@@ -21,7 +21,7 @@ body:before{content:'';display:block;height:0}.page{scroll-margin-top:0}#nav{pos
 .update-list{text-align:left;color:var(--muted);line-height:1.45;margin:12px 0}.update-list li{margin:5px 0}
 </style></head><body>
 <div id="header"><h1>🧠 Brainrot Clicker</h1><div style="display:flex;gap:9px"><div id="hp" class="pill">0 pts</div><div id="hs" class="pill c">0/s</div></div></div>
-<div style="background:linear-gradient(90deg,#ff6b35,#ff3da0);color:white;text-align:center;font-family:Fredoka One;padding:8px;font-size:1rem">🆕 V 2.354: Shop button now flashes when upgrades are available! ✨</div>
+<div style="background:linear-gradient(90deg,#ff6b35,#ff3da0);color:white;text-align:center;font-family:Fredoka One;padding:8px;font-size:1rem">🆕 V 2.354: Shop button now flashes when upgrades are available! ✨ (Updated: <span id="updateTime"></span>)</div>
 <div id="nav"><button class="nav-btn active" onclick="page('game')">🎮 Click</button><button class="nav-btn" onclick="page('shop')">🛒 Shop</button><button class="nav-btn" onclick="page('brainrots')">🧠 Brainrots</button><button class="nav-btn" onclick="page('codes')">🎁 Codes</button><button class="nav-btn" onclick="page('quests')">📋 Quests</button><button class="nav-btn" onclick="page('settings')">⚙️ Settings</button></div>
 <div id="page-game" class="page active"><div id="game-layout"><div class="box side"><h3>📊 Stats</h3><div class="row"><span>Clicks</span><b id="stClicks">0</b></div><div class="row"><span>Run Earned</span><b id="stRun">0</b></div><div class="row"><span>Lifetime</span><b id="stLife">0</b></div><div class="row"><span>PPC</span><b id="stPpc">1</b></div><div class="row"><span>PPS</span><b id="stPps">0</b></div><div class="row"><span>Prestige</span><b id="stPrestige">0</b></div><div class="row"><span>Brainrots</span><b id="stBrainrots">1</b></div></div><div id="center"><div id="score"><div id="scoreNum">0</div><div class="small">Brainrot Points</div></div><div id="char"><img id="charImg"><div id="charName">Tung Tung Sahur</div></div><div id="ppc">+1 per click</div><div class="box" style="width:100%;text-align:center"><div class="small">Next Brainrot: <b id="nextName" style="color:var(--accent)">Tim Cheese</b></div><div class="progress"><div id="nextFill" class="fill"></div></div><div id="nextTxt" class="small">0 / 75</div><div id="readyHint" class="small" style="display:none;color:var(--green);font-weight:800">✅ Ready! Buy it in Shop.</div></div></div><div class="box side"><h3>⭐ Prestige</h3><div class="row"><span>Need</span><b id="prestNeed">10B</b></div><div class="row"><span>All Brainrots?</span><b id="prestAll">No</b></div><div class="row"><span>Upgrade Max</span><b id="prestMax">5</b></div><div class="row"><span>Total Playtime</span><b id="stPlaytime">0s</b></div></div></div></div>
 <div id="page-shop" class="page"><div class="title">🛒 Shop</div><div class="sub">Unlock Brainrots and upgrades. Max upgrade levels increase by 5 after every prestige.</div><div class="section">⚡ Click Upgrades</div><div id="upgrades" class="grid"></div><div class="section">🤖 Auto Upgrades</div><div id="autos" class="grid"></div><div class="section">🧠 Unlock Brainrots</div><div id="shopBrains" class="grid"></div></div>
@@ -524,6 +524,12 @@ function updateChar(){
 }
 function ui(){
   try {
+    // Update cache-busting timestamp
+    const updateTimeEl = document.getElementById('updateTime');
+    if(updateTimeEl) {
+      updateTimeEl.textContent = new Date().toLocaleTimeString();
+    }
+    
     let b=cur(),next=BRAINROTS.find(x=>!G.unlocked.includes(x.id));
     
     // Safe DOM updates with existence checks
