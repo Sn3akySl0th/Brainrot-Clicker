@@ -1028,7 +1028,7 @@ function checkShopUpgrades(){
   // Update Shop button flash state
   const navElement = safeGetElementById('nav');
   if (navElement) {
-    const shopBtn = navElement.querySelector('button[onclick*="shop"]');
+    const shopBtn = Array.from(navElement.querySelectorAll('button')).find(btn => btn.textContent.includes('Shop'));
     if (shopBtn) {
       console.log('Shop button found, hasAvailableUpgrades:', hasAvailableUpgrades);
       if (hasAvailableUpgrades) {
