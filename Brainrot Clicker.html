@@ -1028,14 +1028,21 @@ function checkShopUpgrades(){
   // Update Shop button flash state
   const navElement = safeGetElementById('nav');
   if (navElement) {
-    const shopBtn = Array.from(navElement.querySelectorAll('button')).find(btn => btn.textContent.includes('Shop'));
+    const shopBtn = navElement.querySelector('button[onclick*="shop"]');
     if (shopBtn) {
+      console.log('Shop button found, hasAvailableUpgrades:', hasAvailableUpgrades);
       if (hasAvailableUpgrades) {
         shopBtn.classList.add('flash');
+        console.log('Added flash class to Shop button');
       } else {
         shopBtn.classList.remove('flash');
+        console.log('Removed flash class from Shop button');
       }
+    } else {
+      console.log('Shop button not found');
     }
+  } else {
+    console.log('Nav element not found');
   }
 }
 
