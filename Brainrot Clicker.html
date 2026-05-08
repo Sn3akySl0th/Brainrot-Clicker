@@ -57,12 +57,483 @@ const QUESTS=[
   {id:'q_infinityt',name:'How did we get here?',desc:'Reach InfinityT lifetime points',cat:'legend',reward:'secretcode',amount:1,rewardDesc:'Will reward a secret code',check:function(g){return g.lifetimeEarned>=INFINITY_T;}}
 ];
 const CODES=[{code:'BRAINROT',reward:'points',amount:75,desc:'+75 points'},{code:'TUNGTUNG',reward:'points',amount:45,desc:'+45 points'},{code:'TIMCHEESE',reward:'points',amount:113,desc:'+113 points'},{code:'TUNGGOD',reward:'tunggod',amount:1,desc:'x3 Tung evo and +15K points'},{code:'1PRESTIGE1',reward:'prestige',amount:1,desc:'+1 prestige',secret:true},{code:'GOATED2',reward:'modpanel',amount:1,desc:'???',secret:true},{code:'AREUREAL',reward:'chitlinburger',amount:1,desc:'Unlocks a secret Brainrot',secret:true},{code:'YUMMY',reward:'chitlinblock',amount:1,desc:'Free Chitlin Burger Lucky Block',secret:true},{code:'V3CODE',reward:'points',amount:30000,desc:'+30K points'}];
+
+// Security and Utility Functions
+function sanitizeInput(input) {
+  if (typeof input !== 'string') return '';
+  
+  // Create a temporary div to safely escape HTML
+  const div = document.createElement('div');
+  div.textContent = input;
+  let escaped = div.innerHTML;
+  
+  // Remove any remaining script tags and event handlers
+  escaped = escaped.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+                 .replace(/javascript:/gi, '')
+                 .replace(/on\w+\s*=/gi, '')
+                 .replace(/<iframe[^>]*>/gi, '')
+                 .replace(/<object[^>]*>/gi, '')
+                 .replace(/<embed[^>]*>/gi, '')
+                 .replace(/data:[^;]*;base64[^"']*/gi, '');
+  
+  return escaped.trim();
+}
+
+function safeJSONParse(jsonString, fallback = null) {
+  try {
+    if (typeof jsonString !== 'string') return fallback;
+    const parsed = JSON.parse(jsonString);
+    return validateSaveData(parsed) ? parsed : fallback;
+  } catch (error) {
+    logError('JSON Parse Error', error);
+    return fallback;
+  }
+}
+
+function validateSaveData(data) {
+  if (!data || typeof data !== 'object') return false;
+  
+  const requiredFields = ['points', 'runEarned', 'lifetimeEarned', 'totalClicks', 'current', 'unlocked'];
+  for (const field of requiredFields) {
+    if (!(field in data)) return false;
+  }
+  
+  if (typeof data.points !== 'number' || data.points < 0) return false;
+  if (typeof data.runEarned !== 'number' || data.runEarned < 0) return false;
+  if (typeof data.lifetimeEarned !== 'number' || data.lifetimeEarned < 0) return false;
+  if (typeof data.totalClicks !== 'number' || data.totalClicks < 0) return false;
+  if (typeof data.current !== 'string') return false;
+  if (!Array.isArray(data.unlocked)) return false;
+  
+  return true;
+}
+
+function safeGetElementById(id) {
+  try {
+    const element = document.getElementById(id);
+    return element || null;
+  } catch (error) {
+    logError('DOM Element Access Error', error);
+    return null;
+  }
+}
+
+function logError(message, error) {
+  console.error(`[Brainrot Clicker Error] ${message}:`, error);
+  
+  // Categorize errors for user notifications
+  const errorCategory = categorizeError(message, error);
+  
+  // Show user-friendly notification for critical errors
+  if (errorCategory.critical) {
+    showUserErrorNotification(errorCategory.userMessage, errorCategory.action);
+  }
+  
+  // Store error log for debugging (limited to prevent memory issues)
+  if (!G.errorLog) G.errorLog = [];
+  G.errorLog.push({
+    timestamp: Date.now(),
+    message: message,
+    error: error.toString(),
+    category: errorCategory.type,
+    critical: errorCategory.critical
+  });
+  
+  // Keep only last 50 errors to prevent memory issues
+  if (G.errorLog.length > 50) {
+    G.errorLog = G.errorLog.slice(-50);
+  }
+  
+  // Could send to analytics service in production
+}
+
+function logSuccess(message, data = null) {
+  console.log(`[Brainrot Clicker Success] ${message}`, data || '');
+  
+  // Store success log for debugging (limited to prevent memory issues)
+  if (!G.successLog) G.successLog = [];
+  G.successLog.push({
+    timestamp: Date.now(),
+    message: message,
+    data: data
+  });
+  
+  // Keep only last 20 success messages to prevent memory issues
+  if (G.successLog.length > 20) {
+    G.successLog = G.successLog.slice(-20);
+  }
+}
+
+function categorizeError(message, error) {
+  const errorMsg = error.toString().toLowerCase();
+  const messageLower = message.toLowerCase();
+  
+  // Storage errors
+  if (messageLower.includes('storage') || errorMsg.includes('quota') || errorMsg.includes('storage')) {
+    return {
+      type: 'storage',
+      critical: true,
+      userMessage: '💾 Save failed! Your browser storage might be full. Try clearing some data or use a save code.',
+      action: 'save'
+    };
+  }
+  
+  // Network errors
+  if (errorMsg.includes('network') || errorMsg.includes('fetch')) {
+    return {
+      type: 'network',
+      critical: false,
+      userMessage: '🌐 Network issue detected. Some features may not work properly.',
+      action: 'none'
+    };
+  }
+  
+  // Save/Load errors
+  if (messageLower.includes('save') || messageLower.includes('load')) {
+    return {
+      type: 'save_load',
+      critical: true,
+      userMessage: '⚠️ Save/Load error! Your progress might not be saved properly.',
+      action: 'save'
+    };
+  }
+  
+  // Calculation errors
+  if (messageLower.includes('calculation') || errorMsg.includes('math')) {
+    return {
+      type: 'calculation',
+      critical: false,
+      userMessage: '🧮 Calculation error detected. Game balance might be affected.',
+      action: 'none'
+    };
+  }
+  
+  // DOM errors
+  if (messageLower.includes('dom') || errorMsg.includes('element')) {
+    return {
+      type: 'dom',
+      critical: false,
+      userMessage: '🖥️ Display issue detected. Some UI elements may not work.',
+      action: 'none'
+    };
+  }
+  
+  // Default
+  return {
+    type: 'general',
+    critical: false,
+    userMessage: '⚠️ An error occurred. The game should continue working normally.',
+    action: 'none'
+  };
+}
+
+function showUserErrorNotification(message, action) {
+  // Create a special error toast that's more prominent
+  const errorToast = document.createElement('div');
+  errorToast.className = 'error-toast';
+  errorToast.innerHTML = `
+    <div class="error-content">
+      <div class="error-icon">⚠️</div>
+      <div class="error-message">${message}</div>
+      ${action === 'save' ? '<button class="error-action" onclick="showSaveOptions()">💾 Save Options</button>' : ''}
+    </div>
+  `;
+  
+  // Add styles if not already added
+  if (!document.querySelector('#error-toast-styles')) {
+    const style = document.createElement('style');
+    style.id = 'error-toast-styles';
+    style.textContent = `
+      .error-toast {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #e74c3c, #c0392b);
+        color: white;
+        padding: 15px;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(231, 76, 60, 0.3);
+        z-index: 10000;
+        max-width: 300px;
+        animation: slideIn 0.3s ease-out;
+      }
+      .error-content {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .error-icon {
+        font-size: 1.5rem;
+        text-align: center;
+      }
+      .error-message {
+        font-size: 0.9rem;
+        line-height: 1.4;
+      }
+      .error-action {
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        padding: 8px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.8rem;
+        transition: all 0.2s ease;
+      }
+      .error-action:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+      @keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+  
+  document.body.appendChild(errorToast);
+  
+  // Auto-remove after 8 seconds
+  setTimeout(() => {
+    if (errorToast.parentNode) {
+      errorToast.parentNode.removeChild(errorToast);
+    }
+  }, 8000);
+  
+  // Remove on click
+  errorToast.addEventListener('click', () => {
+    if (errorToast.parentNode) {
+      errorToast.parentNode.removeChild(errorToast);
+    }
+  });
+}
+
+function showSaveOptions() {
+  // Show modal with different save options
+  const modal = document.createElement('div');
+  modal.className = 'modal show';
+  modal.innerHTML = `
+    <div class="modal-card">
+      <h2>💾 Save Options</h2>
+      <p>Choose an alternative save method:</p>
+      <div style="display: flex; flex-direction: column; gap: 10px; margin: 20px 0;">
+        <button class="btn" onclick="downloadSave()">📥 Download Save File</button>
+        <button class="btn" onclick="generateAndShowSaveCode()">🔑 Generate Save Code</button>
+        <button class="btn secondary" onclick="this.closest('.modal').remove()">❌ Cancel</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+}
+
 let G={points:0,runEarned:0,lifetimeEarned:0,totalClicks:0,current:'tung',unlocked:['tung'],levels:{},evos:{},redeemed:[],prestige:0,prestigeCodeUnlocked:false,playtime:0,crateBuys:{double:0,triple:0,chitlin:0},settings:{particles:true,rings:true,sound:true},questsDone:[],chitlinUnlocked:false,boostUntil:0,cardBuys:0,cards:{},codex:[],cardBoosts:{},combinePick:[]};
 const PRICE_CAP=1000000000000000;
 const MUTATIONS=[{id:'radiation',name:'Radiation',mult:1.5,color:'#7CFC00',weight:10},{id:'gold',name:'Gold',mult:2,color:'#ffd700',weight:6},{id:'diamond',name:'Diamond',mult:3,color:'#00d4ff',weight:3},{id:'heavenly',name:'Heavenly',mult:5,color:'#f5f3ff',weight:1}];
 function fmt(n){n=Math.floor(n);if(n>=INFINITY_T)return'InfinityT';if(n>=1e12)return(n/1e12).toFixed(2)+'T';if(n>=1e9)return(n/1e9).toFixed(2)+'B';if(n>=1e6)return(n/1e6).toFixed(2)+'M';if(n>=1e3)return(n/1e3).toFixed(1)+'K';return String(n)}
 function evoCap(){return 100000+(G.prestige||0)*100000}function evo(id){return Math.min(G.evos[id]||1,evoCap())}function isTungGod(){return evo('tung')>=200000}function displayName(b){return b.id==='tung'&&isTungGod()?b.godName:b.name}function displayPpc(b){return b.ppc*evo(b.id)}function maxLvl(){return 5+G.prestige*5}function prestigeNeed(){return 10000000000*(G.prestige+1)}function missingBrainrots(){return BRAINROTS.filter(b=>b.cost>0&&!b.noPrestige&&!G.unlocked.includes(b.id))}function allOwned(){return missingBrainrots().length===0}
-function cur(){return BRAINROTS.find(b=>b.id===G.current)||BRAINROTS[0]}function incomeBoost(){return Date.now()<(G.boostUntil||0)?5:1}function cardBoost(id){return Math.pow(1.5,(G.cardBoosts&&G.cardBoosts[id])||0)}function ppc(){let b=cur(),bonus=0;UPGRADES.forEach(u=>bonus+=u.effect*(G.levels[u.id]||0));return Math.floor((displayPpc(b)*cardBoost(b.id)+bonus)*Math.pow(2,G.prestige)*incomeBoost())}function pps(){let x=0;AUTOS.forEach(u=>x+=u.effect*(G.levels[u.id]||0));return Math.floor(x*Math.pow(2,G.prestige)*incomeBoost())}function cost(u){return Math.floor(u.cost*Math.pow(1.65,G.levels[u.id]||0))}
+function cur(){return BRAINROTS.find(b=>b.id===G.current)||BRAINROTS[0]}function incomeBoost(){return Date.now()<(G.boostUntil||0)?5:1}function cardBoost(id){return Math.pow(1.5,(G.cardBoosts&&G.cardBoosts[id])||0)}function ppc(){let b=cur(),bonus=0;UPGRADES.forEach(u=>bonus+=u.effect*(G.levels[u.id]||0));return Math.floor((displayPpc(b)*cardBoost(b.id)+bonus)*Math.pow(2,G.prestige)*incomeBoost())}function pps(){let x=0;AUTOS.forEach(u=>x+=u.effect*(G.levels[u.id]||0));return Math.floor(x*Math.pow(2,G.prestige)*incomeBoost())}function safeBigInt(value) {
+  try {
+    if (typeof value === 'bigint') return value;
+    if (typeof value === 'number' && !isNaN(value) && isFinite(value)) {
+      // Check for overflow before conversion
+      if (Math.abs(value) > Number.MAX_SAFE_INTEGER) {
+        logError('BigInt Overflow Warning', new Error(`Value ${value} exceeds safe integer range`));
+        return value > 0 ? BigInt(Number.MAX_SAFE_INTEGER) : BigInt(-Number.MAX_SAFE_INTEGER);
+      }
+      return BigInt(Math.floor(value));
+    }
+    return BigInt(0);
+  } catch (error) {
+    logError('BigInt Conversion Error', error);
+    return BigInt(0);
+  }
+}
+
+function safeBigIntToNumber(bigintValue) {
+  try {
+    if (typeof bigintValue === 'number') return bigintValue;
+    const num = Number(bigintValue);
+    return !isNaN(num) && isFinite(num) ? num : 0;
+  } catch (error) {
+    logError('BigInt to Number Conversion Error', error);
+    return 0;
+  }
+}
+
+function cost(u){try{const costValue=safeBigInt(u.cost)*safeBigInt(Math.pow(1.65,G.levels[u.id]||0));return safeBigIntToNumber(costValue)}catch(error){logError('Cost Calculation Error',error);return u.cost||0}}
+
+// Save operation mutex to prevent race conditions
+let saveMutex = false;
+let saveQueue = [];
+
+async function save(){
+  // If save is already in progress, queue this request
+  if (saveMutex) {
+    return new Promise((resolve) => {
+      saveQueue.push(resolve);
+    });
+  }
+  
+  // Acquire mutex
+  saveMutex = true;
+  
+  try {
+    // Validate game state before saving
+    if (!validateSaveData(G)) {
+      logError('Save Validation Failed', new Error('Invalid game state detected'));
+      // Attempt to repair game state
+      repairGameState();
+    }
+    
+    const saveData = JSON.stringify(G);
+    
+    // Try localStorage first with quota handling
+    if (tryLocalStorageSave(saveData)) {
+      releaseSaveMutex();
+      return true;
+    }
+    
+    // Fallback to sessionStorage
+    if (trySessionStorageSave(saveData)) {
+      releaseSaveMutex();
+      return true;
+    }
+    
+    // Fallback to IndexedDB (async)
+    const indexedDbSuccess = await tryIndexedDBSave(saveData);
+    if (indexedDbSuccess) {
+      releaseSaveMutex();
+      return true;
+    }
+    
+    // Final fallback to URL parameters for Google Sites
+    logError('All Storage Methods Failed', new Error('Using URL fallback'));
+    saveToURL();
+    releaseSaveMutex();
+    return false;
+    
+  } catch(e) {
+    logError('Save Error', e);
+    // Emergency fallback
+    saveToURL();
+    releaseSaveMutex();
+    return false;
+  }
+}
+
+function releaseSaveMutex() {
+  saveMutex = false;
+  
+  // Process queued save requests
+  if (saveQueue.length > 0) {
+    const nextResolve = saveQueue.shift();
+    nextResolve(save());
+  }
+}
+
+function downloadSaveFile() {
+  try {
+    // Create save data object
+    const saveData = {
+      version: '2.353',
+      timestamp: Date.now(),
+      data: {
+        p: G.points,
+        re: G.runEarned,
+        le: G.lifetimeEarned,
+        tc: G.totalClicks,
+        cur: G.current,
+        unl: G.unlocked,
+        lvl: G.levels,
+        evo: G.evos,
+        red: G.redeemed,
+        pr: G.prestige,
+        pcu: G.prestigeCodeUnlocked,
+        pt: G.playtime,
+        cb: G.crateBuys,
+        qd: G.questsDone,
+        chu: G.chitlinUnlocked
+      }
+    };
+    
+    // Create JSON string
+    const jsonString = JSON.stringify(saveData, null, 2);
+    
+    // Create blob
+    const blob = new Blob([jsonString], { type: 'application/json' });
+    
+    // Create download link
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `brainrot-save-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    
+    // Clean up
+    URL.revokeObjectURL(url);
+    
+    toast('Save file downloaded! 📁', true);
+  } catch (error) {
+    logError('Download Save File Error', error);
+    toast('Failed to download save file!', false);
+  }
+}
+
+// Event listener management
+const eventListeners = new Map();
+
+function addManagedEventListener(element, event, handler, options = {}) {
+  if (!element) return null;
+  
+  const key = `${element.id || 'anonymous'}-${event}`;
+  
+  // Remove existing listener if present
+  if (eventListeners.has(key)) {
+    const existingHandler = eventListeners.get(key);
+    element.removeEventListener(event, existingHandler, options);
+  }
+  
+  // Add new listener
+  element.addEventListener(event, handler, options);
+  eventListeners.set(key, handler);
+  
+  return handler;
+}
+
+function cleanupEventListeners() {
+  eventListeners.forEach((handler, key) => {
+    const [elementId, event] = key.split('-');
+    const element = elementId === 'anonymous' ? document : document.getElementById(elementId);
+    if (element) {
+      element.removeEventListener(event, handler);
+    }
+  });
+  eventListeners.clear();
+}
+
+// Safe DOM manipulation
+function safelyUpdateContainer(container, htmlStrings) {
+  if (!container) return;
+  
+  const newContent = htmlStrings.join('');
+  if (container.innerHTML !== newContent) {
+    // Clear existing content
+    while (container.firstChild) {
+      container.removeChild(container.firstChild);
+    }
+    
+    // Create temporary div to parse HTML
+    const temp = document.createElement('div');
+    temp.innerHTML = newContent;
+    
+    // Move nodes to actual container
+    while (temp.firstChild) {
+      container.appendChild(temp.firstChild);
+    }
+  }
+}
 function clicker(e){if(Math.random()<0.0005){G.boostUntil=Math.max(G.boostUntil||0,Date.now()+90000);toast('⚡ 5x income boost for 1:30!')}let v=ppc();G.points+=v;G.runEarned+=v;G.lifetimeEarned+=v;G.totalClicks++;let im=document.getElementById('charImg');im.classList.add('b');setTimeout(()=>im.classList.remove('b'),80);if(G.settings.particles)part(e,v);if(G.settings.rings)ring(e);speak();ui()}
 function speak(){if(!G.settings.sound)return;try{let u=new SpeechSynthesisUtterance(cur().id==='tung'&&isTungGod()?'Tung God':cur().sound);u.rate=1.12;u.pitch=.85;speechSynthesis.speak(u)}catch(e){}}
 function part(e,v){let d=document.createElement('div');d.className='particle';d.textContent='+'+fmt(v);d.style.left=e.clientX+Math.random()*30-15+'px';d.style.top=e.clientY-10+'px';d.style.color=cur().color;document.body.appendChild(d);setTimeout(()=>d.remove(),850)}function ring(e){let d=document.createElement('div');d.className='ring';d.style.borderColor=cur().color;d.style.left=e.clientX+'px';d.style.top=e.clientY+'px';d.style.margin='-10px 0 0 -10px';document.body.appendChild(d);setTimeout(()=>d.remove(),500)}
