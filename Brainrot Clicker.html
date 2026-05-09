@@ -382,7 +382,7 @@ function cur(){return BRAINROTS.find(b=>b.id===G.current)||BRAINROTS[0]}function
   critMultiplier*=getSkillBonus('click','click_crit');
   speedMultiplier*=getSkillBonus('click','click_speed');
   multiBoost*=getSkillBonus('click','click_multi');
-  let totalMultiplier=clickMultiplier*multiBoost;
+  let totalMultiplier=clickMultiplier*critMultiplier*speedMultiplier*multiBoost;
   return Math.floor(baseValue*totalMultiplier);}function pps(){let x=0;AUTOS.forEach(u=>x+=u.effect*(G.levels[u.id]||0));let baseValue=x*Math.pow(2,G.prestige)*incomeBoost();let efficiencyBonus=getSkillBonus('auto','auto_efficiency');let productionBoost=getSkillBonus('auto','auto_boost');let totalMultiplier=efficiencyBonus*productionBoost;return Math.floor(baseValue*totalMultiplier);}function safeBigInt(value) {
   try {
     if (typeof value === 'bigint') return value;
@@ -588,48 +588,7 @@ function safelyUpdateContainer(container, htmlStrings) {
     }
   }
 }
-function clicker(e){if(Math.random()<0.0005){G.boostUntil=Math.max(G.boostUntil||0,Date.now()+90000);toast('⚡ 5x income boost for 1:30!')}let v=ppc();G.points+=v;G.runEarned+=v;G.lifetimeEarned+=v;G.totalClicks++;let im=document.getElementById('charImg');im.classList.add('b');setTimeout(()=>im.classList.remove('b'),80);if(G.settings.particles)part(e,v);if(G.settings.rings)ring(e);speak();function checkSkillMilestones(){
-  const milestones = [
-    {type: 'click', threshold: 10, reward: 1, message: '🎯 Milestone: 10 Clicks! +1 Skill Point'},
-    {type: 'click', threshold: 100, reward: 2, message: '🎯 Milestone: 100 Clicks! +2 Skill Points'},
-    {type: 'click', threshold: 500, reward: 5, message: '⭐ Milestone: 500 Clicks! +5 Skill Points'},
-    {type: 'auto', threshold: 1000, reward: 1, message: '🤖 Milestone: 1K Auto Points! +1 Skill Point'},
-    {type: 'auto', threshold: 10000, reward: 3, message: '🏭 Milestone: 10K Auto Points! +3 Skill Points'},
-    {type: 'prestige', threshold: 1, reward: 2, message: '🌟 First Prestige! +2 Skill Points'},
-    {type: 'prestige', threshold: 5, reward: 5, message: '⭐ Prestige Master! +5 Skill Points'}
-  ];
-  
-  milestones.forEach(milestone => {
-    let currentValue = 0;
-    switch(milestone.type) {
-      case 'click': currentValue = G.totalClicks; break;
-      case 'auto': currentValue = Object.values(G.levels).reduce((sum, level) => sum + level, 0); break;
-      case 'prestige': currentValue = Number(G.prestige) || 0; break;
-    }
-    
-    if (currentValue >= milestone.threshold && !G.milestones || !G.milestones.includes(milestone.type + '_' + milestone.threshold)) {
-      if (!G.milestones) G.milestones = [];
-      G.milestones.push(milestone.type + '_' + milestone.threshold);
-      G.skillPoints += milestone.reward;
-      toast(milestone.message, true);
-      
-      // Check for skill tree unlocks
-      const tree = SKILL_TREES[G.activeTree];
-      if (tree) {
-        const unlockedSkills = Object.keys(G.skillLevels[G.activeTree] || {});
-        const totalSkills = tree.skills.length;
-        const unlockThreshold = Math.floor(totalSkills * 0.3); // Unlock new skill every 30% of total skills
-        
-        if (unlockedSkills.length >= unlockThreshold && unlockedSkills.length < totalSkills) {
-          const nextSkill = tree.skills[unlockedSkills.length];
-          if (nextSkill && G.skillPoints >= nextSkill.cost) {
-            toast(`🌟 New Skill Unlocked: ${nextSkill.name}!`, true);
-          }
-        }
-      }
-    }
-  });
-};ui()}
+function clicker(e){if(Math.random()<0.0005){G.boostUntil=Math.max(G.boostUntil||0,Date.now()+90000);toast('⚡ 5x income boost for 1:30!')}let v=ppc();G.points+=v;G.runEarned+=v;G.lifetimeEarned+=v;G.totalClicks++;let im=document.getElementById('charImg');im.classList.add('b');setTimeout(()=>im.classList.remove('b'),80);if(G.settings.particles)part(e,v);if(G.settings.rings)ring(e);speak();checkSkillMilestones();ui()}
 function speak(){if(!G.settings.sound)return;try{let u=new SpeechSynthesisUtterance(cur().id==='tung'&&isTungGod()?'Tung God':cur().sound);u.rate=1.12;u.pitch=.85;speechSynthesis.speak(u)}catch(e){}}
 function part(e,v){let d=document.createElement('div');d.className='particle';d.textContent='+'+fmt(v);d.style.left=e.clientX+Math.random()*30-15+'px';d.style.top=e.clientY-10+'px';d.style.color=cur().color;document.body.appendChild(d);setTimeout(()=>d.remove(),850)}function ring(e){let d=document.createElement('div');d.className='ring';d.style.borderColor=cur().color;d.style.left=e.clientX+'px';d.style.top=e.clientY+'px';d.style.margin='-10px 0 0 -10px';document.body.appendChild(d);setTimeout(()=>d.remove(),500)}
 function buyUp(id){let u=[...UPGRADES,...AUTOS].find(x=>x.id===id),l=G.levels[id]||0;if(l>=maxLvl())return toast('Maxed until next prestige');let c=cost(u);if(G.points<c)return toast('Need '+fmt(c));G.points-=c;G.levels[id]=l+1;toast(u.name+' upgraded');renderShop();ui()}function buyB(id){let b=BRAINROTS.find(x=>x.id===id);if(G.unlocked.includes(id))return;let canAfford=b.cost===Infinity?G.points>=INFINITY_T:G.points>=b.cost;if(!canAfford)return toast('Need '+fmt(b.cost));if(b.cost!==Infinity)G.points-=b.cost;else G.points=0;G.unlocked.push(id);toast('Unlocked '+b.name);renderShop();renderBrains();ui()}function selectB(id){if(!G.unlocked.includes(id))return toast('Buy it first');G.current=id;updateChar();renderBrains();ui()}
