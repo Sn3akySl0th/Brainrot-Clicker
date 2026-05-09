@@ -1151,7 +1151,7 @@ function deleteSaveCode(code){
     G.recentSaves = G.recentSaves.filter(s => s.code !== code);
     
     save();
-    showSaveCodeManager();
+    renderSaveCodes();
     toast('Save code deleted');
   }
 }
@@ -1193,6 +1193,7 @@ function redeemSaveCode(code){
 
 function showSaveCodeManager(){
   let modal = document.createElement('div');
+  modal.id = 'saveCodeModal';
   modal.className = 'modal show';
   modal.innerHTML = `
     <div class="modal-card">
@@ -1264,7 +1265,6 @@ function renderSaveCodes(){
       codesHtml += '<div>';
       codesHtml += '<div style="font-weight:800">' + entry.label + '</div>';
       codesHtml += '<div class="small" style="color:var(--muted)">' + timeAgo + ' min ago</div>';
-      codesHtml += '</div>';
       codesHtml += '</div>';
       codesHtml += '<div style="display:flex;gap:4px">';
       codesHtml += '<button class="btn secondary" style="padding:4px 8px;font-size:.7rem" onclick="copySaveCode(\'' + code + '\')">📋 Copy</button>';
