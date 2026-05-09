@@ -383,6 +383,7 @@ function cur(){return BRAINROTS.find(b=>b.id===G.current)||BRAINROTS[0]}function
   speedMultiplier*=getSkillBonus('click','click_speed');
   multiBoost*=getSkillBonus('click','click_multi');
   let totalMultiplier=clickMultiplier*critMultiplier*speedMultiplier*multiBoost;
+  console.log('PPC Debug:', {baseValue, clickMultiplier, critMultiplier, speedMultiplier, multiBoost, totalMultiplier, brainrot: b.id, ppc: b.ppc});
   return Math.floor(baseValue*totalMultiplier);}function pps(){let x=0;AUTOS.forEach(u=>x+=u.effect*(G.levels[u.id]||0));let baseValue=x*Math.pow(2,G.prestige)*incomeBoost();let efficiencyBonus=getSkillBonus('auto','auto_efficiency');let productionBoost=getSkillBonus('auto','auto_boost');let totalMultiplier=efficiencyBonus*productionBoost;return Math.floor(baseValue*totalMultiplier);}function safeBigInt(value) {
   try {
     if (typeof value === 'bigint') return value;
