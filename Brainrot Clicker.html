@@ -716,21 +716,30 @@ function renderShop(){
   document.getElementById('shopBrains').innerHTML=BRAINROTS.slice().sort((a,b)=>a.cost-b.cost).filter(b=>b.cost>0&&(!b.secret||G.chitlinUnlocked)&&(b.id!=='spaghetti'||G.spaghettiShopUnlocked||!G.unlocked.includes(b.id))).map(shopBrain).join('');
 }
 function buySkill(skillId) {
-  const activeTree = SKILL_TREES[G.activeTree];
-  if (!activeTree) return;
+  // Find which tree contains this skill
+  let treeKey = null;
+  let skill = null;
   
-  const skill = activeTree.skills.find(s => s.id === skillId);
-  if (!skill) return;
+  for (const key in SKILL_TREES) {
+    const foundSkill = SKILL_TREES[key].skills.find(s => s.id === skillId);
+    if (foundSkill) {
+      treeKey = key;
+      skill = foundSkill;
+      break;
+    }
+  }
   
-  const currentLevel = G.skillLevels[G.activeTree]?.[skillId] || 0;
+  if (!skill || !treeKey) return;
+  
+  const currentLevel = G.skillLevels[treeKey]?.[skillId] || 0;
   if (currentLevel >= skill.maxLevel) return toast('Skill already maxed!');
   
   if (G.skillPoints < skill.cost) return toast('Need more skill points!');
   
   // Deduct skill points and upgrade skill
   G.skillPoints -= skill.cost;
-  if (!G.skillLevels[G.activeTree]) G.skillLevels[G.activeTree] = {};
-  G.skillLevels[G.activeTree][skillId] = currentLevel + 1;
+  if (!G.skillLevels[treeKey]) G.skillLevels[treeKey] = {};
+  G.skillLevels[treeKey][skillId] = currentLevel + 1;
   
   toast(`${skill.name} upgraded to level ${currentLevel + 1}!`);
   renderSkills();
@@ -739,38 +748,39 @@ function buySkill(skillId) {
 }
 
 function renderSkills(){
-  const activeTree = SKILL_TREES[G.activeTree];
-  if (!activeTree) return;
-  
-  const skillsContainer = document.getElementById(G.activeTree + 'Skills');
-  if (skillsContainer) {
-    skillsContainer.innerHTML = activeTree.skills.map(skill => {
-      const level = G.skillLevels[G.activeTree]?.[skill.id] || 0;
-      const maxLevel = skill.maxLevel;
-      const canAfford = G.skillPoints >= skill.cost && level < maxLevel;
-      const isMaxed = level >= maxLevel;
-      const effectValue = skill.effect(level);
-      
-      return `
-        <div class="card ${isMaxed ? 'owned' : canAfford ? 'aff' : 'locked'}">
-          <div class="uphead">
-            <span class="icon">${skill.emoji || '🌟'}</span>
-            <div>
-              <div class="name">${skill.name}</div>
-              <div class="small">Level ${level}/${maxLevel}</div>
+  // Render all four skill trees
+  Object.keys(SKILL_TREES).forEach(treeKey => {
+    const tree = SKILL_TREES[treeKey];
+    const skillsContainer = document.getElementById(treeKey + 'Skills');
+    if (skillsContainer) {
+      skillsContainer.innerHTML = tree.skills.map(skill => {
+        const level = G.skillLevels[treeKey]?.[skill.id] || 0;
+        const maxLevel = skill.maxLevel;
+        const canAfford = G.skillPoints >= skill.cost && level < maxLevel;
+        const isMaxed = level >= maxLevel;
+        const effectValue = skill.effect(level);
+        
+        return `
+          <div class="card ${isMaxed ? 'owned' : canAfford ? 'aff' : 'locked'}">
+            <div class="uphead">
+              <span class="icon">${skill.emoji || '🌟'}</span>
+              <div>
+                <div class="name">${skill.name}</div>
+                <div class="small">Level ${level}/${maxLevel}</div>
+              </div>
+            </div>
+            <div class="desc">${skill.desc}</div>
+            <div class="foot">
+              <span class="cost">${isMaxed ? 'MAX' : '🪙 ' + fmt(skill.cost)}</span>
+              <span class="eff">${typeof effectValue === 'number' ? '+' + effectValue : effectValue}</span>
+            </div>
+            ${!isMaxed ? `<button class="buy" onclick="buySkill('${skill.id}')" ${canAfford ? '' : 'disabled'}>${canAfford ? 'Buy' : 'Need ' + fmt(skill.cost)}</button>` : ''}
             </div>
           </div>
-          <div class="desc">${skill.desc}</div>
-          <div class="foot">
-            <span class="cost">${isMaxed ? 'MAX' : '🪙 ' + fmt(skill.cost)}</span>
-            <span class="eff">${typeof effectValue === 'number' ? '+' + effectValue : effectValue}</span>
-          </div>
-          ${!isMaxed ? `<button class="buy" onclick="buySkill('${skill.id}')" ${canAfford ? '' : 'disabled'}>${canAfford ? 'Buy' : 'Need ' + fmt(skill.cost)}</button>` : ''}
-          </div>
-        </div>
-      `;
-    }).join('');
-  }
+        `;
+      }).join('');
+    }
+  });
 }
 
 function getSkillBonus(treeType, skillId) {
