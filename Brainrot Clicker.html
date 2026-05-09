@@ -9,7 +9,7 @@
 #game-layout{display:grid;grid-template-columns:200px 1fr 230px;gap:15px}@media(max-width:760px){#game-layout{grid-template-columns:1fr}.side{display:none}}.side h3{font-family:'Fredoka One';color:var(--cyan);text-align:center;font-size:1rem;border-bottom:1px solid #ffffff12;padding-bottom:7px;margin-bottom:8px}.row{display:flex;justify-content:space-between;gap:8px;font-size:.82rem;color:var(--muted);margin:6px 0}.row b{color:white}
 #center{display:flex;flex-direction:column;align-items:center;gap:13px}#score{width:100%;text-align:center;background:var(--panel);border:1px solid #ffffff12;border-radius:17px;padding:14px}#scoreNum{font-family:'Fredoka One';font-size:2.75rem;color:var(--gold);text-shadow:0 0 18px #ffd70077}#char{text-align:center;cursor:pointer}#charImg{width:250px;height:250px;object-fit:contain;background:transparent;border-radius:14px;filter:drop-shadow(0 0 18px var(--char-color,#ff8c42));transition:.08s}#charImg.b{transform:scale(.91)}#charName{font-family:'Fredoka One';color:var(--char-color,#ff8c42);font-size:1.12rem;text-shadow:0 0 9px var(--char-color,#ff8c42)}#ppc{border:1px solid var(--cyan);background:#00d4ff22;color:var(--cyan);font-weight:800;border-radius:999px;padding:5px 14px}
 .progress{height:9px;background:#ffffff12;border-radius:999px;overflow:hidden;margin:7px 0}.fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));width:0}
-.btn,.buy{border:0;border-radius:999px;padding:9px 16px;font-weight:800;cursor:pointer;color:white;background:linear-gradient(135deg,var(--accent),var(--accent2))}.buy{width:100%;margin-top:10px}button:disabled{opacity:.4;cursor:not-allowed}.danger{background:linear-gradient(135deg,#e74c3c,#c0392b)}.secondary{background:#ffffff18;border:1px solid #ffffff25}
+.btn,.buy{border:0;border-radius:999px;padding:9px 16px;font-weight:800;cursor:pointer;color:white;background:linear-gradient(135deg,var(--accent),var(--accent2))}.buy{width:100%;margin-top:10px}button:disabled{opacity:.4;cursor:not-allowed}.danger{background:linear-gradient(135deg,#e74c3c,#c0392b)}.secondary{background:#ffffff18;border:1px solid #ffffff25}.bulk-buttons{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}.bulk-10,.bulk-100,.bulk-max{flex:1;min-width:60px;padding:6px 8px;font-size:.75rem;background:linear-gradient(135deg,#27ae60,#2ecc71)}.bulk-10:hover,.bulk-100:hover,.bulk-max:hover{background:linear-gradient(135deg,#2ecc71,#27ae60);transform:translateY(-1px)}.hold-upgrade{width:100%;margin-top:6px;background:linear-gradient(135deg,#9b59b6,#8e44ad);position:relative;overflow:hidden}.hold-upgrade:before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent);animation:shimmer 2s infinite}.hold-upgrade:hover:before{animation-duration:1s}@keyframes shimmer{to{left:100%}}
 .uphead{display:flex;align-items:center;gap:10px}.icon{font-size:1.8rem}.name{font-family:'Fredoka One';font-size:1rem}.desc,.small{font-size:.78rem;color:var(--muted)}.desc{margin:8px 0;line-height:1.35}.foot{display:flex;justify-content:space-between;gap:8px;font-size:.85rem;font-weight:800}.cost{color:var(--gold)}.eff{color:var(--cyan)}
 .brain{text-align:center;position:relative}.brimg{width:100px;height:100px;object-fit:contain;border-radius:10px;margin:0 auto 8px;display:block}.emoji{font-size:3.1rem;display:block;margin-bottom:8px}.badge{position:absolute;top:7px;right:7px;border-radius:999px;padding:2px 7px;font-size:.58rem;font-weight:800}.a{background:var(--gold);color:#000}.o{background:var(--green);color:#000}.l{background:#333;color:#aaa}
 #codeInput{flex:1;background:var(--card);border:2px solid #ffffff18;border-radius:12px;color:white;padding:10px 14px;outline:0}.code{text-align:center}.code .name{color:var(--gold)}
@@ -620,9 +620,103 @@ function renderShop(){
   document.getElementById('autos').innerHTML=AUTOS.map(upCard).join('');
   document.getElementById('shopBrains').innerHTML=BRAINROTS.slice().sort((a,b)=>a.cost-b.cost).filter(b=>b.cost>0&&(!b.secret||G.chitlinUnlocked)&&(b.id!=='spaghetti'||G.spaghettiShopUnlocked)&&(!b.tripleOnly||b.id==='spaghetti'||G.unlocked.includes(b.id))).map(shopBrain).join('');
 }
+
+// Bulk upgrade and hold-to-upgrade variables
+let bulkIntervals={};
+
+function buyUpBulk(id, count){
+  let u=[...UPGRADES,...AUTOS].find(x=>x.id===id), l=G.levels[id]||0, m=maxLvl();
+  let canBuy = 0;
+  let totalCost = 0;
+  let tempLevel = l;
+  
+  for(let i=0; i<count && tempLevel<m; i++){
+    // Temporarily set level to calculate cost
+    G.levels[id] = tempLevel;
+    let c = cost(u);
+    if(G.points >= totalCost + c){
+      totalCost += c;
+      canBuy++;
+      tempLevel++;
+    } else {
+      break;
+    }
+  }
+  
+  // Restore original level if no purchase
+  if(canBuy === 0) {
+    G.levels[id] = l;
+    return toast('Need more points!');
+  }
+  
+  G.points -= totalCost;
+  G.levels[id] = l + canBuy;
+  toast(`Bought ${canBuy}x ${u.name}!`);
+  renderShop();
+  ui();
+}
+
+function buyUpMax(id){
+  let u=[...UPGRADES,...AUTOS].find(x=>x.id===id), l=G.levels[id]||0, m=maxLvl();
+  let canBuy = 0;
+  let totalCost = 0;
+  let tempLevel = l;
+  
+  for(let i=0; tempLevel<m; i++){
+    // Temporarily set level to calculate cost
+    G.levels[id] = tempLevel;
+    let c = cost(u);
+    if(G.points >= totalCost + c){
+      totalCost += c;
+      canBuy++;
+      tempLevel++;
+    } else {
+      break;
+    }
+  }
+  
+  // Restore original level if no purchase
+  if(canBuy === 0) {
+    G.levels[id] = l;
+    return toast('Need more points!');
+  }
+  
+  G.points -= totalCost;
+  G.levels[id] = l + canBuy;
+  toast(`Maxed ${u.name} (${canBuy} levels)!`);
+  renderShop();
+  ui();
+}
+
+function startHoldUpgrade(id){
+  if(bulkIntervals[id]) return; // Already holding
+  
+  bulkIntervals[id] = setInterval(() => {
+    let u=[...UPGRADES,...AUTOS].find(x=>x.id===id), l=G.levels[id]||0, m=maxLvl();
+    if(l >= m) {
+      stopHoldUpgrade(id);
+      return;
+    }
+    
+    let c = cost(u, l);
+    if(G.points >= c){
+      buyUp(id);
+    } else {
+      stopHoldUpgrade(id);
+    }
+  }, 100); // Purchase every 100ms while holding
+}
+
+function stopHoldUpgrade(id){
+  if(bulkIntervals[id]){
+    clearInterval(bulkIntervals[id]);
+    delete bulkIntervals[id];
+  }
+}
+
 function upCard(u){
   let l=G.levels[u.id]||0,m=maxLvl(),c=cost(u),aff=G.points>=c&&l<m;
-  return `<div class="card ${l>=m?'owned':aff?'aff':'locked'}"><div class="uphead"><span class="icon">${u.emoji}</span><div><div class="name">${u.name}</div><div class="small">Level ${l}/${m}</div></div></div><div class="desc">${u.desc}</div><div class="foot"><span class="cost">${l>=m?'MAX':'🪙 '+fmt(c)}</span><span class="eff">+${u.effect*(l+1)}</span></div>${l>=m?'':`<button class="buy" ${aff?'':'disabled'} onclick="buyUp('${u.id}')">${aff?'Buy':'Need '+fmt(c)}</button>`}</div>`;
+  return `<div class="card ${l>=m?'owned':aff?'aff':'locked'}"><div class="uphead"><span class="icon">${u.emoji}</span><div><div class="name">${u.name}</div><div class="small">Level ${l}/${m}</div></div></div><div class="desc">${u.desc}</div><div class="foot"><span class="cost">${l>=m?'MAX':'🪙 '+fmt(c)}</span><span class="eff">+${u.effect*(l+1)}</span></div>${l>=m?'':`<div class="bulk-buttons"><button class="buy bulk-10" ${aff?'':'disabled'}" onclick="buyUpBulk('${u.id}', 10)">x10</button><button class="buy bulk-100" ${aff?'':'disabled'}" onclick="buyUpBulk('${u.id}', 100)">x100</button><button class="buy bulk-max" ${aff?'':'disabled'}" onclick="buyUpMax('${u.id}')">MAX</button></div><button class="buy hold-upgrade" ${aff?'':'disabled'}" onmousedown="startHoldUpgrade('${u.id}')" onmouseup="stopHoldUpgrade('${u.id}')" onmouseleave="stopHoldUpgrade('${u.id}')" ontouchstart="startHoldUpgrade('${u.id}')" ontouchend="stopHoldUpgrade('${u.id}')">${aff?'Hold to Upgrade':'Need '+fmt(c)}</button>`}</div>`;
 }
 function shopBrain(b){
   let o=G.unlocked.includes(b.id),a=(b.cost===Infinity?G.points>=INFINITY_T:G.points>=b.cost)&&!o,img=imgHtml(b);
