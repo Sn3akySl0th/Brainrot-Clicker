@@ -1117,16 +1117,17 @@ function generateSaveCode(){
   
   // Store the save code with save data
   if(!G.saveCodes) G.saveCodes = {};
+  let saveLabel = 'Save ' + (Object.keys(G.saveCodes).length + 1);
   G.saveCodes[code] = {
     data: saveData,
     timestamp: Date.now(),
-    version: '3.122',
-    label: ''
+    version: '4.0',
+    label: saveLabel
   };
   
   // Add to recent saves
   if(!G.recentSaves) G.recentSaves = [];
-  G.recentSaves.unshift({code: code, label: G.saveCodes[code].label, timestamp: Date.now()});
+  G.recentSaves.unshift({code: code, label: saveLabel, timestamp: Date.now()});
   G.recentSaves = G.recentSaves.slice(0, 10); // Keep only 10 most recent
   
   save();
