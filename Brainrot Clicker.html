@@ -63,8 +63,8 @@ const SKILL_TREES={
     description: 'Enhance clicking power and unlock combo abilities',
     color: '#ff6b35',
     skills: [
-      {id: 'click_combo', name: 'Combo Master', cost: 5, maxLevel: 10, effect: (lvl) => lvl * 0.1, desc: '+10% combo chance per level'},
-      {id: 'click_crit', name: 'Critical Strikes', cost: 8, maxLevel: 5, effect: (lvl) => lvl * 0.05, desc: '+5% critical chance per level'},
+      {id: 'click_lucky', name: 'Lucky Click', cost: 5, maxLevel: 10, effect: (lvl) => 0.0005 + (lvl * 0.0005), desc: '+0.05% 5x boost chance per level'},
+      {id: 'click_discount', name: 'Upgrade Discount', cost: 8, maxLevel: 5, effect: (lvl) => 1 - (lvl * 0.05), desc: '-5% upgrade cost per level'},
       {id: 'click_speed', name: 'Rapid Taps', cost: 12, maxLevel: 8, effect: (lvl) => 1 + lvl * 0.2, desc: '+20% click speed per level'},
       {id: 'click_multi', name: 'Multiplier Boost', cost: 20, maxLevel: 3, effect: (lvl) => 1 + lvl * 0.5, desc: '+50% click power per level'}
     ]
@@ -377,13 +377,11 @@ const PRICE_CAP=1000000000000000;
 const MUTATIONS=[{id:'radiation',name:'Radiation',mult:1.5,color:'#7CFC00',weight:10},{id:'gold',name:'Gold',mult:2,color:'#ffd700',weight:6},{id:'diamond',name:'Diamond',mult:3,color:'#00d4ff',weight:3},{id:'heavenly',name:'Heavenly',mult:5,color:'#f5f3ff',weight:1}];
 function fmt(n){n=Math.floor(n);if(n>=INFINITY_T)return'InfinityT';if(n>=1e12)return(n/1e12).toFixed(2)+'T';if(n>=1e9)return(n/1e9).toFixed(2)+'B';if(n>=1e6)return(n/1e6).toFixed(2)+'M';if(n>=1e3)return(n/1e3).toFixed(1)+'K';return String(n)}
 function evoCap(){return 100000+(G.prestige||0)*100000}function evo(id){return Math.min(G.evos[id]||1,evoCap())}function isTungGod(){return evo('tung')>=200000}function displayName(b){return b.id==='tung'&&isTungGod()?b.godName:b.name}function displayPpc(b){return b.ppc*evo(b.id)}function maxLvl(){return 5+G.prestige*5}function prestigeNeed(){return 10000000000*(G.prestige+1)}function missingBrainrots(){return BRAINROTS.filter(b=>b.cost>0&&!b.noPrestige&&!G.unlocked.includes(b.id))}function allOwned(){return missingBrainrots().length===0}
-function cur(){return BRAINROTS.find(b=>b.id===G.current)||BRAINROTS[0]}function incomeBoost(){return Date.now()<(G.boostUntil||0)?5:1}function cardBoost(id){return Math.pow(1.5,(G.cardBoosts&&G.cardBoosts[id])||0)}function ppc(){let b=cur(),bonus=0;UPGRADES.forEach(u=>bonus+=u.effect*(G.levels[u.id]||0));let baseValue=(displayPpc(b)*cardBoost(b.id)+bonus)*Math.pow(2,G.prestige)*incomeBoost();let clickMultiplier=1;let critMultiplier=1;let speedMultiplier=1;let multiBoost=1; // Apply Click Mastery skills
-  clickMultiplier*=getSkillBonus('click','click_combo');
-  critMultiplier*=getSkillBonus('click','click_crit');
+function cur(){return BRAINROTS.find(b=>b.id===G.current)||BRAINROTS[0]}function incomeBoost(){return Date.now()<(G.boostUntil||0)?5:1}function cardBoost(id){return Math.pow(1.5,(G.cardBoosts&&G.cardBoosts[id])||0)}function ppc(){let b=cur(),bonus=0;UPGRADES.forEach(u=>bonus+=u.effect*(G.levels[u.id]||0));let baseValue=(displayPpc(b)*cardBoost(b.id)+bonus)*Math.pow(2,G.prestige)*incomeBoost();let speedMultiplier=1;let multiBoost=1; // Apply Click Mastery skills
   speedMultiplier*=getSkillBonus('click','click_speed');
   multiBoost*=getSkillBonus('click','click_multi');
-  let totalMultiplier=clickMultiplier*critMultiplier*speedMultiplier*multiBoost;
-  console.log('PPC Debug:', {baseValue, clickMultiplier, critMultiplier, speedMultiplier, multiBoost, totalMultiplier, brainrot: b.id, ppc: b.ppc});
+  let totalMultiplier=speedMultiplier*multiBoost;
+  console.log('PPC Debug:', {baseValue, speedMultiplier, multiBoost, totalMultiplier, brainrot: b.id, ppc: b.ppc});
   return Math.floor(baseValue*totalMultiplier);}function pps(){let x=0;AUTOS.forEach(u=>x+=u.effect*(G.levels[u.id]||0));let baseValue=x*Math.pow(2,G.prestige)*incomeBoost();let efficiencyBonus=getSkillBonus('auto','auto_efficiency');let productionBoost=getSkillBonus('auto','auto_boost');let totalMultiplier=efficiencyBonus*productionBoost;return Math.floor(baseValue*totalMultiplier);}function safeBigInt(value) {
   try {
     if (typeof value === 'bigint') return value;
@@ -413,7 +411,7 @@ function safeBigIntToNumber(bigintValue) {
   }
 }
 
-function cost(u){try{const costValue=safeBigInt(u.cost)*safeBigInt(Math.pow(1.65,G.levels[u.id]||0));return safeBigIntToNumber(costValue)}catch(error){logError('Cost Calculation Error',error);return u.cost||0}}
+function cost(u){try{let costValue=safeBigInt(u.cost)*safeBigInt(Math.pow(1.65,G.levels[u.id]||0));let discountMultiplier=1;if(G.skillLevels&&G.skillLevels.click&&G.skillLevels.click.click_discount){discountMultiplier=1-(G.skillLevels.click.click_discount*0.05)}costValue=safeBigInt(safeBigIntToNumber(costValue)*discountMultiplier);return safeBigIntToNumber(costValue)}catch(error){logError('Cost Calculation Error',error);return u.cost||0}}
 
 // Save operation mutex to prevent race conditions
 let saveMutex = false;
@@ -589,7 +587,7 @@ function safelyUpdateContainer(container, htmlStrings) {
     }
   }
 }
-function clicker(e){if(Math.random()<0.0005){G.boostUntil=Math.max(G.boostUntil||0,Date.now()+90000);toast('⚡ 5x income boost for 1:30!')}let v=ppc();G.points+=v;G.runEarned+=v;G.lifetimeEarned+=v;G.totalClicks++;let im=document.getElementById('charImg');im.classList.add('b');setTimeout(()=>im.classList.remove('b'),80);if(G.settings.particles)part(e,v);if(G.settings.rings)ring(e);speak();checkSkillMilestones();ui()}
+function clicker(e){let luckyChance=0.0005;if(G.skillLevels&&G.skillLevels.click&&G.skillLevels.click.click_lucky){luckyChance=G.skillLevels.click.click_lucky*0.0005}if(Math.random()<luckyChance){G.boostUntil=Math.max(G.boostUntil||0,Date.now()+90000);toast('⚡ 5x income boost for 1:30!')}let v=ppc();G.points+=v;G.runEarned+=v;G.lifetimeEarned+=v;G.totalClicks++;let im=document.getElementById('charImg');im.classList.add('b');setTimeout(()=>im.classList.remove('b'),80);if(G.settings.particles)part(e,v);if(G.settings.rings)ring(e);speak();checkSkillMilestones();ui()}
 
 function checkSkillMilestones(){
   if(!G.skillMilestones) G.skillMilestones = {};
