@@ -1331,89 +1331,89 @@ function renderMilestones(){
     }
     
     let milestonesHtml = '';
-  
-  // Click milestones
-  const clickMilestones = [100, 500, 1000, 5000, 10000, 50000, 100000];
-  milestonesHtml += '<div style="margin-bottom:15px"><h4 style="color:var(--accent);margin-bottom:8px">🖱️ Click Milestones</h4>';
-  clickMilestones.forEach(m => {
-    let completed = G.skillMilestones && G.skillMilestones['click_'+m];
-    let progress = Math.min(100, (G.totalClicks / m) * 100);
-    let color = completed ? 'var(--green)' : 'var(--accent)';
+    
+    // Click milestones
+    const clickMilestones = [100, 500, 1000, 5000, 10000, 50000, 100000];
+    milestonesHtml += '<div style="margin-bottom:15px"><h4 style="color:var(--accent);margin-bottom:8px">🖱️ Click Milestones</h4>';
+    clickMilestones.forEach(m => {
+      let completed = G.skillMilestones && G.skillMilestones['click_'+m];
+      let progress = Math.min(100, (G.totalClicks / m) * 100);
+      let color = completed ? 'var(--green)' : 'var(--accent)';
+      milestonesHtml += `
+        <div style="margin-bottom:6px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
+            <span style="font-size:0.85rem">${completed ? '✅' : '⏳'} ${fmt(m)} clicks</span>
+            <span style="font-size:0.75rem;color:var(--muted)">${G.totalClicks}/${m}</span>
+          </div>
+          <div style="background:rgba(255,255,255,0.1);border-radius:10px;height:8px;overflow:hidden">
+            <div style="background:${color};height:100%;width:${progress}%;transition:width 0.3s"></div>
+          </div>
+        </div>
+      `;
+    });
+    milestonesHtml += '</div>';
+    
+    // Points milestones
+    const pointMilestones = [1000, 10000, 100000, 1000000, 10000000, 100000000];
+    milestonesHtml += '<div style="margin-bottom:15px"><h4 style="color:var(--accent);margin-bottom:8px">💰 Points Milestones</h4>';
+    pointMilestones.forEach(m => {
+      let completed = G.skillMilestones && G.skillMilestones['points_'+m];
+      let progress = Math.min(100, (G.lifetimeEarned / m) * 100);
+      let color = completed ? 'var(--green)' : 'var(--accent)';
+      milestonesHtml += `
+        <div style="margin-bottom:6px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
+            <span style="font-size:0.85rem">${completed ? '✅' : '⏳'} ${fmt(m)} points</span>
+            <span style="font-size:0.75rem;color:var(--muted)">${fmt(G.lifetimeEarned)}/${fmt(m)}</span>
+          </div>
+          <div style="background:rgba(255,255,255,0.1);border-radius:10px;height:8px;overflow:hidden">
+            <div style="background:${color};height:100%;width:${progress}%;transition:width 0.3s"></div>
+          </div>
+        </div>
+      `;
+    });
+    milestonesHtml += '</div>';
+    
+    // Brainrot milestones
+    const brainMilestones = [3, 5, 10, 15, 20];
+    milestonesHtml += '<div style="margin-bottom:15px"><h4 style="color:var(--accent);margin-bottom:8px">🧠 Brainrot Milestones</h4>';
+    brainMilestones.forEach(m => {
+      let completed = G.skillMilestones && G.skillMilestones['brain_'+m];
+      let progress = Math.min(100, (G.unlocked.length / m) * 100);
+      let color = completed ? 'var(--green)' : 'var(--accent)';
+      milestonesHtml += `
+        <div style="margin-bottom:6px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
+            <span style="font-size:0.85rem">${completed ? '✅' : '⏳'} ${m} Brainrots</span>
+            <span style="font-size:0.75rem;color:var(--muted)">${G.unlocked.length}/${m}</span>
+          </div>
+          <div style="background:rgba(255,255,255,0.1);border-radius:10px;height:8px;overflow:hidden">
+            <div style="background:${color};height:100%;width:${progress}%;transition:width 0.3s"></div>
+          </div>
+        </div>
+      `;
+    });
+    milestonesHtml += '</div>';
+    
+    // Prestige milestone
+    milestonesHtml += '<div><h4 style="color:var(--accent);margin-bottom:8px">⭐ Prestige Milestone</h4>';
+    let prestigeCompleted = G.skillMilestones && G.skillMilestones['prestige_1'];
+    let prestigeProgress = G.prestige >= 1 ? 100 : 0;
+    let prestigeColor = prestigeCompleted ? 'var(--green)' : 'var(--accent)';
     milestonesHtml += `
       <div style="margin-bottom:6px">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
-          <span style="font-size:0.85rem">${completed ? '✅' : '⏳'} ${fmt(m)} clicks</span>
-          <span style="font-size:0.75rem;color:var(--muted)">${G.totalClicks}/${m}</span>
+          <span style="font-size:0.85rem">${prestigeCompleted ? '✅' : '⏳'} First Prestige (5 SP)</span>
+          <span style="font-size:0.75rem;color:var(--muted)">${G.prestige >= 1 ? 'Completed' : 'Not yet'}</span>
         </div>
         <div style="background:rgba(255,255,255,0.1);border-radius:10px;height:8px;overflow:hidden">
-          <div style="background:${color};height:100%;width:${progress}%;transition:width 0.3s"></div>
+          <div style="background:${prestigeColor};height:100%;width:${prestigeProgress}%;transition:width 0.3s"></div>
         </div>
       </div>
     `;
-  });
-  milestonesHtml += '</div>';
-  
-  // Points milestones
-  const pointMilestones = [1000, 10000, 100000, 1000000, 10000000, 100000000];
-  milestonesHtml += '<div style="margin-bottom:15px"><h4 style="color:var(--accent);margin-bottom:8px">💰 Points Milestones</h4>';
-  pointMilestones.forEach(m => {
-    let completed = G.skillMilestones && G.skillMilestones['points_'+m];
-    let progress = Math.min(100, (G.lifetimeEarned / m) * 100);
-    let color = completed ? 'var(--green)' : 'var(--accent)';
-    milestonesHtml += `
-      <div style="margin-bottom:6px">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
-          <span style="font-size:0.85rem">${completed ? '✅' : '⏳'} ${fmt(m)} points</span>
-          <span style="font-size:0.75rem;color:var(--muted)">${fmt(G.lifetimeEarned)}/${fmt(m)}</span>
-        </div>
-        <div style="background:rgba(255,255,255,0.1);border-radius:10px;height:8px;overflow:hidden">
-          <div style="background:${color};height:100%;width:${progress}%;transition:width 0.3s"></div>
-        </div>
-      </div>
-    `;
-  });
-  milestonesHtml += '</div>';
-  
-  // Brainrot milestones
-  const brainMilestones = [3, 5, 10, 15, 20];
-  milestonesHtml += '<div style="margin-bottom:15px"><h4 style="color:var(--accent);margin-bottom:8px">🧠 Brainrot Milestones</h4>';
-  brainMilestones.forEach(m => {
-    let completed = G.skillMilestones && G.skillMilestones['brain_'+m];
-    let progress = Math.min(100, (G.unlocked.length / m) * 100);
-    let color = completed ? 'var(--green)' : 'var(--accent)';
-    milestonesHtml += `
-      <div style="margin-bottom:6px">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
-          <span style="font-size:0.85rem">${completed ? '✅' : '⏳'} ${m} Brainrots</span>
-          <span style="font-size:0.75rem;color:var(--muted)">${G.unlocked.length}/${m}</span>
-        </div>
-        <div style="background:rgba(255,255,255,0.1);border-radius:10px;height:8px;overflow:hidden">
-          <div style="background:${color};height:100%;width:${progress}%;transition:width 0.3s"></div>
-        </div>
-      </div>
-    `;
-  });
-  milestonesHtml += '</div>';
-  
-  // Prestige milestone
-  milestonesHtml += '<div><h4 style="color:var(--accent);margin-bottom:8px">⭐ Prestige Milestone</h4>';
-  let prestigeCompleted = G.skillMilestones && G.skillMilestones['prestige_1'];
-  let prestigeProgress = G.prestige >= 1 ? 100 : 0;
-  let prestigeColor = prestigeCompleted ? 'var(--green)' : 'var(--accent)';
-  milestonesHtml += `
-    <div style="margin-bottom:6px">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
-        <span style="font-size:0.85rem">${prestigeCompleted ? '✅' : '⏳'} First Prestige (5 SP)</span>
-        <span style="font-size:0.75rem;color:var(--muted)">${G.prestige >= 1 ? 'Completed' : 'Not yet'}</span>
-      </div>
-      <div style="background:rgba(255,255,255,0.1);border-radius:10px;height:8px;overflow:hidden">
-        <div style="background:${prestigeColor};height:100%;width:${prestigeProgress}%;transition:width 0.3s"></div>
-      </div>
-    </div>
-  `;
-  milestonesHtml += '</div>';
-  
-  container.innerHTML = milestonesHtml;
+    milestonesHtml += '</div>';
+    
+    container.innerHTML = milestonesHtml;
   } catch(error) {
     console.error('Error rendering milestones:', error);
   }
