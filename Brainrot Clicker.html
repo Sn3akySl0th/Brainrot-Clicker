@@ -1289,7 +1289,12 @@ function closeImportSaveCode(){
 
 function renderSaveCodes(){
   let container = document.getElementById('saveCodesContainer');
-  if(!container) return;
+  if(!container) {
+    console.log('saveCodesContainer not found');
+    return;
+  }
+  
+  console.log('Rendering save codes. Count:', G.saveCodes ? Object.keys(G.saveCodes).length : 0);
   
   let codesHtml = '';
   
@@ -1314,6 +1319,7 @@ function renderSaveCodes(){
   }
   
   container.innerHTML = codesHtml;
+  console.log('Save codes rendered. HTML length:', codesHtml.length);
 }
 </script>
 
