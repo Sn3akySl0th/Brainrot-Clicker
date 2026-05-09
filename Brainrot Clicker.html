@@ -939,7 +939,7 @@ function generateSaveCode(){
     data: saveData,
     timestamp: Date.now(),
     version: '3.122',
-    label: prompt('Enter a label for this save (optional):') || 'Save ' + saveCodeCounter++
+    label: ''
   };
   
   // Add to recent saves
@@ -948,7 +948,7 @@ function generateSaveCode(){
   G.recentSaves = G.recentSaves.slice(0, 10); // Keep only 10 most recent
   
   save();
-  showSaveCodeManager();
+  showSaveCodeLabelInput(code);
 }
 
 function copySaveCode(code){
