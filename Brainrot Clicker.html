@@ -1024,7 +1024,7 @@
     </div>
   </div>
   <div class="update-banner">
-    🎉 V 4.0 MAJOR UPDATE - Skill System, Save Features & Image Improvements!</div>
+    🎉 V 4.0 MAJOR UPDATE - Skill System, Save Features &amp; Image Improvements!</div>
   <div id="nav"><button class="nav-btn active" onclick="page('game')">🎮 Click</button><button class="nav-btn" id="shopNavBtn"
       onclick="page('shop')">🛒 Shop</button><button class="nav-btn" onclick="page('brainrots')">🧠
       Brainrots</button><button class="nav-btn" onclick="page('cards')">🃏 Cards</button><button class="nav-btn"
@@ -1109,8 +1109,7 @@
       </div>
       <div class="card aff">
         <div class="name">Chitlin Sandwich</div>
-        <div class="desc">CS:GO-style roll. Costs 1B and gives 100x evo to one Brainrot. Opening one unlocks Spaghetti
-          Tualetti.</div>
+        <div class="desc">CS:GO-style roll. Costs 1B and gives 100x evo to one Brainrot.</div>
         <div class="foot"><span class="cost" id="chitlinCratePrice">🪙 1B each</span><span class="eff">x100</span></div>
         <div class="btn-wrap-6"><button class="btn"
             onclick="openCrates('chitlin',1)">Open 1</button><button class="btn" onclick="openCrates('chitlin',5)">Open
@@ -1208,6 +1207,12 @@
       <div class="section section-no-top">🎮 Gameplay</div><button class="btn" id="autoSwitchUnlockToggle"
         onclick="toggleAutoSwitchUnlock()">🎯 Auto-switch on unlock: ON</button>
     </div>
+    <div class="box mb-13" id="ledunkCosmeticBox" hidden>
+      <div class="section section-no-top">🥤 Cosmetics</div>
+      <p class="small" style="color:var(--muted)">After you redeem code <code>LEDUNK</code>, you can switch John Pork between
+        the Dunkin look and classic art here anytime.</p>
+      <button class="btn" id="ledunkCosmeticToggle" onclick="toggleLedunkCosmeticSetting()">🥤 Dunkin look: ON</button>
+    </div>
     <div class="box">
       <div class="section section-no-top">🌟 Prestige</div>
       <div class="row"><span>Requirement</span><b id="prestReqSet">All Brainrots + 10B</b></div><button class="btn"
@@ -1246,15 +1251,17 @@
           card/lucky block price scaling resets on prestige.</li>
         <li>📋 <b>Quest Loop:</b> New quest reset button appears after all quests are complete, grants +10 Skill Points,
           and resets quests for replay.</li>
-        <li>🥤 <b>New Secret Code:</b> <code>LEDUNK</code> transforms John Pork into Dunkin using a custom image.</li>
+        <li>🧽 <b>Roster tweaks:</b> Spoony Spoonicus (45M / 500K PPC), Blue Collar Spongebob (100M / 5M PPC), Job Job Job
+          Sahur 15M, John Pork 75M PPC, Spaghetti Tualetti always in Shop (no Chitlin gate).</li>
+        <li>🥤 <b>John Pork Dunkin cosmetic:</b> Code <code>LEDUNK</code> (one-time) unlocks the look. Code <code>LEDUNKIN</code>
+          toggles Dunkin vs classic anytime. After <code>LEDUNK</code>, <b>Settings &rarr; Cosmetics</b> has the same toggle.</li>
         <li>🆕 V 3.122: Ryan Butlord has joined the Brainrot lineup.</li>
         <li>📦 Lucky Blocks now have a price limit of one quadrillion points.</li>
-        <li>🍝 All you need to do now is open a Chitlin Burger Lucky Block to unlock Spaghetti Tualetti in the Shop.
-        </li>
+        <li>🍝 Spaghetti Tualetti is always in the Shop; Triple crates can still roll him for a big evo boost.</li>
         <li>⭐ The Prestige button was added to the Click page so it is easier to find.</li>
         <li>📦 Card packs cost 50K points at first and increase by 1.3x after every purchase. Open up to 3 packs at
           once.</li>
-        <li>🍝 Triple Evolution Lucky Blocks can now roll Spaghetti Tualetti and unlock him.</li>
+        <li>🍝 Triple Evolution Lucky Blocks can roll Spaghetti Tualetti for evo (he is also always in the Shop).</li>
         <li>⭐ Spaghetti Tualetti is required to prestige.</li>
         <li>⚡ Clicking now has a tiny chance to trigger a 5x income boost for 1 minute and 30 seconds.</li>
         <li>🎁 A new public code was added.</li>
@@ -1327,8 +1334,8 @@
         calculations<br>• Update modal now only shows for new updates<br><br>🆕 <b>MAY 9 ADDITIONS (V 4.0):</b><br>•
         Offline progress now has a 12h anti-cheese cap + Last Offline Gain stat<br>• Auto-switch toggle for first-time
         unlocks<br>• Card pack cap set to 500B and new card quests added<br>• Quest loop reset button (+10 Skill
-        Points)<br>• New secret code: LEDUNK (John Pork ➜ Dunkin)</div><button class="btn"
-        onclick="closeUpdateModal()" class="mt-15">Got it! Let's play!</button>
+        Points)<br>• Secret codes: LEDUNK (one-time Dunkin unlock) · LEDUNKIN (toggle Dunkin look, unlimited)<br>• Settings &rarr; Cosmetics (shows after LEDUNK) matches that toggle<br>• Spoony Spoonicus (45M, 500K PPC); Blue Collar Spongebob (100M, 5M PPC); Job Job Job 15M; John Pork 75M PPC<br>• Spaghetti Tualetti always in Shop (no Chitlin gate)</div>
+      <button type="button" class="btn mt-15" onclick="closeUpdateModal()">Got it! Let's play!</button>
     </div>
   </div>
   <div id="toast"></div>
@@ -1337,7 +1344,7 @@
     const TUNG_GOD_IMG = "data:image/jpeg;base64,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";
     const TUNG_IMG = "data:image/jpeg;base64,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", TIM_IMG = "data:image/jpeg;base64,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";
     const INFINITY_T = 1e18;
-    const BRAINROTS = [{ id: 'tung', name: 'Tung Tung Sahur', godName: 'Tung Tung God', img: '/Brainrot-Clicker/images/tung_tung_sahur.png', godImg: TUNG_GOD_IMG, ppc: 1, cost: 0, color: '#ff8c42', sound: 'Tung', rarity: 'common' }, { id: 'tim', name: 'Tim Cheese', img: '/Brainrot-Clicker/images/tim_cheese.png', ppc: 3, cost: 90, color: '#f1c40f', sound: 'Tim', rarity: 'common' }, { id: 'patapim', name: 'Brr Brr Patapim', emoji: '🌳', ppc: 5, cost: 1170, color: '#2ecc71', sound: 'Brr Brr', rarity: 'common', img: '/Brainrot-Clicker/images/brr_brr.png' }, { id: 'bomb', name: 'Bombardiro Crocodilo', emoji: '🐊', ppc: 8, cost: 3000, color: '#27ae60', sound: 'Bombardiro', rarity: 'common', img: '/Brainrot-Clicker/images/Bombardiro_Crocodilo.png' }, { id: 'frulli', name: 'Frulli Frullia', emoji: '🍓', ppc: 11, cost: 6000, color: '#ff5ca8', sound: 'Frulli', rarity: 'rare', img: '/Brainrot-Clicker/images/fruli_frulia.png' }, { id: 'lirili', name: 'Lirili Larila', emoji: '🐘', ppc: 16, cost: 10800, color: '#9b59b6', sound: 'Lirili', rarity: 'epic', img: '/Brainrot-Clicker/images/Lirili_Larila.png' }, { id: 'trala', name: 'Tralalero Tralala', emoji: '🦈', ppc: 20, cost: 12000, color: '#00d4ff', sound: 'Tralalero', rarity: 'rare', img: '/Brainrot-Clicker/images/tralalero tralala.png' }, { id: 'gusini', name: 'Bombombini Gusini', emoji: '💣', ppc: 105, cost: 22500, color: '#ff4d4d', sound: 'Bombombini', rarity: 'epic', img: '/Brainrot-Clicker/images/bombini_gusini.png' }, { id: 'coco', name: 'Cocofanto Elefanto', emoji: '🥥', ppc: 200, cost: 54000, color: '#c47f4a', sound: 'Cocofanto', rarity: 'epic', img: '/Brainrot-Clicker/images/cocofanto_elefanto.png' }, { id: 'ryan', name: 'Ryan Butlord', emoji: '🧈', ppc: 450, cost: 70000, color: '#ff9f43', sound: 'Ryan Butlord', rarity: 'rare', img: '/Brainrot-Clicker/images/ryan_buttlord.png' }, { id: 'odin', name: 'Odin Din Dun', emoji: '🧙', ppc: 1000, cost: 120000, color: '#7fdbff', sound: 'Odin Din Dun', rarity: 'epic', img: '/Brainrot-Clicker/images/Odindin-Dean-Dean-Dunmadin.png' }, { id: 'homer', name: 'Homer Dropped His Donut', emoji: '🍩', ppc: 10000, cost: 600000, color: '#ffcc33', sound: 'Donut', rarity: 'epic', img: '/Brainrot-Clicker/images/homer_dropped_his_donut.png' }, { id: 'ander', name: 'Ander Dingus', emoji: '🤓', ppc: 30000, cost: 1200000, color: '#b8ff6a', sound: 'Ander Dingus', rarity: 'superrare', img: '/Brainrot-Clicker/images/ander_dingus.png' }, { id: 'mateo', name: 'Mateo', emoji: '🧢', ppc: 100000, cost: 10200000, color: '#6ac8ff', sound: 'Mateo', rarity: 'epic', img: '/Brainrot-Clicker/images/mateo_brainrot.png' }, { id: 'jobjob', name: 'Job Job Job Sahur', emoji: '💼', ppc: 150000, cost: 12000000, color: '#ffa64d', sound: 'Job Job Job', rarity: 'epic', img: '/Brainrot-Clicker/images/job jon job sahur.png' }, { id: 'john', name: 'John Pork', emoji: '🐷', ppc: 750000, cost: 4200000000, color: '#ff9bb3', sound: 'John Pork', rarity: 'legend', img: '/Brainrot-Clicker/images/john_pork.png' }, { id: 'spaghetti', name: 'Spaghetti Tualetti', emoji: '🍝', ppc: 50000, cost: 5500000, color: '#ff6348', sound: 'Spaghetti Tualetti', rarity: 'legend', tripleOnly: true, img: '/Brainrot-Clicker/images/spaghetti tualetti.png' }, { id: 'chitlinburger', name: 'Chitlin Burger', emoji: '🍔', ppc: 100000000000000, cost: Infinity, color: '#c8860a', sound: 'Chitlin Burger', rarity: 'legend', secret: true, noPrestige: true, img: '/Brainrot-Clicker/images/chitlin_burger.png' }];
+    const BRAINROTS = [{ id: 'tung', name: 'Tung Tung Sahur', godName: 'Tung Tung God', img: '/Brainrot-Clicker/images/tung_tung_sahur.png', godImg: TUNG_GOD_IMG, ppc: 1, cost: 0, color: '#ff8c42', sound: 'Tung', rarity: 'common' }, { id: 'tim', name: 'Tim Cheese', img: '/Brainrot-Clicker/images/tim_cheese.png', ppc: 3, cost: 90, color: '#f1c40f', sound: 'Tim', rarity: 'common' }, { id: 'patapim', name: 'Brr Brr Patapim', emoji: '🌳', ppc: 5, cost: 1170, color: '#2ecc71', sound: 'Brr Brr', rarity: 'common', img: '/Brainrot-Clicker/images/brr_brr.png' }, { id: 'bomb', name: 'Bombardiro Crocodilo', emoji: '🐊', ppc: 8, cost: 3000, color: '#27ae60', sound: 'Bombardiro', rarity: 'common', img: '/Brainrot-Clicker/images/Bombardiro_Crocodilo.png' }, { id: 'frulli', name: 'Frulli Frullia', emoji: '🍓', ppc: 11, cost: 6000, color: '#ff5ca8', sound: 'Frulli', rarity: 'rare', img: '/Brainrot-Clicker/images/fruli_frulia.png' }, { id: 'lirili', name: 'Lirili Larila', emoji: '🐘', ppc: 16, cost: 10800, color: '#9b59b6', sound: 'Lirili', rarity: 'epic', img: '/Brainrot-Clicker/images/Lirili_Larila.png' }, { id: 'trala', name: 'Tralalero Tralala', emoji: '🦈', ppc: 20, cost: 12000, color: '#00d4ff', sound: 'Tralalero', rarity: 'rare', img: '/Brainrot-Clicker/images/tralalero tralala.png' }, { id: 'gusini', name: 'Bombombini Gusini', emoji: '💣', ppc: 105, cost: 22500, color: '#ff4d4d', sound: 'Bombombini', rarity: 'epic', img: '/Brainrot-Clicker/images/bombini_gusini.png' }, { id: 'coco', name: 'Cocofanto Elefanto', emoji: '🥥', ppc: 200, cost: 54000, color: '#c47f4a', sound: 'Cocofanto', rarity: 'epic', img: '/Brainrot-Clicker/images/cocofanto_elefanto.png' }, { id: 'ryan', name: 'Ryan Butlord', emoji: '🧈', ppc: 450, cost: 70000, color: '#ff9f43', sound: 'Ryan Butlord', rarity: 'rare', img: '/Brainrot-Clicker/images/ryan_buttlord.png' }, { id: 'odin', name: 'Odin Din Dun', emoji: '🧙', ppc: 1000, cost: 120000, color: '#7fdbff', sound: 'Odin Din Dun', rarity: 'epic', img: '/Brainrot-Clicker/images/Odindin-Dean-Dean-Dunmadin.png' }, { id: 'homer', name: 'Homer Dropped His Donut', emoji: '🍩', ppc: 10000, cost: 600000, color: '#ffcc33', sound: 'Donut', rarity: 'epic', img: '/Brainrot-Clicker/images/homer_dropped_his_donut.png' }, { id: 'ander', name: 'Ander Dingus', emoji: '🤓', ppc: 30000, cost: 1200000, color: '#b8ff6a', sound: 'Ander Dingus', rarity: 'superrare', img: '/Brainrot-Clicker/images/ander_dingus.png' }, { id: 'mateo', name: 'Mateo', emoji: '🧢', ppc: 100000, cost: 10200000, color: '#6ac8ff', sound: 'Mateo', rarity: 'epic', img: '/Brainrot-Clicker/images/mateo_brainrot.png' }, { id: 'jobjob', name: 'Job Job Job Sahur', emoji: '💼', ppc: 150000, cost: 12000000, color: '#ffa64d', sound: 'Job Job Job', rarity: 'epic', img: '/Brainrot-Clicker/images/job jon job sahur.png' }, { id: 'spoony', name: 'Spoony Spoonicus', emoji: '🥄', ppc: 500000, cost: 45000000, color: '#b0b0b0', sound: 'Spoony Spoonicus', rarity: 'legend', img: 'images/0b226c450798410ac541646c86ec31afd840e5beab817a5d84fa821e7db61981ec84c3b4a3f072a7a2e1899c9fb06c6e652ab527d16c5da294b0041cf274ab340b5888d3babee20899e84f8b3a1a3aee921e82ed4adb3997903a5de3c8cb5896.png' }, { id: 'bluecollarsponge', name: 'Blue Collar Spongebob', emoji: '🔧', ppc: 5000000, cost: 100000000, color: '#5a7aad', sound: 'Blue Collar', rarity: 'legend', img: 'images/0b226c450798410ac541646c86ec31afd840e5beab817a5d84fa821e7db61981ec84c3b4a3f072a7a2e1899c9fb06c6eb8fc6f04e3aeb9c22c0764470028179a733887bdbae1c80a546ca241090cb67a88fe2f4101d6abf810023cb499293427.png' }, { id: 'john', name: 'John Pork', emoji: '🐷', ppc: 75000000, cost: 4200000000, color: '#ff9bb3', sound: 'John Pork', rarity: 'legend', img: '/Brainrot-Clicker/images/john_pork.png' }, { id: 'spaghetti', name: 'Spaghetti Tualetti', emoji: '🍝', ppc: 50000, cost: 5500000, color: '#ff6348', sound: 'Spaghetti Tualetti', rarity: 'legend', tripleOnly: true, bio: 'The pasta-powered icon. Buy him in the Shop anytime, or land him on a Triple Evolution crate for a huge evo spike.', img: '/Brainrot-Clicker/images/spaghetti tualetti.png' }, { id: 'chitlinburger', name: 'Chitlin Burger', emoji: '🍔', ppc: 100000000000000, cost: Infinity, color: '#c8860a', sound: 'Chitlin Burger', rarity: 'legend', secret: true, noPrestige: true, img: '/Brainrot-Clicker/images/chitlin_burger.png' }];
     const UPGRADES = [{ id: 'c1', name: 'Double Tap', emoji: '👆', desc: '+2 PPC', cost: 92, effect: 2, type: 'click' }, { id: 'c2', name: 'Power Punch', emoji: '👊', desc: '+5 PPC', cost: 480, effect: 5, type: 'click' }, { id: 'c3', name: 'Mega Smash', emoji: '💥', desc: '+15 PPC', cost: 2400, effect: 15, type: 'click' }, { id: 'c4', name: 'Sigma Grip', emoji: '🔱', desc: '+50 PPC', cost: 15000, effect: 50, type: 'click' }, { id: 'c5', name: 'God Click', emoji: '⚡', desc: '+200 PPC', cost: 90000, effect: 200, type: 'click' }];
     const AUTOS = [{ id: 'a1', name: 'Auto Tapper', emoji: '🤖', desc: '+1/sec', cost: 150, effect: 1, type: 'auto' }, { id: 'a2', name: 'Brainrot Farm', emoji: '🌾', desc: '+4/sec', cost: 700, effect: 4, type: 'auto' }, { id: 'a3', name: 'Chaos Engine', emoji: '⚙️', desc: '+12/sec', cost: 3200, effect: 12, type: 'auto' }, { id: 'a4', name: 'Sigma Factory', emoji: '🏭', desc: '+35/sec', cost: 14000, effect: 35, type: 'auto' }, { id: 'a5', name: 'Brainrot Matrix', emoji: '🔮', desc: '+90/sec', cost: 58000, effect: 90, type: 'auto' }, { id: 'a6', name: 'Neural Conveyor', emoji: '🧬', desc: '+220/sec', cost: 230000, effect: 220, type: 'auto' }, { id: 'a7', name: 'Meme Reactor', emoji: '☢️', desc: '+520/sec', cost: 900000, effect: 520, type: 'auto' }, { id: 'a8', name: 'Brainrot Singularity', emoji: '🕳️', desc: '+1200/sec', cost: 3200000, effect: 1200, type: 'auto' }];
     const QUESTS = [
@@ -1361,7 +1368,7 @@
       { id: 'q_cardboost3', name: 'Card Blacksmith', desc: 'Get 3 permanent card boosts', cat: 'hard', reward: 'skillpoints', amount: 10, rewardDesc: '+10 Skill Points', check: function (g) { return Object.values(g.cardBoosts || {}).reduce(function (a, b) { return a + b; }, 0) >= 3; } },
       { id: 'q_infinityt', name: 'How did we get here?', desc: 'Reach InfinityT lifetime points', cat: 'legend', reward: 'secretcode', amount: 1, rewardDesc: 'Will reward a secret code + 50 Skill Points', check: function (g) { return g.lifetimeEarned >= INFINITY_T; } }
     ];
-    const CODES = [{ code: 'BRAINROT', reward: 'points', amount: 75, desc: '+75 points' }, { code: 'TUNGTUNG', reward: 'points', amount: 45, desc: '+45 points' }, { code: 'TIMCHEESE', reward: 'points', amount: 113, desc: '+113 points' }, { code: 'TUNGGOD', reward: 'tunggod', amount: 1, desc: 'x3 Tung evo and +15K points' }, { code: 'LEDUNK', reward: 'ledunk', amount: 1, desc: 'Turns John Pork into Dunkin', secret: true }, { code: '1PRESTIGE1', reward: 'prestige', amount: 1, desc: '+1 prestige', secret: true }, { code: 'GOATED2', reward: 'modpanel', amount: 1, desc: '???', secret: true }, { code: 'AREUREAL', reward: 'chitlinburger', amount: 1, desc: 'Unlocks a secret Brainrot', secret: true }, { code: 'YUMMY', reward: 'chitlinblock', amount: 1, desc: 'Free Chitlin Burger Lucky Block', secret: true }, { code: 'V3CODE', reward: 'points', amount: 30000, desc: '+30K points' }];
+    const CODES = [{ code: 'BRAINROT', reward: 'points', amount: 75, desc: '+75 points' }, { code: 'TUNGTUNG', reward: 'points', amount: 45, desc: '+45 points' }, { code: 'TIMCHEESE', reward: 'points', amount: 113, desc: '+113 points' }, { code: 'TUNGGOD', reward: 'tunggod', amount: 1, desc: 'x3 Tung evo and +15K points' }, { code: 'LEDUNK', reward: 'ledunk', amount: 1, desc: 'Turns John Pork into Dunkin', secret: true }, { code: 'LEDUNKIN', reward: 'ledunk_toggle', amount: 1, desc: 'Toggle Dunkin cosmetic on/off (unlimited)', secret: true }, { code: '1PRESTIGE1', reward: 'prestige', amount: 1, desc: '+1 prestige', secret: true }, { code: 'GOATED2', reward: 'modpanel', amount: 1, desc: '???', secret: true }, { code: 'AREUREAL', reward: 'chitlinburger', amount: 1, desc: 'Unlocks a secret Brainrot', secret: true }, { code: 'YUMMY', reward: 'chitlinblock', amount: 1, desc: 'Free Chitlin Burger Lucky Block', secret: true }, { code: 'V3CODE', reward: 'points', amount: 30000, desc: '+30K points' }];
     const SKILL_TREES = {
       click: {
         name: 'Click Mastery',
@@ -1679,7 +1686,34 @@
       document.body.appendChild(modal);
     }
 
-    let G = { points: 0, runEarned: 0, lifetimeEarned: 0, totalClicks: 0, current: 'tung', unlocked: ['tung'], levels: {}, evos: {}, redeemed: [], prestige: 0, prestigeCodeUnlocked: false, playtime: 0, crateBuys: { double: 0, triple: 0, chitlin: 0 }, settings: { particles: true, rings: true, sound: true }, questsDone: [], chitlinUnlocked: false, skillPoints: 0, skillLevels: {}, skillMilestones: {}, activeTree: 'click', boostUntil: 0, cardBuys: 0, cards: {}, codex: [], cardBoosts: {}, combinePick: [], saveCodes: {}, importedSave: null, autoProduced: 0, autoMilestones: {}, lastManualClick: Date.now() };
+    let G = { points: 0, runEarned: 0, lifetimeEarned: 0, totalClicks: 0, current: 'tung', unlocked: ['tung'], levels: {}, evos: {}, redeemed: [], prestige: 0, prestigeCodeUnlocked: false, playtime: 0, crateBuys: { double: 0, triple: 0, chitlin: 0 }, settings: { particles: true, rings: true, sound: true }, questsDone: [], chitlinUnlocked: false, ledunkUnlocked: false, ledunkRedeemed: false, ledunkCosmeticOn: false, skillPoints: 0, skillLevels: {}, skillMilestones: {}, activeTree: 'click', boostUntil: 0, cardBuys: 0, cards: {}, codex: [], cardBoosts: {}, combinePick: [], saveCodes: {}, importedSave: null, autoProduced: 0, autoMilestones: {}, lastManualClick: Date.now() };
+    const BRAINROT_SHOP_CHAIN = ['tim', 'patapim', 'bomb', 'frulli', 'lirili', 'trala', 'gusini', 'coco', 'ryan', 'odin', 'homer', 'ander', 'spaghetti', 'mateo', 'jobjob'];
+    const BRAINROT_SHOP_MULTS = [13, 2.55, 2.05, 1.75, 1.12, 1.85, 2.35, 1.32, 1.65, 4.8, 2.05, 4.5, 1.82, 1.17];
+    const BRAINROT_JOHN_BASE = 4200000000;
+    function applyBrainrotShopCosts() {
+      let p = 90;
+      const pr = Number(G && G.prestige) || 0;
+      const disc = Math.pow(0.965, pr);
+      BRAINROT_SHOP_CHAIN.forEach((id, i) => {
+        const b = BRAINROTS.find(x => x.id === id);
+        if (!b) return;
+        if (i > 0) p = Math.floor(p * BRAINROT_SHOP_MULTS[i - 1]);
+        b.cost = Math.max(1, Math.floor(p * disc));
+      });
+      const john = BRAINROTS.find(x => x.id === 'john');
+      if (john) john.cost = Math.max(1, Math.floor(BRAINROT_JOHN_BASE * Math.pow(1.085, pr) * disc));
+      const tung = BRAINROTS.find(x => x.id === 'tung');
+      if (tung) tung.cost = 0;
+      const ch = BRAINROTS.find(x => x.id === 'chitlinburger');
+      if (ch) ch.cost = Infinity;
+      const jobjobB = BRAINROTS.find(x => x.id === 'jobjob');
+      if (jobjobB) jobjobB.cost = Math.max(1, Math.floor(15000000 * disc));
+      const spoonyB = BRAINROTS.find(x => x.id === 'spoony');
+      if (spoonyB) spoonyB.cost = Math.max(1, Math.floor(45000000 * disc));
+      const bluecollar = BRAINROTS.find(x => x.id === 'bluecollarsponge');
+      if (bluecollar) bluecollar.cost = Math.max(1, Math.floor(100000000 * disc));
+    }
+    applyBrainrotShopCosts();
     const PRICE_CAP = 1000000000000000;
     const CARD_PACK_PRICE_CAP = 500000000000;
     const MUTATIONS = [{ id: 'radiation', name: 'Radiation', mult: 1.5, color: '#7CFC00', weight: 10 }, { id: 'gold', name: 'Gold', mult: 2, color: '#ffd700', weight: 6 }, { id: 'diamond', name: 'Diamond', mult: 3, color: '#00d4ff', weight: 3 }, { id: 'heavenly', name: 'Heavenly', mult: 5, color: '#f5f3ff', weight: 1 }];
@@ -1969,7 +2003,24 @@
       } catch (e) { }
     }
     function part(e, v) { let d = document.createElement('div'); d.className = 'particle'; d.textContent = '+' + fmt(v); d.style.left = e.clientX + Math.random() * 30 - 15 + 'px'; d.style.top = e.clientY - 10 + 'px'; d.style.color = cur().color; document.body.appendChild(d); setTimeout(() => d.remove(), 850) } function ring(e) { let d = document.createElement('div'); d.className = 'ring'; d.style.borderColor = cur().color; d.style.left = e.clientX + 'px'; d.style.top = e.clientY + 'px'; d.style.margin = '-10px 0 0 -10px'; document.body.appendChild(d); setTimeout(() => d.remove(), 500) }
+    const JOHN_PORK_DEFAULT_COSMETIC = { name: 'John Pork', sound: 'John Pork', img: '/Brainrot-Clicker/images/john_pork.png' };
     function applyLedunkSkin() { let john = BRAINROTS.find(x => x.id === 'john'); if (!john) return; john.name = 'Dunkin'; john.sound = 'Dunkin'; john.img = 'images/kaden.png'; }
+    function removeLedunkSkin() { let john = BRAINROTS.find(x => x.id === 'john'); if (!john) return; john.name = JOHN_PORK_DEFAULT_COSMETIC.name; john.sound = JOHN_PORK_DEFAULT_COSMETIC.sound; john.img = JOHN_PORK_DEFAULT_COSMETIC.img; }
+    function syncLedunkCosmeticFromSave() { if (G.ledunkCosmeticOn) applyLedunkSkin(); else removeLedunkSkin(); }
+    function toggleLedunkCosmeticSetting() {
+      if (!G.ledunkRedeemed) return toast('Redeem code LEDUNK first');
+      G.ledunkCosmeticOn = !G.ledunkCosmeticOn;
+      syncLedunkCosmeticFromSave();
+      updateChar(); renderShop(); renderBrains(); ui(); save();
+      toast(G.ledunkCosmeticOn ? '🥤 Dunkin cosmetic ON' : '🐷 John Pork look restored');
+    }
+    function updateLedunkCosmeticSettingsUi() {
+      var box = document.getElementById('ledunkCosmeticBox');
+      var btn = document.getElementById('ledunkCosmeticToggle');
+      if (!box || !btn) return;
+      box.hidden = !G.ledunkRedeemed;
+      if (G.ledunkRedeemed) btn.textContent = G.ledunkCosmeticOn ? '🥤 Dunkin look: ON' : '🐷 Classic John Pork look';
+    }
     function buyUp(id) { let u = [...UPGRADES, ...AUTOS].find(x => x.id === id), l = G.levels[id] || 0; if (l >= maxLvl()) return toast('Maxed until next prestige'); let c = cost(u); if (G.points < c) return toast('Need ' + fmt(c)); G.points -= c; G.levels[id] = l + 1; toast(u.name + ' upgraded'); renderShop(); ui() }
     function unlockBrainrot(id, options) { options = options || {}; let b = BRAINROTS.find(x => x.id === id); if (!b || G.unlocked.includes(id)) return false; G.unlocked.push(id); if (G.settings && G.settings.autoSwitchUnlock) { G.current = id; updateChar(); if (!options.silentToast) toast('Unlocked ' + b.name + ' and auto-switched!') } else if (!options.silentToast) { toast('Unlocked ' + b.name) } return true }
     function buyB(id) { let b = BRAINROTS.find(x => x.id === id); if (G.unlocked.includes(id)) return; let canAfford = b.cost === Infinity ? G.points >= INFINITY_T : G.points >= b.cost; if (!canAfford) return toast('Need ' + fmt(b.cost)); if (b.cost !== Infinity) G.points -= b.cost; else G.points = 0; unlockBrainrot(id); renderShop(); renderBrains(); ui() }
@@ -1981,9 +2032,11 @@
       if (missing.length > 0) { closeModal('prestigeConfirm'); return toast('Need all Brainrots first') }
       if (Number(G.points) < need) { closeModal('prestigeConfirm'); return toast('Need ' + fmt(need) + ' points') }
       G.prestige = (Number(G.prestige) || 0) + 1; G.prestigeCodeUnlocked = true; G.points = 0; G.runEarned = 0; G.totalClicks = 0; G.current = 'tung'; G.unlocked = ['tung']; G.levels = {}; G.evos = {}; G.crateBuys = { double: 0, triple: 0, chitlin: 0 }; G.cardBuys = 0; G.tungGodNotified = false;
+      applyBrainrotShopCosts();
+      syncLedunkCosmeticFromSave();
       closeModal('prestigeConfirm'); save(); updateChar(); renderShop(); renderBrains(); renderCodes(); renderCards(); ui(); showModal('prestigeModal');
     }
-    function redeem() { let val = document.getElementById('codeInput').value.trim().toUpperCase(), c = CODES.find(x => x.code === val); if (!c) return toast('Invalid code'); if (G.redeemed.includes(val)) return toast('Already used'); G.redeemed.push(val); if (c.reward === 'points') { G.points += c.amount; G.runEarned += c.amount; G.lifetimeEarned += c.amount } if (c.reward === 'prestige') { G.prestige += c.amount; G.prestigeCodeUnlocked = true; toast('+1 prestige') } if (c.reward === 'tunggod') { G.evos['tung'] = evo('tung') * 3; G.points += 15000; G.runEarned += 15000; G.lifetimeEarned += 15000; toast('Tung Tung got x3 evo + 15K points!') } if (c.reward === 'ledunk') { G.ledunkUnlocked = true; applyLedunkSkin(); toast('🥤 John Pork became Dunkin!'); updateChar(); renderShop(); renderBrains(); } if (c.reward === 'modpanel') { G.modPanelUnlocked = true; openModPanel(); toast('🛠️ Mod Panel Unlocked!'); document.getElementById('codeInput').value = ''; renderCodes(); renderCards(); ui(); save(); return } if (c.reward === 'chitlinburger') { G.chitlinUnlocked = true; toast('🍔 Secret Brainrot Unlocked: Chitlin Burger!'); document.getElementById('codeInput').value = ''; renderCodes(); renderShop(); renderBrains(); ui(); save(); return } if (c.reward === 'chitlinblock') { document.getElementById('codeInput').value = ''; renderCodes(); openCrates('chitlin', 1, true); ui(); save(); return } document.getElementById('codeInput').value = ''; renderCodes(); renderCards(); ui(); save() }
+    function redeem() { let val = document.getElementById('codeInput').value.trim().toUpperCase(), c = CODES.find(x => x.code === val); if (!c) return toast('Invalid code'); if (c.reward === 'ledunk_toggle') { G.ledunkCosmeticOn = !G.ledunkCosmeticOn; G.ledunkUnlocked = true; if (G.ledunkCosmeticOn) { applyLedunkSkin(); toast('🥤 Dunkin cosmetic ON') } else { removeLedunkSkin(); toast('🐷 John Pork look restored') } document.getElementById('codeInput').value = ''; updateChar(); renderShop(); renderBrains(); ui(); save(); return } if (G.redeemed.includes(val)) return toast('Already used'); G.redeemed.push(val); if (c.reward === 'points') { G.points += c.amount; G.runEarned += c.amount; G.lifetimeEarned += c.amount } if (c.reward === 'prestige') { G.prestige += c.amount; G.prestigeCodeUnlocked = true; applyBrainrotShopCosts(); toast('+1 prestige') } if (c.reward === 'tunggod') { G.evos['tung'] = evo('tung') * 3; G.points += 15000; G.runEarned += 15000; G.lifetimeEarned += 15000; toast('Tung Tung got x3 evo + 15K points!') } if (c.reward === 'ledunk') { G.ledunkRedeemed = true; G.ledunkUnlocked = true; G.ledunkCosmeticOn = true; applyLedunkSkin(); toast('🥤 John Pork became Dunkin! Toggle anytime in Settings.'); updateChar(); renderShop(); renderBrains(); } if (c.reward === 'modpanel') { G.modPanelUnlocked = true; openModPanel(); toast('🛠️ Mod Panel Unlocked!'); document.getElementById('codeInput').value = ''; renderCodes(); renderCards(); ui(); save(); return } if (c.reward === 'chitlinburger') { G.chitlinUnlocked = true; toast('🍔 Secret Brainrot Unlocked: Chitlin Burger!'); document.getElementById('codeInput').value = ''; renderCodes(); renderShop(); renderBrains(); ui(); save(); return } if (c.reward === 'chitlinblock') { document.getElementById('codeInput').value = ''; renderCodes(); openCrates('chitlin', 1, true); ui(); save(); return } document.getElementById('codeInput').value = ''; renderCodes(); renderCards(); ui(); save() }
     let crateAnimating = false;
     document.addEventListener('keydown', function (e) {
       if (e.code === 'Space' || e.key === ' ') {
@@ -1995,7 +2048,6 @@
       if (crateAnimating) return toast('Wait for the current roll to finish!'); if (!G.crateBuys) G.crateBuys = { double: 0, triple: 0, chitlin: 0 }; if (!G.questsDone) G.questsDone = []; if (G.chitlinUnlocked === undefined) G.chitlinUnlocked = false; if (G.boostUntil === undefined) G.boostUntil = 0; if (G.cardBuys === undefined) G.cardBuys = 0; if (!G.cards) G.cards = {}; if (!G.codex) G.codex = []; if (!G.cardBoosts) G.cardBoosts = {}; if (!G.combinePick) G.combinePick = []; let base = type === 'double' ? 15000 : (type === 'triple' ? 75000 : 1000000000), growth = type === 'double' ? 2 : 1.5, each = Math.min(PRICE_CAP, Math.floor(base * Math.pow(growth, G.crateBuys[type] || 0))), mult = type === 'double' ? 2 : (type === 'triple' ? 3 : 100), total = each * n;
       if (!free && G.points < total) return toast('Need ' + fmt(total));
       if (!free) G.points -= total;
-      if (type === 'chitlin' && !G.spaghettiShopUnlocked) { G.spaghettiShopUnlocked = true; renderShop(); save(); toast('🍝 Spaghetti Tualetti is now purchasable in the Shop!') }
       animateCrates(type, mult, n);
     }
     function buildCaseStrip(reward) {
@@ -2049,12 +2101,12 @@
       }, 4300);
     }
     function animateCrate(type, mult) { animateCrates(type, mult, 1) }
-    function afterEvo() { if (isTungGod() && !G.tungGodAnnounced) { G.tungGodAnnounced = true; toast('Tung Tung Sahur evolved into Tung Tung God!') } if (!isTungGod()) G.tungGodAnnounced = false; updateChar(); renderBrains(); ui(); save() } function roll(type) { let bag = []; BRAINROTS.forEach(b => { if (b.secret && !G.chitlinUnlocked) return; if (b.id === 'spaghetti') return; if (b.tripleOnly && type !== 'triple') return; let w = b.rarity === 'common' ? 30 : b.rarity === 'rare' ? 12 : b.rarity === 'superrare' ? 2 : b.rarity === 'epic' ? 5 : 1; if (b.id === 'spaghetti') w = 1; if (b.id === 'ander' || b.id === 'mateo' || b.id === 'jobjob') w = 1; for (let i = 0; i < w; i++)bag.push(b) }); return bag[Math.floor(Math.random() * bag.length)] } function caseItem(b) { let name = displayName(b); let img = b.img ? '<img src="' + b.img + '" alt="' + name + '" title="' + name + '">' : '<div style="font-size:2.2rem">' + b.emoji + '</div>'; return '<div class="case-item ' + b.rarity + '">' + img + '<span>' + name.split(' ')[0] + '</span></div>' }
+    function afterEvo() { if (isTungGod() && !G.tungGodAnnounced) { G.tungGodAnnounced = true; toast('Tung Tung Sahur evolved into Tung Tung God!') } if (!isTungGod()) G.tungGodAnnounced = false; updateChar(); renderBrains(); ui(); save() } function roll(type) { let bag = []; BRAINROTS.forEach(b => { if (b.secret && !G.chitlinUnlocked) return; if (b.id === 'spaghetti') return; if (b.tripleOnly && type !== 'triple') return; let w = b.rarity === 'common' ? 30 : b.rarity === 'rare' ? 12 : b.rarity === 'superrare' ? 2 : b.rarity === 'epic' ? 5 : 1; if (b.id === 'spaghetti') w = 1; if (b.id === 'ander' || b.id === 'mateo' || b.id === 'jobjob' || b.id === 'spoony' || b.id === 'bluecollarsponge') w = 1; for (let i = 0; i < w; i++)bag.push(b) }); return bag[Math.floor(Math.random() * bag.length)] } function caseItem(b) { let name = displayName(b); let img = b.img ? '<img src="' + b.img + '" alt="' + name + '" title="' + name + '">' : '<div style="font-size:2.2rem">' + b.emoji + '</div>'; return '<div class="case-item ' + b.rarity + '">' + img + '<span>' + name.split(' ')[0] + '</span></div>' }
 
     function renderShop() {
       document.getElementById('upgrades').innerHTML = UPGRADES.map(upCard).join('');
       document.getElementById('autos').innerHTML = AUTOS.map(upCard).join('');
-      document.getElementById('shopBrains').innerHTML = BRAINROTS.slice().sort((a, b) => a.cost - b.cost).filter(b => b.cost > 0 && (!b.secret || G.chitlinUnlocked) && (b.id !== 'spaghetti' || G.spaghettiShopUnlocked || !G.unlocked.includes(b.id))).map(shopBrain).join('');
+      document.getElementById('shopBrains').innerHTML = BRAINROTS.slice().sort((a, b) => a.cost - b.cost).filter(b => b.cost > 0 && (!b.secret || G.chitlinUnlocked)).map(shopBrain).join('');
       updateShopNavHighlight();
     }
     function hasAffordableShopUpgrade() { return [...UPGRADES, ...AUTOS].some(u => { let l = G.levels[u.id] || 0; return l < maxLvl() && G.points >= cost(u) }) }
@@ -2247,9 +2299,9 @@
       return `<div class="card brain ${o ? 'owned' : a ? 'aff' : 'locked'}">${img}<div class="name">${displayName(b)}</div><div class="desc">${fmt(displayPpc(b))} PPC • Evo x${fmt(evo(b.id))}</div><div class="cost">${fmt(b.cost)} pts</div>${o ? '<div class="small" style="color:var(--gold);font-weight:800">Owned</div>' : `<button class="buy" ${a ? '' : 'disabled'} onclick="buyB('${b.id}')">${a ? 'Unlock' : 'Need ' + fmt(b.cost)}</button>`}</div>`;
     }
     function renderBrains() {
-      document.getElementById('brains').innerHTML = BRAINROTS.slice().sort((a, b) => a.cost - b.cost).filter(b => (!b.secret || G.chitlinUnlocked) && (b.id !== 'spaghetti' || G.spaghettiShopUnlocked || !G.unlocked.includes(b.id))).map(b => {
+      document.getElementById('brains').innerHTML = BRAINROTS.slice().sort((a, b) => a.cost - b.cost).filter(b => (!b.secret || G.chitlinUnlocked)).map(b => {
         let o = G.unlocked.includes(b.id), a = G.current === b.id, img = imgHtml(b);
-        let bio = b.id === 'spaghetti' && !o && !G.spaghettiShopUnlocked ? '<div class="small" style="color:var(--gold);font-weight:800;margin-top:6px">Get a Chitlin Sandwich Lucky Block to unlock this in the Shop.</div>' : (!o ? '<div class="small">Buy in Shop</div>' : ''); return `<div class="brainrot card brain ${a ? 'owned' : o ? 'aff' : 'locked'}"><span class="badge ${a ? 'a' : o ? 'o' : 'l'}">${a ? 'ACTIVE' : o ? 'OWNED' : 'LOCKED'}</span>${img}<div class="name">${displayName(b)}</div><div class="desc">${fmt(displayPpc(b))} PPC<br>Evo x${fmt(evo(b.id))}</div>${o && !a ? `<button class="buy" onclick="selectB('${b.id}')">Select</button>` : !o ? bio : '<div class="small" style="color:var(--gold)">Current</div>'}</div>`;
+        let bio = !o ? (b.bio ? '<div class="small" style="color:var(--muted);margin-top:6px">' + b.bio + '</div>' : '<div class="small">Buy in Shop</div>') : ''; return `<div class="brainrot card brain ${a ? 'owned' : o ? 'aff' : 'locked'}"><span class="badge ${a ? 'a' : o ? 'o' : 'l'}">${a ? 'ACTIVE' : o ? 'OWNED' : 'LOCKED'}</span>${img}<div class="name">${displayName(b)}</div><div class="desc">${fmt(displayPpc(b))} PPC<br>Evo x${fmt(evo(b.id))}</div>${o && !a ? `<button class="buy" onclick="selectB('${b.id}')">Select</button>` : !o ? bio : '<div class="small" style="color:var(--gold)">Current</div>'}</div>`;
       }).join('');
     }
     function normalizeImageSrc(src) {
@@ -2265,7 +2317,7 @@
     function renderCodes() { document.getElementById('codes').innerHTML = CODES.filter(c => !c.secret).map(c => '<div class="card code ' + (G.redeemed.includes(c.code) ? 'owned' : '') + '"><div class="name">' + c.code + '</div><div class="small">' + c.desc + '</div>' + (c.secret ? '<div class="small" style="color:var(--gold)">Keep this for later</div>' : '') + '</div>').join('') }
     function formatTime(sec) { sec = Math.floor(sec || 0); let h = Math.floor(sec / 3600), m = Math.floor((sec % 3600) / 60), ss = sec % 60; return h > 0 ? h + 'h ' + m + 'm ' + ss + 's' : m > 0 ? m + 'm ' + ss + 's' : ss + 's' }
     function updateChar() { let b = cur(), im = document.getElementById('charImg'); let src = (b.id === 'tung' && isTungGod() && b.godImg) ? b.godImg : b.img; src = normalizeImageSrc(src); im.src = src || 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="250" height="250"><text x="50%" y="55%" text-anchor="middle" font-size="150">' + (b.emoji || '🧠') + '</text></svg>'); im.onerror = () => { im.src = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="250" height="250"><text x="50%" y="55%" text-anchor="middle" font-size="140">🧠</text></svg>'); }; let currentName = displayName(b); im.alt = currentName + ' character'; im.title = currentName; document.getElementById('charName').textContent = currentName; document.documentElement.style.setProperty('--char-color', b.color) }
-    function ui() { let b = cur(), next = BRAINROTS.find(x => !G.unlocked.includes(x.id)); document.getElementById('hp').textContent = fmt(G.points) + ' pts'; document.getElementById('hs').textContent = fmt(pps()) + '/s' + (incomeBoost() > 1 ? ' ⚡5x' : ''); let hsMods = document.getElementById('hsMods'); if (hsMods) { let burst = autoBurstMultiplier(); let idle = autoIdleMomentum(); let critChance = Math.min(0.6, 0.02 + getSkillLevel('auto', 'auto_crit_chance') * 0.01 + autoMilestoneCritBonus()); hsMods.textContent = 'Burst x' + burst.toFixed(1) + ' • Idle x' + idle.toFixed(1) + ' • Crit ' + Math.round(critChance * 100) + '%'; hsMods.style.color = (burst > 1 || idle > 1) ? 'var(--accent)' : 'var(--muted)'; } document.getElementById('scoreNum').textContent = fmt(G.points); document.getElementById('ppc').textContent = '+' + fmt(ppc()) + ' per click'; document.getElementById('stClicks').textContent = fmt(G.totalClicks); document.getElementById('stRun').textContent = fmt(G.runEarned); document.getElementById('stLife').textContent = fmt(G.lifetimeEarned); document.getElementById('stPpc').textContent = fmt(ppc()); document.getElementById('stPps').textContent = fmt(pps()); document.getElementById('stPrestige').textContent = G.prestige; document.getElementById('stSkillPoints').textContent = G.skillPoints || 0; let stLastOffline = document.getElementById('stLastOffline'); if (stLastOffline) stLastOffline.textContent = fmt(G.lastOfflineGain || 0) + ' pts'; var mpBtn = document.getElementById('modPanelBtn'); if (mpBtn) mpBtn.style.display = G.modPanelUnlocked ? 'block' : 'none'; document.getElementById('stBrainrots').textContent = G.unlocked.length + '/' + BRAINROTS.length; document.getElementById('prestNeed').textContent = fmt(prestigeNeed()); let miss = missingBrainrots(); document.getElementById('prestAll').textContent = miss.length === 0 ? 'Yes' : 'No (' + miss.length + ' missing)'; document.getElementById('prestMax').textContent = maxLvl(); if (document.getElementById('stPlaytime')) document.getElementById('stPlaytime').textContent = formatTime(G.playtime); let _dp = document.getElementById('doublePrice'); if (_dp) { let _e = Math.min(PRICE_CAP, Math.floor(15000 * Math.pow(2, G.crateBuys.double || 0))); _dp.textContent = '🪙 ' + fmt(_e) + ' each'; } let _tp = document.getElementById('triplePrice'); if (_tp) { let _e = Math.min(PRICE_CAP, Math.floor(75000 * Math.pow(1.5, G.crateBuys.triple || 0))); _tp.textContent = '🪙 ' + fmt(_e) + ' each'; } let _cp = document.getElementById('chitlinCratePrice'); if (_cp) { let _e = Math.min(PRICE_CAP, Math.floor(1000000000 * Math.pow(1.5, G.crateBuys.chitlin || 0))); _cp.textContent = '🪙 ' + fmt(_e) + ' each'; } let _pp = document.getElementById('packPriceLabel'); if (_pp) { _pp.textContent = '🪙 ' + fmt(packPrice()) + ' each'; } document.getElementById('prestReqSet').textContent = 'All Brainrots + ' + fmt(prestigeNeed()) + ' pts'; if (next) { document.getElementById('nextName').textContent = next.name; document.getElementById('nextFill').style.width = Math.min(100, G.points / next.cost * 100) + '%'; document.getElementById('nextTxt').textContent = fmt(G.points) + ' / ' + fmt(next.cost) + ' pts'; document.getElementById('readyHint').style.display = G.points >= next.cost ? 'block' : 'none' } let soundBtn = document.getElementById('soundToggle'); if (soundBtn) soundBtn.textContent = G.settings.sound ? '🔊 Sound: ON' : '🔇 Sound: OFF'; let autoSwitchBtn = document.getElementById('autoSwitchUnlockToggle'); if (autoSwitchBtn) autoSwitchBtn.textContent = (G.settings && G.settings.autoSwitchUnlock !== false) ? '🎯 Auto-switch on unlock: ON' : '🎯 Auto-switch on unlock: OFF'; updateShopNavHighlight(); }
+    function ui() { let b = cur(), next = BRAINROTS.find(x => !G.unlocked.includes(x.id)); document.getElementById('hp').textContent = fmt(G.points) + ' pts'; document.getElementById('hs').textContent = fmt(pps()) + '/s' + (incomeBoost() > 1 ? ' ⚡5x' : ''); let hsMods = document.getElementById('hsMods'); if (hsMods) { let burst = autoBurstMultiplier(); let idle = autoIdleMomentum(); let critChance = Math.min(0.6, 0.02 + getSkillLevel('auto', 'auto_crit_chance') * 0.01 + autoMilestoneCritBonus()); hsMods.textContent = 'Burst x' + burst.toFixed(1) + ' • Idle x' + idle.toFixed(1) + ' • Crit ' + Math.round(critChance * 100) + '%'; hsMods.style.color = (burst > 1 || idle > 1) ? 'var(--accent)' : 'var(--muted)'; } document.getElementById('scoreNum').textContent = fmt(G.points); document.getElementById('ppc').textContent = '+' + fmt(ppc()) + ' per click'; document.getElementById('stClicks').textContent = fmt(G.totalClicks); document.getElementById('stRun').textContent = fmt(G.runEarned); document.getElementById('stLife').textContent = fmt(G.lifetimeEarned); document.getElementById('stPpc').textContent = fmt(ppc()); document.getElementById('stPps').textContent = fmt(pps()); document.getElementById('stPrestige').textContent = G.prestige; document.getElementById('stSkillPoints').textContent = G.skillPoints || 0; let stLastOffline = document.getElementById('stLastOffline'); if (stLastOffline) stLastOffline.textContent = fmt(G.lastOfflineGain || 0) + ' pts'; var mpBtn = document.getElementById('modPanelBtn'); if (mpBtn) mpBtn.style.display = G.modPanelUnlocked ? 'block' : 'none'; document.getElementById('stBrainrots').textContent = G.unlocked.length + '/' + BRAINROTS.length; document.getElementById('prestNeed').textContent = fmt(prestigeNeed()); let miss = missingBrainrots(); document.getElementById('prestAll').textContent = miss.length === 0 ? 'Yes' : 'No (' + miss.length + ' missing)'; document.getElementById('prestMax').textContent = maxLvl(); if (document.getElementById('stPlaytime')) document.getElementById('stPlaytime').textContent = formatTime(G.playtime); let _dp = document.getElementById('doublePrice'); if (_dp) { let _e = Math.min(PRICE_CAP, Math.floor(15000 * Math.pow(2, G.crateBuys.double || 0))); _dp.textContent = '🪙 ' + fmt(_e) + ' each'; } let _tp = document.getElementById('triplePrice'); if (_tp) { let _e = Math.min(PRICE_CAP, Math.floor(75000 * Math.pow(1.5, G.crateBuys.triple || 0))); _tp.textContent = '🪙 ' + fmt(_e) + ' each'; } let _cp = document.getElementById('chitlinCratePrice'); if (_cp) { let _e = Math.min(PRICE_CAP, Math.floor(1000000000 * Math.pow(1.5, G.crateBuys.chitlin || 0))); _cp.textContent = '🪙 ' + fmt(_e) + ' each'; } let _pp = document.getElementById('packPriceLabel'); if (_pp) { _pp.textContent = '🪙 ' + fmt(packPrice()) + ' each'; } document.getElementById('prestReqSet').textContent = 'All Brainrots + ' + fmt(prestigeNeed()) + ' pts'; if (next) { document.getElementById('nextName').textContent = next.name; document.getElementById('nextFill').style.width = Math.min(100, G.points / next.cost * 100) + '%'; document.getElementById('nextTxt').textContent = fmt(G.points) + ' / ' + fmt(next.cost) + ' pts'; document.getElementById('readyHint').style.display = G.points >= next.cost ? 'block' : 'none' } let soundBtn = document.getElementById('soundToggle'); if (soundBtn) soundBtn.textContent = G.settings.sound ? '🔊 Sound: ON' : '🔇 Sound: OFF'; let autoSwitchBtn = document.getElementById('autoSwitchUnlockToggle'); if (autoSwitchBtn) autoSwitchBtn.textContent = (G.settings && G.settings.autoSwitchUnlock !== false) ? '🎯 Auto-switch on unlock: ON' : '🎯 Auto-switch on unlock: OFF'; updateLedunkCosmeticSettingsUi(); updateShopNavHighlight(); }
     function page(id) {
       document.querySelectorAll('.page').forEach(p => { p.classList.remove('active'); p.style.display = 'none' }); document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active')); let el = document.getElementById('page-' + id); if (el) { el.classList.add('active'); el.style.display = 'block'; if (id === 'quests') fullRenderQuests(); if (id === 'cards') renderCards(); if (id === 'skills') { renderSkills(); renderMilestones(); } let m = { game: 0, shop: 1, brainrots: 2, cards: 3, skills: 4, codes: 5, quests: 6, settings: 7 }; let btn = document.querySelectorAll('.nav-btn')[m[id]]; if (btn) btn.classList.add('active'); if (id === 'shop') renderShop(); if (id === 'brainrots') renderBrains(); if (id === 'codes') renderCodes(); if (id === 'skills') renderSkills(); ui() }
     }
@@ -2397,7 +2449,6 @@
         if (!G.autoMilestones) G.autoMilestones = {};
         if (!G.lastManualClick) G.lastManualClick = Date.now();
         Object.keys(G.cards || {}).forEach(k => { if (splitCardKey(k).mut && !G.mutationCodex.includes(k)) G.mutationCodex.push(k) }); 
-        if (G.spaghettiShopUnlocked === undefined) G.spaghettiShopUnlocked = G.unlocked && G.unlocked.includes('spaghetti'); 
         Object.keys(G.evos || {}).forEach(k => G.evos[k] = Math.min(evoCap(), G.evos[k])); 
         if (!BRAINROTS.some(b => b.id === G.current)) G.current = 'tung'; 
         if (G.skillPoints === undefined) G.skillPoints = 0; 
@@ -2406,7 +2457,10 @@
         if (G.milestones === undefined) G.milestones = []; 
         if (G.lastSkillPointTime === undefined) G.lastSkillPointTime = Date.now(); 
         if (G.ledunkUnlocked === undefined) G.ledunkUnlocked = false;
-        if (G.ledunkUnlocked) applyLedunkSkin();
+        if (G.ledunkRedeemed === undefined) G.ledunkRedeemed = !!(G.redeemed && G.redeemed.includes('LEDUNK'));
+        if (G.ledunkCosmeticOn === undefined) G.ledunkCosmeticOn = !!G.ledunkUnlocked;
+        syncLedunkCosmeticFromSave();
+        applyBrainrotShopCosts();
         if (!G.settings) G.settings = { particles: true, rings: true, sound: true, autoSwitchUnlock: true };
         if (G.settings.autoSwitchUnlock === undefined) G.settings.autoSwitchUnlock = true;
         if (G.lastOfflineGain === undefined) G.lastOfflineGain = 0;
@@ -2583,7 +2637,7 @@
       function modGivePrestige() {
         var v = parseInt(document.getElementById('modPrestige').value);
         if (!v || v <= 0) return toast('Enter a valid amount');
-        G.prestige += v; ui(); save(); toast('+' + v + ' prestiges added!');
+        G.prestige += v; applyBrainrotShopCosts(); ui(); save(); toast('+' + v + ' prestiges added!');
       }
       function modGivePrestigeAmount(n) {
         document.getElementById('modPrestige').value = n;
@@ -2608,15 +2662,45 @@
         ui(); renderBrains(); renderShop(); save(); toast('All Brainrots unlocked!');
       }
 
-      // Save code generation and management
+      // Save code generation and management — short SAVE* IDs are LOCAL only (browser storage).
+      // Sharing uses portable codes BR1... (base64url of save JSON) so other devices can decode without your localStorage.
+
       let saveCodeCounter = 0;
 
+      const PORTABLE_SAVE_PREFIX = 'BR1';
+
+      function encodeSaveJsonBase64Url(jsonStr) {
+        var b64 = btoa(unescape(encodeURIComponent(jsonStr))).replace(/\+/g, '-').replace(/\//g, '_');
+        while (b64.endsWith('=')) b64 = b64.slice(0, -1);
+        return b64;
+      }
+
+      function decodeSaveJsonBase64Url(b64url) {
+        var b64 = b64url.replace(/-/g, '+').replace(/_/g, '/');
+        while (b64.length % 4) b64 += '=';
+        return decodeURIComponent(escape(atob(b64)));
+      }
+
+      function makePortableSavePayload(saveDataJsonString) {
+        return PORTABLE_SAVE_PREFIX + encodeSaveJsonBase64Url(saveDataJsonString);
+      }
+
+      function tryParsePortableSaveCode(codeInput) {
+        var raw = (codeInput || '').trim().replace(/^[\s\uFEFF]+|[\s\uFEFF]+$/g, '');
+        if (!raw || raw.slice(0, PORTABLE_SAVE_PREFIX.length) !== PORTABLE_SAVE_PREFIX) return null;
+        var payload = raw.slice(PORTABLE_SAVE_PREFIX.length).replace(/\s+/g, '');
+        if (!payload) return null;
+        try {
+          return JSON.parse(decodeSaveJsonBase64Url(payload));
+        } catch (e) {
+          return null;
+        }
+      }
+
       function generateSaveCode() {
-        // Generate unique save code
         let code = 'SAVE' + Date.now().toString(36).toUpperCase();
         let saveData = JSON.stringify(G);
 
-        // Store the save code with save data
         if (!G.saveCodes) G.saveCodes = {};
         let saveLabel = 'Save ' + (Object.keys(G.saveCodes).length + 1);
         G.saveCodes[code] = {
@@ -2626,42 +2710,83 @@
           label: saveLabel
         };
 
-        // Add to recent saves
+        let portablePayload = makePortableSavePayload(saveData);
+
         if (!G.recentSaves) G.recentSaves = [];
         G.recentSaves.unshift({ code: code, label: saveLabel, timestamp: Date.now() });
-        G.recentSaves = G.recentSaves.slice(0, 10); // Keep only 10 most recent
+        G.recentSaves = G.recentSaves.slice(0, 10);
 
         save();
-        showSaveCodeLabelInput(code);
+        showSaveCodeLabelInput(code, portablePayload);
       }
 
-      function showSaveCodeLabelInput(code) {
+      function showSaveCodeLabelInput(localRefCode, portablePayload) {
         let modal = document.createElement('div');
         modal.id = 'saveCodeLabelModal';
         modal.className = 'modal show';
         modal.innerHTML = `
     <div class="modal-card">
       <h2 style="font-family:'Fredoka One';color:var(--gold)">🔑 Save Code Generated!</h2>
-      <p class="sub">Your save code has been generated. You can copy it below:</p>
-      <div style="margin:15px 0">
-        <input id="generatedSaveCode" type="text" value="${code}" readonly style="width:100%;background:var(--card);border:2px solid #ffffff18;border-radius:12px;color:white;padding:12px 14px;outline:0;font-family:Nunito,sans-serif;font-size:.9rem;text-align:center;font-weight:800">
+      <p class="sub"><b>For friends / other browsers:</b> copy the long <b>share code</b> below — it carries your entire save.</p>
+      <p class="small" style="color:var(--muted)">The short <code>SAVE…</code> line is only a label on this device and will not work for anyone else.</p>
+      <div style="margin:12px 0">
+        <div class="small" style="margin-bottom:6px;color:var(--cyan)">Share code (give this to other players)</div>
+        <textarea id="generatedPortableSave" readonly rows="6" style="width:100%;background:var(--card);border:2px solid #ffffff18;border-radius:12px;color:white;padding:10px 14px;outline:0;font-family:ui-monospace,monospace;font-size:.65rem;word-break:break-all;resize:vertical"></textarea>
       </div>
-      <div style="display:flex;gap:8px;justify-content:center;margin-top:15px">
-        <button class="btn" onclick="copySaveCode('${code}')">📋 Copy Code</button>
-        <button class="btn secondary" onclick="closeSaveCodeLabelModal()">Done</button>
+      <div style="margin:15px 0">
+        <div class="small" style="margin-bottom:6px;color:var(--muted)">Device-only reference</div>
+        <input id="generatedSaveLocalRef" type="text" readonly style="width:100%;background:var(--card);border:2px solid #ffffff18;border-radius:12px;color:var(--muted);padding:10px 14px;outline:0;font-family:monospace;font-size:.85rem;text-align:center">
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:15px">
+        <button type="button" class="btn" id="generatedCopyPortableBtn">📋 Copy Share Code</button>
+        <button type="button" class="btn secondary" id="generatedCopyLocalBtn">📋 Copy local ref only</button>
+        <button type="button" class="btn secondary" onclick="closeSaveCodeLabelModal()">Done</button>
       </div>
     </div>
   `;
         document.body.appendChild(modal);
+        var portableEl = document.getElementById('generatedPortableSave');
+        var refEl = document.getElementById('generatedSaveLocalRef');
+        if (portableEl) portableEl.value = portablePayload;
+        if (refEl) refEl.value = localRefCode;
+        document.getElementById('generatedCopyPortableBtn').onclick = function () {
+          copyTextFromEl('generatedPortableSave', 'Share code copied! Send it to another player.');
+        };
+        document.getElementById('generatedCopyLocalBtn').onclick = function () {
+          copyTextFromEl('generatedSaveLocalRef', 'Local reference copied (same device list only)');
+        };
 
-        // Select the text for easy copying
-        setTimeout(() => {
-          let input = document.getElementById('generatedSaveCode');
+        setTimeout(function () {
+          var input = document.getElementById('generatedPortableSave');
           if (input) {
+            input.focus();
             input.select();
-            input.setSelectionRange(0, 99999); // For mobile devices
+            input.setSelectionRange(0, input.value.length);
           }
         }, 100);
+      }
+
+      function copyTextFromEl(elementId, successToast) {
+        var el = document.getElementById(elementId);
+        if (!el) return toast('Nothing to copy');
+        el.focus();
+        el.select();
+        el.setSelectionRange(0, 999999);
+        var text = el.value || el.textContent || '';
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(function () { toast(successToast); }).catch(function () { fallbackExecCopy(successToast); });
+        } else {
+          fallbackExecCopy(successToast);
+        }
+      }
+
+      function fallbackExecCopy(successToast) {
+        try {
+          document.execCommand('copy');
+          toast(successToast);
+        } catch (e) {
+          toast('Could not copy — select the text manually');
+        }
       }
 
       function closeSaveCodeLabelModal() {
@@ -2671,11 +2796,19 @@
       }
 
       function copySaveCode(code) {
-        navigator.clipboard.writeText(code).then(() => {
-          toast('Save code copied to clipboard! 📋');
-        }).catch(() => {
-          toast('Failed to copy code');
-        });
+        if (!G.saveCodes || !G.saveCodes[code] || !G.saveCodes[code].data) {
+          return toast('Save code entry not found');
+        }
+        var portable = makePortableSavePayload(G.saveCodes[code].data);
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(portable).then(function () {
+            toast('Share code copied! Other players paste this whole string when importing.');
+          }).catch(function () {
+            toast('Failed to copy');
+          });
+        } else {
+          toast('Clipboard not available — use Generate and copy from the textarea');
+        }
       }
 
       function deleteSaveCode(code) {
@@ -2693,36 +2826,65 @@
         }
       }
 
+      function applyImportedSaveData(importedData) {
+        Object.assign(G, importedData);
+        applyBrainrotShopCosts();
+        if (G.ledunkRedeemed === undefined) G.ledunkRedeemed = !!(G.redeemed && G.redeemed.includes('LEDUNK'));
+        if (G.ledunkCosmeticOn === undefined) G.ledunkCosmeticOn = !!G.ledunkUnlocked;
+        if (typeof syncLedunkCosmeticFromSave === 'function') syncLedunkCosmeticFromSave();
+        save();
+        ui();
+        renderShop();
+        renderBrains();
+        if (typeof renderCards === 'function') renderCards();
+      }
+
+      function closeImportSaveIfOpen() {
+        var modal = document.getElementById('importSaveModal');
+        if (modal) modal.remove();
+      }
+
       function redeemSaveCode(code) {
-        if (!G.saveCodes || !G.saveCodes[code]) {
-          toast('Invalid save code');
+        if (typeof code !== 'string' || !(code = code.trim())) {
+          toast('Enter a save code');
           return;
         }
 
-        let saveEntry = G.saveCodes[code];
+        var portableData = tryParsePortableSaveCode(code);
+        if (portableData) {
+          try {
+            applyImportedSaveData(portableData);
+            closeImportSaveIfOpen();
+            toast('Save imported successfully! (share code)');
+            return;
+          } catch (error) {
+            toast('Failed to import share code: ' + error.message);
+            return;
+          }
+        }
+
+        var lookupKey = code.replace(/\s+/g, '');
+        if (/^SAVE/i.test(lookupKey)) {
+          lookupKey = lookupKey.toUpperCase();
+        }
+        if (!G.saveCodes || !G.saveCodes[lookupKey]) {
+          toast('Invalid save code. Paste the full long share code starting with BR1 from the other player. Short SAVE… codes only work on the browser that generated them.');
+          return;
+        }
+
+        var saveEntry = G.saveCodes[lookupKey];
         if (!saveEntry) return toast('Save code not found');
 
         try {
-          let importedData = JSON.parse(saveEntry.data);
-
-          // Merge imported data with current game state
-          Object.assign(G, importedData);
-
-          // Mark as imported
+          var importedData = JSON.parse(saveEntry.data);
+          applyImportedSaveData(importedData);
           saveEntry.imported = true;
           saveEntry.importedAt = Date.now();
-
           save();
+          closeImportSaveIfOpen();
           showSaveCodeManager();
-
-          // Show success message
-          let timeAgo = Math.floor((Date.now() - saveEntry.timestamp) / 1000 / 60); // minutes ago
-          toast('Save "' + saveEntry.label + '" imported successfully! (' + timeAgo + ' minutes ago)');
-
-          // Update UI
-          ui();
-          renderShop();
-          renderBrains();
+          var timeAgo = Math.floor((Date.now() - saveEntry.timestamp) / 1000 / 60);
+          toast('Save "' + saveEntry.label + '" imported OK! (' + timeAgo + ' min ago)');
         } catch (error) {
           toast('Failed to import save: ' + error.message);
         }
@@ -2735,7 +2897,7 @@
         modal.innerHTML = `
     <div class="modal-card">
       <h2 style="font-family:'Fredoka One';color:var(--gold)">🔑 Save Code Manager</h2>
-      <p class="sub">Generate, copy, import, and manage your save codes. Share codes with friends to transfer progress!</p>
+      <p class="sub">Use <b>Share</b> on a save to copy the full <b>share code</b> (starts with BR1). Friends paste that entire string — short SAVE… refs only work on this device.</p>
       <div style="margin-bottom:15px">
         <button class="btn" onclick="generateSaveCode()">🔑 Generate New Save Code</button>
         <button class="btn secondary" onclick="showImportSaveCode()">📥 Import Save Code</button>
@@ -2759,7 +2921,8 @@
         modal.innerHTML = `
     <div class="modal-card">
       <h2 style="font-family:'Fredoka One';color:var(--gold)">📥 Import Save Code</h2>
-      <p class="sub">Enter a save code to import progress from another player:</p>
+      <p class="small" style="color:var(--muted);margin-bottom:8px">Paste the full share code (<code>BR1…</code>) from another player.</p>
+      <p class="sub">Paste share code:</p>
       <div style="display:flex;gap:8px;align-items:center;margin-bottom:15px">
         <input id="importSaveCodeInput" type="text" placeholder="Enter save code" style="flex:1;background:var(--card);border:2px solid #ffffff18;border-radius:12px;color:white;padding:10px 14px;outline:0;font-family:Nunito,sans-serif;font-size:.9rem">
         <button class="btn" onclick="importSaveCodeFromInput()">📥 Import</button>
@@ -2773,7 +2936,7 @@
       }
 
       function importSaveCodeFromInput() {
-        let code = document.getElementById('importSaveCodeInput').value.trim().toUpperCase();
+        let code = document.getElementById('importSaveCodeInput').value.trim();
         if (!code) return toast('Please enter a save code');
         redeemSaveCode(code);
       }
@@ -2810,7 +2973,7 @@
             codesHtml += '<div class="small" style="color:var(--muted)">' + timeAgo + ' min ago</div>';
             codesHtml += '</div>';
             codesHtml += '<div style="display:flex;gap:4px">';
-            codesHtml += '<button class="btn secondary" style="padding:4px 8px;font-size:.7rem" onclick="copySaveCode(\'' + code + '\')">📋 Copy</button>';
+            codesHtml += '<button class="btn secondary" style="padding:4px 8px;font-size:.7rem" onclick="copySaveCode(\'' + code + '\')" title="Copies full BR1 share code">📋 Share</button>';
             codesHtml += '<button class="btn secondary" style="padding:4px 8px;font-size:.7rem" onclick="redeemSaveCode(\'' + code + '\')">📥 Import</button>';
             codesHtml += '<button class="btn danger" style="padding:4px 8px;font-size:.7rem" onclick="deleteSaveCode(\'' + code + '\')">🗑️ Delete</button>';
             codesHtml += '</div>';
