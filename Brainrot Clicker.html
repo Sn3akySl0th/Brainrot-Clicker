@@ -746,7 +746,10 @@ function renderSkills(){
 function getSkillBonus(treeType, skillId) {
   const level = G.skillLevels[treeType]?.[skillId] || 0;
   const skill = SKILL_TREES[treeType]?.skills.find(s => s.id === skillId);
-  return skill ? skill.effect(level) : 1;
+  if (skill && level > 0) {
+    return skill.effect(level);
+  }
+  return 1;
 }
 
 function applySkillEffects() {
