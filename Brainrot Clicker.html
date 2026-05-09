@@ -1133,6 +1133,41 @@ function generateSaveCode(){
   showSaveCodeLabelInput(code);
 }
 
+function showSaveCodeLabelInput(code){
+  let modal = document.createElement('div');
+  modal.id = 'saveCodeLabelModal';
+  modal.className = 'modal show';
+  modal.innerHTML = `
+    <div class="modal-card">
+      <h2 style="font-family:'Fredoka One';color:var(--gold)">🔑 Save Code Generated!</h2>
+      <p class="sub">Your save code has been generated. You can copy it below:</p>
+      <div style="margin:15px 0">
+        <input id="generatedSaveCode" type="text" value="${code}" readonly style="width:100%;background:var(--card);border:2px solid #ffffff18;border-radius:12px;color:white;padding:12px 14px;outline:0;font-family:Nunito,sans-serif;font-size:.9rem;text-align:center;font-weight:800">
+      </div>
+      <div style="display:flex;gap:8px;justify-content:center;margin-top:15px">
+        <button class="btn" onclick="copySaveCode('${code}')">📋 Copy Code</button>
+        <button class="btn secondary" onclick="closeSaveCodeLabelModal()">Done</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+  
+  // Select the text for easy copying
+  setTimeout(() => {
+    let input = document.getElementById('generatedSaveCode');
+    if(input) {
+      input.select();
+      input.setSelectionRange(0, 99999); // For mobile devices
+    }
+  }, 100);
+}
+
+function closeSaveCodeLabelModal(){
+  let modal = document.getElementById('saveCodeLabelModal');
+  if(modal) modal.remove();
+  renderSaveCodes(); // Refresh the save codes list
+}
+
 function copySaveCode(code){
   navigator.clipboard.writeText(code).then(() => {
     toast('Save code copied to clipboard! 📋');
