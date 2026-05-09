@@ -372,7 +372,7 @@ function showSaveOptions() {
   document.body.appendChild(modal);
 }
 
-let G={points:0,runEarned:0,lifetimeEarned:0,totalClicks:0,current:'tung',unlocked:['tung'],levels:{},evos:{},redeemed:[],prestige:0,prestigeCodeUnlocked:false,playtime:0,crateBuys:{double:0,triple:0,chitlin:0},settings:{particles:true,rings:true,sound:true},questsDone:[],chitlinUnlocked:false,skillPoints:0,skillLevels:{},activeTree:'click',boostUntil:0,cardBuys:0,cards:{},codex:[],cardBoosts:{},combinePick:[],saveCodes:{},importedSave:null};
+let G={points:0,runEarned:0,lifetimeEarned:0,totalClicks:0,current:'tung',unlocked:['tung'],levels:{},evos:{},redeemed:[],prestige:0,prestigeCodeUnlocked:false,playtime:0,crateBuys:{double:0,triple:0,chitlin:0},settings:{particles:true,rings:true,sound:true},questsDone:[],chitlinUnlocked:false,skillPoints:0,skillLevels:{},skillMilestones:{},activeTree:'click',boostUntil:0,cardBuys:0,cards:{},codex:[],cardBoosts:{},combinePick:[],saveCodes:{},importedSave:null};
 const PRICE_CAP=1000000000000000;
 const MUTATIONS=[{id:'radiation',name:'Radiation',mult:1.5,color:'#7CFC00',weight:10},{id:'gold',name:'Gold',mult:2,color:'#ffd700',weight:6},{id:'diamond',name:'Diamond',mult:3,color:'#00d4ff',weight:3},{id:'heavenly',name:'Heavenly',mult:5,color:'#f5f3ff',weight:1}];
 function fmt(n){n=Math.floor(n);if(n>=INFINITY_T)return'InfinityT';if(n>=1e12)return(n/1e12).toFixed(2)+'T';if(n>=1e9)return(n/1e9).toFixed(2)+'B';if(n>=1e6)return(n/1e6).toFixed(2)+'M';if(n>=1e3)return(n/1e3).toFixed(1)+'K';return String(n)}
@@ -590,6 +590,48 @@ function safelyUpdateContainer(container, htmlStrings) {
   }
 }
 function clicker(e){if(Math.random()<0.0005){G.boostUntil=Math.max(G.boostUntil||0,Date.now()+90000);toast('⚡ 5x income boost for 1:30!')}let v=ppc();G.points+=v;G.runEarned+=v;G.lifetimeEarned+=v;G.totalClicks++;let im=document.getElementById('charImg');im.classList.add('b');setTimeout(()=>im.classList.remove('b'),80);if(G.settings.particles)part(e,v);if(G.settings.rings)ring(e);speak();checkSkillMilestones();ui()}
+
+function checkSkillMilestones(){
+  if(!G.skillMilestones) G.skillMilestones = {};
+  
+  // Click milestones - award skill points at certain click thresholds
+  const clickMilestones = [100, 500, 1000, 5000, 10000, 50000, 100000];
+  clickMilestones.forEach(m => {
+    if(G.totalClicks >= m && !G.skillMilestones['click_'+m]){
+      G.skillMilestones['click_'+m] = true;
+      G.skillPoints = (G.skillPoints || 0) + 1;
+      toast(`🌟 Skill Point earned! (${m} clicks)`);
+    }
+  });
+  
+  // Points earned milestones
+  const pointMilestones = [1000, 10000, 100000, 1000000, 10000000, 100000000];
+  pointMilestones.forEach(m => {
+    if(G.lifetimeEarned >= m && !G.skillMilestones['points_'+m]){
+      G.skillMilestones['points_'+m] = true;
+      G.skillPoints = (G.skillPoints || 0) + 1;
+      toast(`🌟 Skill Point earned! (${fmt(m)} lifetime points)`);
+    }
+  });
+  
+  // Brainrot unlock milestones
+  const brainMilestones = [3, 5, 10, 15, 20];
+  brainMilestones.forEach(m => {
+    if(G.unlocked.length >= m && !G.skillMilestones['brain_'+m]){
+      G.skillMilestones['brain_'+m] = true;
+      G.skillPoints = (G.skillPoints || 0) + 2;
+      toast(`🌟 Skill Points earned! (${m} Brainrots unlocked)`);
+    }
+  });
+  
+  // Prestige milestones
+  if(G.prestige >= 1 && !G.skillMilestones['prestige_1']){
+    G.skillMilestones['prestige_1'] = true;
+    G.skillPoints = (G.skillPoints || 0) + 5;
+    toast(`🌟 Skill Points earned! (First Prestige)`);
+  }
+}
+
 function speak(){if(!G.settings.sound)return;try{let u=new SpeechSynthesisUtterance(cur().id==='tung'&&isTungGod()?'Tung God':cur().sound);u.rate=1.12;u.pitch=.85;speechSynthesis.speak(u)}catch(e){}}
 function part(e,v){let d=document.createElement('div');d.className='particle';d.textContent='+'+fmt(v);d.style.left=e.clientX+Math.random()*30-15+'px';d.style.top=e.clientY-10+'px';d.style.color=cur().color;document.body.appendChild(d);setTimeout(()=>d.remove(),850)}function ring(e){let d=document.createElement('div');d.className='ring';d.style.borderColor=cur().color;d.style.left=e.clientX+'px';d.style.top=e.clientY+'px';d.style.margin='-10px 0 0 -10px';document.body.appendChild(d);setTimeout(()=>d.remove(),500)}
 function buyUp(id){let u=[...UPGRADES,...AUTOS].find(x=>x.id===id),l=G.levels[id]||0;if(l>=maxLvl())return toast('Maxed until next prestige');let c=cost(u);if(G.points<c)return toast('Need '+fmt(c));G.points-=c;G.levels[id]=l+1;toast(u.name+' upgraded');renderShop();ui()}function buyB(id){let b=BRAINROTS.find(x=>x.id===id);if(G.unlocked.includes(id))return;let canAfford=b.cost===Infinity?G.points>=INFINITY_T:G.points>=b.cost;if(!canAfford)return toast('Need '+fmt(b.cost));if(b.cost!==Infinity)G.points-=b.cost;else G.points=0;G.unlocked.push(id);toast('Unlocked '+b.name);renderShop();renderBrains();ui()}function selectB(id){if(!G.unlocked.includes(id))return toast('Buy it first');G.current=id;updateChar();renderBrains();ui()}
