@@ -309,16 +309,16 @@ function showUserErrorNotification(message, action) {
 }
 
 function showSaveOptions() {
-  // Show modal with different save options
+  // Show modal with save options and code management
   const modal = document.createElement('div');
   modal.className = 'modal show';
   modal.innerHTML = `
     <div class="modal-card">
       <h2>💾 Save Options</h2>
-      <p>Choose an alternative save method:</p>
+      <p>Choose a save method or manage your save codes:</p>
       <div style="display: flex; flex-direction: column; gap: 10px; margin: 20px 0;">
         <button class="btn" onclick="downloadSave()">📥 Download Save File</button>
-        <button class="btn" onclick="generateAndShowSaveCode()">🔑 Generate Save Code</button>
+        <button class="btn" onclick="showSaveCodeManager()">🔑 Manage Save Codes</button>
         <button class="btn secondary" onclick="this.closest('.modal').remove()">❌ Cancel</button>
       </div>
     </div>
@@ -326,7 +326,7 @@ function showSaveOptions() {
   document.body.appendChild(modal);
 }
 
-let G={points:0,runEarned:0,lifetimeEarned:0,totalClicks:0,current:'tung',unlocked:['tung'],levels:{},evos:{},redeemed:[],prestige:0,prestigeCodeUnlocked:false,playtime:0,crateBuys:{double:0,triple:0,chitlin:0},settings:{particles:true,rings:true,sound:true},questsDone:[],chitlinUnlocked:false,boostUntil:0,cardBuys:0,cards:{},codex:[],cardBoosts:{},combinePick:[]};
+let G={points:0,runEarned:0,lifetimeEarned:0,totalClicks:0,current:'tung',unlocked:['tung'],levels:{},evos:{},redeemed:[],prestige:0,prestigeCodeUnlocked:false,playtime:0,crateBuys:{double:0,triple:0,chitlin:0},settings:{particles:true,rings:true,sound:true},questsDone:[],chitlinUnlocked:false,boostUntil:0,cardBuys:0,cards:{},codex:[],cardBoosts:{},combinePick:[],saveCodes:{},importedSave:null};
 const PRICE_CAP=1000000000000000;
 const MUTATIONS=[{id:'radiation',name:'Radiation',mult:1.5,color:'#7CFC00',weight:10},{id:'gold',name:'Gold',mult:2,color:'#ffd700',weight:6},{id:'diamond',name:'Diamond',mult:3,color:'#00d4ff',weight:3},{id:'heavenly',name:'Heavenly',mult:5,color:'#f5f3ff',weight:1}];
 function fmt(n){n=Math.floor(n);if(n>=INFINITY_T)return'InfinityT';if(n>=1e12)return(n/1e12).toFixed(2)+'T';if(n>=1e9)return(n/1e9).toFixed(2)+'B';if(n>=1e6)return(n/1e6).toFixed(2)+'M';if(n>=1e3)return(n/1e3).toFixed(1)+'K';return String(n)}
@@ -431,11 +431,11 @@ function releaseSaveMutex() {
   }
 }
 
-function downloadSaveFile() {
+function downloadSaveFile(){
   try {
     // Create save data object
     const saveData = {
-      version: '2.353',
+      version: '3.122',
       timestamp: Date.now(),
       data: {
         p: G.points,
@@ -452,7 +452,9 @@ function downloadSaveFile() {
         pt: G.playtime,
         cb: G.crateBuys,
         qd: G.questsDone,
-        chu: G.chitlinUnlocked
+        chu: G.chitlinUnlocked,
+        sc: G.saveCodes || {},
+        is: G.importedSave || null
       }
     };
     
@@ -921,6 +923,178 @@ function modUnlockAll(){
     if(!G.unlocked.includes(b.id))G.unlocked.push(b.id);
   });
   ui();renderBrains();renderShop();save();toast('All Brainrots unlocked!');
+}
+
+// Save code generation and management
+let saveCodeCounter = 0;
+
+function generateSaveCode(){
+  // Generate unique save code
+  let code = 'SAVE' + Date.now().toString(36).toUpperCase();
+  let saveData = JSON.stringify(G);
+  
+  // Store the save code with save data
+  if(!G.saveCodes) G.saveCodes = {};
+  G.saveCodes[code] = {
+    data: saveData,
+    timestamp: Date.now(),
+    version: '3.122',
+    label: prompt('Enter a label for this save (optional):') || 'Save ' + saveCodeCounter++
+  };
+  
+  // Add to recent saves
+  if(!G.recentSaves) G.recentSaves = [];
+  G.recentSaves.unshift({code: code, label: G.saveCodes[code].label, timestamp: Date.now()});
+  G.recentSaves = G.recentSaves.slice(0, 10); // Keep only 10 most recent
+  
+  save();
+  showSaveCodeManager();
+}
+
+function copySaveCode(code){
+  navigator.clipboard.writeText(code).then(() => {
+    toast('Save code copied to clipboard! 📋');
+  }).catch(() => {
+    toast('Failed to copy code');
+  });
+}
+
+function deleteSaveCode(code){
+  if(!G.saveCodes || !G.saveCodes[code]) return toast('Save code not found');
+  
+  if(confirm('Delete save code "' + code + '"? This cannot be undone!')){
+    delete G.saveCodes[code];
+    
+    // Remove from recent saves
+    G.recentSaves = G.recentSaves.filter(s => s.code !== code);
+    
+    save();
+    showSaveCodeManager();
+    toast('Save code deleted');
+  }
+}
+
+function redeemSaveCode(code){
+  if(!G.saveCodes || !G.saveCodes[code]){
+    toast('Invalid save code');
+    return;
+  }
+  
+  let saveEntry = G.saveCodes[code];
+  if(!saveEntry) return toast('Save code not found');
+  
+  try {
+    let importedData = JSON.parse(saveEntry.data);
+    
+    // Merge imported data with current game state
+    Object.assign(G, importedData);
+    
+    // Mark as imported
+    saveEntry.imported = true;
+    saveEntry.importedAt = Date.now();
+    
+    save();
+    showSaveCodeManager();
+    
+    // Show success message
+    let timeAgo = Math.floor((Date.now() - saveEntry.timestamp) / 1000 / 60); // minutes ago
+    toast('Save "' + saveEntry.label + '" imported successfully! (' + timeAgo + ' minutes ago)');
+    
+    // Update UI
+    ui();
+    renderShop();
+    renderBrains();
+  } catch(error) {
+    toast('Failed to import save: ' + error.message);
+  }
+}
+
+function showSaveCodeManager(){
+  let modal = document.createElement('div');
+  modal.className = 'modal show';
+  modal.innerHTML = `
+    <div class="modal-card">
+      <h2 style="font-family:'Fredoka One';color:var(--gold)">🔑 Save Code Manager</h2>
+      <p class="sub">Generate, copy, import, and manage your save codes. Share codes with friends to transfer progress!</p>
+      <div style="margin-bottom:15px">
+        <button class="btn" onclick="generateSaveCode()">🔑 Generate New Save Code</button>
+        <button class="btn secondary" onclick="showImportSaveCode()">📥 Import Save Code</button>
+      </div>
+      <div id="saveCodesContainer" class="box" style="max-height:400px;overflow-y:auto;padding:10px;background:var(--card);border-radius:12px;margin-top:10px">
+        <div style="text-align:center;color:var(--muted);font-size:.85rem;margin-bottom:10px">No save codes yet. Generate one to get started!</div>
+      </div>
+      <div style="display:flex;gap:8px;justify-content:center;margin-top:15px">
+        <button class="btn secondary" onclick="closeSaveCodeManager()">❌ Close</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+  renderSaveCodes();
+}
+
+function showImportSaveCode(){
+  let modal = document.createElement('div');
+  modal.className = 'modal show';
+  modal.innerHTML = `
+    <div class="modal-card">
+      <h2 style="font-family:'Fredoka One';color:var(--gold)">📥 Import Save Code</h2>
+      <p class="sub">Enter a save code to import progress from another player:</p>
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:15px">
+        <input id="importSaveCodeInput" type="text" placeholder="Enter save code" style="flex:1;background:var(--card);border:2px solid #ffffff18;border-radius:12px;color:white;padding:10px 14px;outline:0;font-family:Nunito,sans-serif;font-size:.9rem">
+        <button class="btn" onclick="importSaveCodeFromInput()">📥 Import</button>
+      </div>
+      <div style="display:flex;gap:8px;justify-content:center;margin-top:15px">
+        <button class="btn secondary" onclick="closeImportSaveCode()">❌ Cancel</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+}
+
+function importSaveCodeFromInput(){
+  let code = document.getElementById('importSaveCodeInput').value.trim().toUpperCase();
+  if(!code) return toast('Please enter a save code');
+  redeemSaveCode(code);
+}
+
+function closeSaveCodeManager(){
+  let modal = document.getElementById('saveCodeModal');
+  if(modal) modal.remove();
+}
+
+function closeImportSaveCode(){
+  let modal = document.getElementById('importSaveModal');
+  if(modal) modal.remove();
+}
+
+function renderSaveCodes(){
+  let container = document.getElementById('saveCodesContainer');
+  if(!container) return;
+  
+  let codesHtml = '';
+  
+  if(G.saveCodes && Object.keys(G.saveCodes).length > 0){
+    Object.entries(G.saveCodes).forEach(([code, entry]) => {
+      let timeAgo = Math.floor((Date.now() - entry.timestamp) / 1000 / 60);
+      let importedStatus = entry.imported ? '✅ Imported' : '📄 Available';
+      codesHtml += '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px;margin:4px 0;background:rgba(255,255,255,0.1);border-radius:8px">';
+      codesHtml += '<div>';
+      codesHtml += '<div style="font-weight:800">' + entry.label + '</div>';
+      codesHtml += '<div class="small" style="color:var(--muted)">' + timeAgo + ' min ago</div>';
+      codesHtml += '</div>';
+      codesHtml += '</div>';
+      codesHtml += '<div style="display:flex;gap:4px">';
+      codesHtml += '<button class="btn secondary" style="padding:4px 8px;font-size:.7rem" onclick="copySaveCode(\'' + code + '\')">📋 Copy</button>';
+      codesHtml += '<button class="btn secondary" style="padding:4px 8px;font-size:.7rem" onclick="redeemSaveCode(\'' + code + '\')">📥 Import</button>';
+      codesHtml += '<button class="btn danger" style="padding:4px 8px;font-size:.7rem" onclick="deleteSaveCode(\'' + code + '\')">🗑️ Delete</button>';
+      codesHtml += '</div>';
+      codesHtml += '</div>';
+    });
+  } else {
+    codesHtml = '<div style="text-align:center;color:var(--muted);font-size:.85rem;margin-bottom:10px">No save codes yet. Generate one to get started!</div>';
+  }
+  
+  container.innerHTML = codesHtml;
 }
 </script>
 
