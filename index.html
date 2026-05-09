@@ -1,1 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Brainrot Clicker — tap, unlock brainrots, prestige, and climb milestones.">
+  <title>Brainrot Clicker — Play</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg-deep: #070713;
+      --panel: #12122a;
+      --card: #1b1b3d;
+      --accent: #ff6b35;
+      --accent2: #ff3da0;
+      --gold: #ffd700;
+      --cyan: #00d4ff;
+      --green: #2ecc71;
+      --text: #f3f3ff;
+      --muted: #9292b8;
+      --border: #ffffff18;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: Nunito, system-ui, sans-serif;
+      color: var(--text);
+      background: radial-gradient(ellipse 120% 80% at 50% -20%, #2a1a4a 0%, var(--bg-deep) 45%, #050510 100%);
+      line-height: 1.5;
+    }
+
+    .noise {
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      opacity: 0.04;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      z-index: 0;
+    }
+
+    .wrap {
+      position: relative;
+      z-index: 1;
+      max-width: 960px;
+      margin: 0 auto;
+      padding: clamp(1.5rem, 4vw, 3rem) clamp(1.25rem, 4vw, 2rem) 4rem;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: clamp(2rem, 6vw, 3.5rem);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      background: #00d4ff18;
+      border: 1px solid #00d4ff44;
+      padding: 0.35rem 0.85rem;
+      border-radius: 999px;
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-family: "Fredoka One", cursive;
+      font-size: clamp(2.25rem, 8vw, 3.25rem);
+      font-weight: 400;
+      line-height: 1.15;
+      background: linear-gradient(100deg, var(--accent), var(--accent2), var(--cyan));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.75rem;
+      filter: drop-shadow(0 12px 40px rgba(255, 107, 53, 0.25));
+    }
+
+    .tagline {
+      font-size: clamp(1rem, 3vw, 1.2rem);
+      color: var(--muted);
+      font-weight: 600;
+      max-width: 28ch;
+      margin: 0 auto 1.75rem;
+    }
+
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 2.5rem;
+    }
+
+    a.btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      font-family: inherit;
+      font-weight: 800;
+      font-size: 1rem;
+      text-decoration: none;
+      border-radius: 999px;
+      padding: 0.95rem 1.75rem;
+      border: 2px solid transparent;
+      transition: transform 0.15s ease, box-shadow 0.2s ease, filter 0.2s ease;
+    }
+
+    a.btn:active {
+      transform: scale(0.98);
+    }
+
+    a.btn-primary {
+      color: #fff;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      box-shadow: 0 8px 32px rgba(255, 61, 160, 0.35), 0 0 0 1px #ffffff22 inset;
+    }
+
+    a.btn-primary:hover {
+      filter: brightness(1.08);
+      box-shadow: 0 12px 40px rgba(255, 107, 53, 0.45), 0 0 0 1px #ffffff33 inset;
+    }
+
+    a.btn-secondary {
+      color: var(--text);
+      background: var(--card);
+      border-color: var(--border);
+    }
+
+    a.btn-secondary:hover {
+      border-color: var(--accent);
+      color: #fff;
+      background: var(--panel);
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+      margin-bottom: 3rem;
+    }
+
+    .card {
+      background: linear-gradient(160deg, var(--card) 0%, #151532 100%);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.35rem 1.25rem;
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.35);
+    }
+
+    .card-icon {
+      font-size: 1.75rem;
+      margin-bottom: 0.5rem;
+      line-height: 1;
+    }
+
+    .card h2 {
+      font-size: 1.05rem;
+      font-weight: 800;
+      margin-bottom: 0.35rem;
+      color: var(--text);
+    }
+
+    .card p {
+      font-size: 0.92rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    section.links {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 1.5rem 1.35rem;
+      margin-bottom: 2rem;
+    }
+
+    section.links h3 {
+      font-size: 0.85rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+
+    .link-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+
+    .link-list a {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.85rem 1rem;
+      border-radius: 12px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-weight: 700;
+      text-decoration: none;
+      transition: border-color 0.15s ease, background 0.15s ease;
+    }
+
+    .link-list a:hover {
+      border-color: var(--accent);
+      background: #221f45;
+    }
+
+    .link-list a span.meta {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    footer {
+      text-align: center;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    footer a {
+      color: var(--cyan);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="noise" aria-hidden="true"></div>
+  <div class="wrap">
+    <header>
+      <p class="badge">Idle · incremental · unhinged</p>
+      <h1>Brainrot Clicker</h1>
+      <p class="tagline">Tap your favorite brainrots, open Lucky Blocks, and prestige into oblivion.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="Brainrot%20Clicker.html">Play game →</a>
+        <a class="btn btn-secondary" href="#features">What’s in the game</a>
+      </div>
+    </header>
+
+    <div id="features" class="cards" tabindex="-1">
+      <article class="card">
+        <div class="card-icon" aria-hidden="true">🧠</div>
+        <h2>Unlock the roster</h2>
+        <p>Collect brainrots, evolve them, and chase rare pulls from crates.</p>
+      </article>
+      <article class="card">
+        <div class="card-icon" aria-hidden="true">⭐</div>
+        <h2>Skills & milestones</h2>
+        <p>Earn skill points from clicks, lifetime points, unlocks, and prestige.</p>
+      </article>
+      <article class="card">
+        <div class="card-icon" aria-hidden="true">🃏</div>
+        <h2>Cards & codes</h2>
+        <p>Combine mutations, redeem codes, and sync saves when you need a backup.</p>
+      </article>
+    </div>
+
+    <section class="links" aria-labelledby="links-heading">
+      <h3 id="links-heading">Quick links</h3>
+      <nav class="link-list">
+        <a href="Brainrot%20Clicker.html">
+          Play Brainrot Clicker
+          <span class="meta">Main game file</span>
+        </a>
+        <a href="#features">
+          Feature overview
+          <span class="meta">On this page</span>
+        </a>
+      </nav>
+    </section>
+
+    <footer>
+      <p>Open source vibes · Hosted as static HTML · <a href="Brainrot%20Clicker.html">Enter game</a></p>
+    </footer>
+  </div>
+</body>
+
+</html>

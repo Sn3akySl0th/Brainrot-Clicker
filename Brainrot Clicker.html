@@ -1613,8 +1613,8 @@
         }
       });
 
-      // Brainrot unlock milestones
-      const brainMilestones = [3, 5, 10, 15, 20];
+      // Brainrot unlock milestones (last tier = full roster; was 20 with only 18 brainrots)
+      const brainMilestones = [3, 5, 10, 15, BRAINROTS.length];
       brainMilestones.forEach(m => {
         if (G.unlocked.length >= m && !G.skillMilestones['brain_' + m]) {
           G.skillMilestones['brain_' + m] = true;
@@ -2402,7 +2402,7 @@
           milestonesHtml += '</div>';
 
           // Brainrot milestones
-          const brainMilestones = [3, 5, 10, 15, 20];
+          const brainMilestones = [3, 5, 10, 15, BRAINROTS.length];
           milestonesHtml += '<div style="margin-bottom:15px"><h4 style="color:var(--accent);margin-bottom:8px">🧠 Brainrot Milestones</h4>';
           brainMilestones.forEach(m => {
             let completed = G.skillMilestones && G.skillMilestones['brain_' + m];
