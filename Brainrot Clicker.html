@@ -1011,6 +1011,103 @@
       text-align: left;
       clear: both
     }
+
+    #spawnBrainrot {
+      position: fixed;
+      left: 16px;
+      top: 110px;
+      z-index: 950;
+      width: min(260px, calc(100vw - 24px));
+      background: linear-gradient(135deg, #1b1b3d, #11112d);
+      border: 2px solid #ffffff2e;
+      border-radius: 16px;
+      padding: 10px;
+      box-shadow: 0 0 24px #0009;
+      cursor: pointer;
+      -webkit-user-select: none;
+      user-select: none;
+      transition: left .7s linear, top .7s linear, transform .18s ease-out;
+      transform-origin: center
+    }
+
+    #spawnBrainrot img {
+      width: 100%;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 10px;
+      border: 1px solid #ffffff2e
+    }
+
+    #spawnBrainrot .name {
+      margin-top: 8px
+    }
+
+    #spawnHpBar {
+      width: 100%;
+      height: 10px;
+      border-radius: 999px;
+      margin-top: 8px;
+      background: #ffffff1f;
+      overflow: hidden
+    }
+
+    #spawnHpFill {
+      height: 100%;
+      width: 100%;
+      background: linear-gradient(90deg, #ff6b35, #ff3da0)
+    }
+
+    #spawnBrainrot.hit {
+      transform: scale(0.95)
+    }
+
+    .spawn-hit-fx {
+      position: fixed;
+      width: 28px;
+      height: 28px;
+      margin-left: -14px;
+      margin-top: -14px;
+      border-radius: 999px;
+      border: 3px solid #ffd700;
+      box-shadow: 0 0 16px #ffd70088;
+      pointer-events: none;
+      z-index: 1200;
+      animation: spawnHitPulse .36s ease-out forwards
+    }
+
+    @keyframes spawnHitPulse {
+      from {
+        transform: scale(0.5);
+        opacity: 1
+      }
+
+      to {
+        transform: scale(1.9);
+        opacity: 0
+      }
+    }
+
+    #spawnBrainrot.dying {
+      pointer-events: none;
+      animation: mario64Death 1.4s cubic-bezier(.2,.7,.2,1) forwards
+    }
+
+    @keyframes mario64Death {
+      0% {
+        transform: translateY(0) rotate(0deg) scale(1);
+        opacity: 1
+      }
+
+      30% {
+        transform: translateY(-120px) rotate(-8deg) scale(1.02);
+        opacity: 1
+      }
+
+      100% {
+        transform: translateY(1000px) rotate(26deg) scale(0.9);
+        opacity: 0
+      }
+    }
   </style>
 </head>
 
@@ -1073,6 +1170,13 @@
           onclick="openPrestigeConfirm()">Prestige</button>
       </div>
     </div>
+  </div>
+  <div id="spawnBrainrot" hidden onclick="clickSpawnBrainrot(event)">
+    <img id="spawnImg" alt="Spawned Brainrot">
+    <div class="name" id="spawnName">Wild Brainrot</div>
+    <div class="small">Click to attack • Damage: <b id="spawnDmg">0</b></div>
+    <div class="small">HP: <b id="spawnHpTxt">0 / 0</b> • Time: <b id="spawnTime">0s</b></div>
+    <div id="spawnHpBar"><div id="spawnHpFill"></div></div>
   </div>
   <div id="page-shop" class="page">
     <div class="title">🛒 Shop</div>
@@ -1686,7 +1790,7 @@
       document.body.appendChild(modal);
     }
 
-    let G = { points: 0, runEarned: 0, lifetimeEarned: 0, totalClicks: 0, current: 'tung', unlocked: ['tung'], levels: {}, evos: {}, redeemed: [], prestige: 0, prestigeCodeUnlocked: false, playtime: 0, crateBuys: { double: 0, triple: 0, chitlin: 0 }, settings: { particles: true, rings: true, sound: true }, questsDone: [], chitlinUnlocked: false, ledunkUnlocked: false, ledunkRedeemed: false, ledunkCosmeticOn: false, skillPoints: 0, skillLevels: {}, skillMilestones: {}, activeTree: 'click', boostUntil: 0, cardBuys: 0, cards: {}, codex: [], cardBoosts: {}, combinePick: [], saveCodes: {}, importedSave: null, autoProduced: 0, autoMilestones: {}, lastManualClick: Date.now() };
+    let G = { points: 0, runEarned: 0, lifetimeEarned: 0, totalClicks: 0, current: 'tung', unlocked: ['tung'], levels: {}, evos: {}, redeemed: [], prestige: 0, prestigeCodeUnlocked: false, playtime: 0, crateBuys: { double: 0, triple: 0, chitlin: 0 }, settings: { particles: true, rings: true, sound: true }, questsDone: [], chitlinUnlocked: false, ledunkUnlocked: false, ledunkRedeemed: false, ledunkCosmeticOn: false, skillPoints: 0, skillLevels: {}, skillMilestones: {}, activeTree: 'click', boostUntil: 0, cardBuys: 0, cards: {}, codex: [], cardBoosts: {}, combinePick: [], saveCodes: {}, importedSave: null, autoProduced: 0, autoMilestones: {}, lastManualClick: Date.now(), spawnBrainrot: null, lastSpawnRoll: 0 };
     const BRAINROT_SHOP_CHAIN = ['tim', 'patapim', 'bomb', 'frulli', 'lirili', 'trala', 'gusini', 'coco', 'ryan', 'odin', 'homer', 'ander', 'spaghetti', 'mateo', 'jobjob'];
     const BRAINROT_SHOP_MULTS = [13, 2.55, 2.05, 1.75, 1.12, 1.85, 2.35, 1.32, 1.65, 4.8, 2.05, 4.5, 1.82, 1.17];
     const BRAINROT_JOHN_BASE = 4200000000;
@@ -1718,7 +1822,7 @@
     const CARD_PACK_PRICE_CAP = 500000000000;
     const MUTATIONS = [{ id: 'radiation', name: 'Radiation', mult: 1.5, color: '#7CFC00', weight: 10 }, { id: 'gold', name: 'Gold', mult: 2, color: '#ffd700', weight: 6 }, { id: 'diamond', name: 'Diamond', mult: 3, color: '#00d4ff', weight: 3 }, { id: 'heavenly', name: 'Heavenly', mult: 5, color: '#f5f3ff', weight: 1 }];
     function fmt(n) { n = Math.floor(n); if (n >= INFINITY_T) return 'InfinityT'; if (n >= 1e12) return (n / 1e12).toFixed(2) + 'T'; if (n >= 1e9) return (n / 1e9).toFixed(2) + 'B'; if (n >= 1e6) return (n / 1e6).toFixed(2) + 'M'; if (n >= 1e3) return (n / 1e3).toFixed(1) + 'K'; return String(n) }
-    function evoCap() { return 100000 + (G.prestige || 0) * 100000 } function evo(id) { return Math.min(G.evos[id] || 1, evoCap()) } function isTungGod() { return evo('tung') >= 200000 } function displayName(b) { return b.id === 'tung' && isTungGod() ? b.godName : b.name } function displayPpc(b) { return b.ppc * evo(b.id) } function maxLvl() { return 5 + G.prestige * 5 } function prestigeNeed() { return 10000000000 * (G.prestige + 1) } function missingBrainrots() { return BRAINROTS.filter(b => b.cost > 0 && !b.noPrestige && !G.unlocked.includes(b.id)) } function allOwned() { return missingBrainrots().length === 0 }
+    function evoCap() { return 100000 + (G.prestige || 0) * 100000 } function evo(id) { return Math.min(G.evos[id] || 1, evoCap()) } function isTungGod() { return evo('tung') >= 200000 } function displayName(b) { return b.id === 'tung' && isTungGod() ? b.godName : b.name } function displayPpc(b) { return b.ppc * evo(b.id) } function maxLvl() { return 5 + G.prestige * 5 } function prestigeNeed() { return Math.min(10000000000000000, Math.floor(10000000000 * Math.pow(1.2, G.prestige))) } function missingBrainrots() { return BRAINROTS.filter(b => b.cost > 0 && !b.noPrestige && !G.unlocked.includes(b.id)) } function allOwned() { return missingBrainrots().length === 0 }
     function cur() { return BRAINROTS.find(b => b.id === G.current) || BRAINROTS[0] } function incomeBoost() { return Date.now() < (G.boostUntil || 0) ? 5 : 1 } function cardBoost(id) { return Math.pow(1.5, (G.cardBoosts && G.cardBoosts[id]) || 0) } function autoMilestoneDiscount() { let discount = 0; if ((G.autoProduced || 0) >= 1000000) discount += 0.05; return Math.min(0.5, discount) } function autoMilestoneBurstBonusMs() { return (G.autoProduced || 0) >= 50000000 ? 1000 : 0 } function autoMilestoneCritBonus() { return (G.autoProduced || 0) >= 500000000 ? 0.01 : 0 } function autoBurstMultiplier() { let cycleMs = 30000; let activeMs = 5000 + autoMilestoneBurstBonusMs(); return (Date.now() % cycleMs) < activeMs ? 2.5 : 1 } function autoIdleMomentum() { return Date.now() - (G.lastManualClick || 0) >= 10000 ? 1.4 : 1 } function ppc() {
       let b = cur(), bonus = 0; UPGRADES.forEach(u => bonus += u.effect * (G.levels[u.id] || 0)); let baseValue = (displayPpc(b) * cardBoost(b.id) + bonus) * Math.pow(2, G.prestige) * incomeBoost(); let speedMultiplier = 1; let multiBoost = 1; // Apply Click Mastery skills
       speedMultiplier *= getSkillBonus('click', 'click_speed');
@@ -2021,6 +2125,119 @@
       box.hidden = !G.ledunkRedeemed;
       if (G.ledunkRedeemed) btn.textContent = G.ledunkCosmeticOn ? '🥤 Dunkin look: ON' : '🐷 Classic John Pork look';
     }
+    function chooseSpawnBrainrot() {
+      let pool = BRAINROTS.filter(b => b.id !== 'chitlinburger' && b.cost > 0 && b.cost !== Infinity);
+      return pool[Math.floor(Math.random() * pool.length)] || BRAINROTS[0];
+    }
+    function spawnBrainrotHp(b) {
+      let c = Number(b && b.cost) || 100;
+      return Math.max(50, Math.floor(Math.sqrt(Math.max(1, c)) * 6));
+    }
+    function randomSpawnPosition() {
+      let w = Math.min(260, Math.max(180, window.innerWidth - 24));
+      let h = 214;
+      let minX = 8;
+      let minY = 92;
+      let maxX = Math.max(minX, window.innerWidth - w - 8);
+      let maxY = Math.max(minY, window.innerHeight - h - 8);
+      return {
+        x: Math.floor(minX + Math.random() * (maxX - minX + 1)),
+        y: Math.floor(minY + Math.random() * (maxY - minY + 1))
+      };
+    }
+    function spawnBrainrotNow(force) {
+      if (G.spawnBrainrot && G.spawnBrainrot.active) return false;
+      if (!force && Math.random() > 0.35) return false;
+      let b = chooseSpawnBrainrot();
+      let hp = spawnBrainrotHp(b);
+      let p = randomSpawnPosition();
+      G.spawnBrainrot = { active: true, id: b.id, hp: hp, maxHp: hp, expiresAt: Date.now() + 45000, x: p.x, y: p.y, nextMoveAt: Date.now() + 420, dying: false, removeAt: 0 };
+      renderSpawnBrainrot();
+      toast('⚠️ Wild ' + displayName(b) + ' appeared! Click it to defeat it.');
+      return true;
+    }
+    function renderSpawnBrainrot() {
+      let wrap = document.getElementById('spawnBrainrot');
+      if (!wrap) return;
+      let s = G.spawnBrainrot;
+      if (!s || !s.active) { wrap.hidden = true; return; }
+      let b = BRAINROTS.find(x => x.id === s.id) || BRAINROTS[0];
+      let img = document.getElementById('spawnImg');
+      let name = document.getElementById('spawnName');
+      let dmg = document.getElementById('spawnDmg');
+      let hpTxt = document.getElementById('spawnHpTxt');
+      let hpFill = document.getElementById('spawnHpFill');
+      let tm = document.getElementById('spawnTime');
+      let src = normalizeImageSrc(b.img);
+      wrap.style.left = Math.floor(s.x || 16) + 'px';
+      wrap.style.top = Math.floor(s.y || 110) + 'px';
+      img.src = src || '';
+      img.alt = displayName(b);
+      name.textContent = '⚠️ Wild ' + displayName(b);
+      dmg.textContent = fmt(ppc());
+      hpTxt.textContent = fmt(s.hp) + ' / ' + fmt(s.maxHp);
+      hpFill.style.width = Math.max(0, Math.min(100, (s.hp / s.maxHp) * 100)) + '%';
+      tm.textContent = s.dying ? 'defeated' : (Math.max(0, Math.ceil((s.expiresAt - Date.now()) / 1000)) + 's');
+      wrap.classList.toggle('dying', !!s.dying);
+      wrap.hidden = false;
+    }
+    function clickSpawnBrainrot(e) {
+      if (e) e.stopPropagation();
+      let s = G.spawnBrainrot;
+      if (!s || !s.active || s.dying) return;
+      let wrap = document.getElementById('spawnBrainrot');
+      if (wrap) { wrap.classList.add('hit'); setTimeout(() => wrap.classList.remove('hit'), 120); }
+      if (e && typeof e.clientX === 'number' && typeof e.clientY === 'number') {
+        let fx = document.createElement('div');
+        fx.className = 'spawn-hit-fx';
+        fx.style.left = e.clientX + 'px';
+        fx.style.top = e.clientY + 'px';
+        document.body.appendChild(fx);
+        setTimeout(() => fx.remove(), 380);
+      }
+      let d = Math.max(1, ppc());
+      s.hp -= d;
+      if (s.hp <= 0) {
+        let reward = Math.max(100, Math.floor(s.maxHp * 2));
+        let b = BRAINROTS.find(x => x.id === s.id) || BRAINROTS[0];
+        G.points += reward; G.runEarned += reward; G.lifetimeEarned += reward;
+        s.hp = 0;
+        s.dying = true;
+        s.removeAt = Date.now() + 1400;
+        renderSpawnBrainrot();
+        ui();
+        save();
+        toast('✅ Defeated ' + displayName(b) + '! +' + fmt(reward) + ' pts');
+        return;
+      }
+      renderSpawnBrainrot();
+      ui();
+    }
+    function tickSpawnBrainrot() {
+      let s = G.spawnBrainrot;
+      if (!s || !s.active) return;
+      if (s.dying) {
+        if (Date.now() >= (s.removeAt || 0)) {
+          G.spawnBrainrot = null;
+          renderSpawnBrainrot();
+        }
+        return;
+      }
+      if (Date.now() >= (s.expiresAt || 0)) {
+        let b = BRAINROTS.find(x => x.id === s.id) || BRAINROTS[0];
+        G.spawnBrainrot = null;
+        renderSpawnBrainrot();
+        toast('💨 ' + displayName(b) + ' escaped!');
+        return;
+      }
+      if (Date.now() >= (s.nextMoveAt || 0)) {
+        let p = randomSpawnPosition();
+        s.x = p.x;
+        s.y = p.y;
+        s.nextMoveAt = Date.now() + 850 + Math.floor(Math.random() * 650);
+      }
+      renderSpawnBrainrot();
+    }
     function buyUp(id) { let u = [...UPGRADES, ...AUTOS].find(x => x.id === id), l = G.levels[id] || 0; if (l >= maxLvl()) return toast('Maxed until next prestige'); let c = cost(u); if (G.points < c) return toast('Need ' + fmt(c)); G.points -= c; G.levels[id] = l + 1; toast(u.name + ' upgraded'); renderShop(); ui() }
     function unlockBrainrot(id, options) { options = options || {}; let b = BRAINROTS.find(x => x.id === id); if (!b || G.unlocked.includes(id)) return false; G.unlocked.push(id); if (G.settings && G.settings.autoSwitchUnlock) { G.current = id; updateChar(); if (!options.silentToast) toast('Unlocked ' + b.name + ' and auto-switched!') } else if (!options.silentToast) { toast('Unlocked ' + b.name) } return true }
     function buyB(id) { let b = BRAINROTS.find(x => x.id === id); if (G.unlocked.includes(id)) return; let canAfford = b.cost === Infinity ? G.points >= INFINITY_T : G.points >= b.cost; if (!canAfford) return toast('Need ' + fmt(b.cost)); if (b.cost !== Infinity) G.points -= b.cost; else G.points = 0; unlockBrainrot(id); renderShop(); renderBrains(); ui() }
@@ -2031,7 +2248,11 @@
       let need = prestigeNeed(); let missing = missingBrainrots();
       if (missing.length > 0) { closeModal('prestigeConfirm'); return toast('Need all Brainrots first') }
       if (Number(G.points) < need) { closeModal('prestigeConfirm'); return toast('Need ' + fmt(need) + ' points') }
-      G.prestige = (Number(G.prestige) || 0) + 1; G.prestigeCodeUnlocked = true; G.points = 0; G.runEarned = 0; G.totalClicks = 0; G.current = 'tung'; G.unlocked = ['tung']; G.levels = {}; G.evos = {}; G.crateBuys = { double: 0, triple: 0, chitlin: 0 }; G.cardBuys = 0; G.tungGodNotified = false;
+      let keepEvos = {};
+      Object.keys(G.cardBoosts || {}).forEach(id => {
+        if ((G.cardBoosts[id] || 0) > 0 && (G.evos[id] || 0) > 1) keepEvos[id] = G.evos[id];
+      });
+      G.prestige = (Number(G.prestige) || 0) + 1; G.prestigeCodeUnlocked = true; G.points = 0; G.runEarned = 0; G.totalClicks = 0; G.current = 'tung'; G.unlocked = ['tung']; G.levels = {}; G.evos = keepEvos; G.crateBuys = { double: 0, triple: 0, chitlin: 0 }; G.cardBuys = 0; G.tungGodNotified = false;
       applyBrainrotShopCosts();
       syncLedunkCosmeticFromSave();
       closeModal('prestigeConfirm'); save(); updateChar(); renderShop(); renderBrains(); renderCodes(); renderCards(); ui(); showModal('prestigeModal');
@@ -2317,7 +2538,7 @@
     function renderCodes() { document.getElementById('codes').innerHTML = CODES.filter(c => !c.secret).map(c => '<div class="card code ' + (G.redeemed.includes(c.code) ? 'owned' : '') + '"><div class="name">' + c.code + '</div><div class="small">' + c.desc + '</div>' + (c.secret ? '<div class="small" style="color:var(--gold)">Keep this for later</div>' : '') + '</div>').join('') }
     function formatTime(sec) { sec = Math.floor(sec || 0); let h = Math.floor(sec / 3600), m = Math.floor((sec % 3600) / 60), ss = sec % 60; return h > 0 ? h + 'h ' + m + 'm ' + ss + 's' : m > 0 ? m + 'm ' + ss + 's' : ss + 's' }
     function updateChar() { let b = cur(), im = document.getElementById('charImg'); let src = (b.id === 'tung' && isTungGod() && b.godImg) ? b.godImg : b.img; src = normalizeImageSrc(src); im.src = src || 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="250" height="250"><text x="50%" y="55%" text-anchor="middle" font-size="150">' + (b.emoji || '🧠') + '</text></svg>'); im.onerror = () => { im.src = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="250" height="250"><text x="50%" y="55%" text-anchor="middle" font-size="140">🧠</text></svg>'); }; let currentName = displayName(b); im.alt = currentName + ' character'; im.title = currentName; document.getElementById('charName').textContent = currentName; document.documentElement.style.setProperty('--char-color', b.color) }
-    function ui() { let b = cur(), next = BRAINROTS.find(x => !G.unlocked.includes(x.id)); document.getElementById('hp').textContent = fmt(G.points) + ' pts'; document.getElementById('hs').textContent = fmt(pps()) + '/s' + (incomeBoost() > 1 ? ' ⚡5x' : ''); let hsMods = document.getElementById('hsMods'); if (hsMods) { let burst = autoBurstMultiplier(); let idle = autoIdleMomentum(); let critChance = Math.min(0.6, 0.02 + getSkillLevel('auto', 'auto_crit_chance') * 0.01 + autoMilestoneCritBonus()); hsMods.textContent = 'Burst x' + burst.toFixed(1) + ' • Idle x' + idle.toFixed(1) + ' • Crit ' + Math.round(critChance * 100) + '%'; hsMods.style.color = (burst > 1 || idle > 1) ? 'var(--accent)' : 'var(--muted)'; } document.getElementById('scoreNum').textContent = fmt(G.points); document.getElementById('ppc').textContent = '+' + fmt(ppc()) + ' per click'; document.getElementById('stClicks').textContent = fmt(G.totalClicks); document.getElementById('stRun').textContent = fmt(G.runEarned); document.getElementById('stLife').textContent = fmt(G.lifetimeEarned); document.getElementById('stPpc').textContent = fmt(ppc()); document.getElementById('stPps').textContent = fmt(pps()); document.getElementById('stPrestige').textContent = G.prestige; document.getElementById('stSkillPoints').textContent = G.skillPoints || 0; let stLastOffline = document.getElementById('stLastOffline'); if (stLastOffline) stLastOffline.textContent = fmt(G.lastOfflineGain || 0) + ' pts'; var mpBtn = document.getElementById('modPanelBtn'); if (mpBtn) mpBtn.style.display = G.modPanelUnlocked ? 'block' : 'none'; document.getElementById('stBrainrots').textContent = G.unlocked.length + '/' + BRAINROTS.length; document.getElementById('prestNeed').textContent = fmt(prestigeNeed()); let miss = missingBrainrots(); document.getElementById('prestAll').textContent = miss.length === 0 ? 'Yes' : 'No (' + miss.length + ' missing)'; document.getElementById('prestMax').textContent = maxLvl(); if (document.getElementById('stPlaytime')) document.getElementById('stPlaytime').textContent = formatTime(G.playtime); let _dp = document.getElementById('doublePrice'); if (_dp) { let _e = Math.min(PRICE_CAP, Math.floor(15000 * Math.pow(2, G.crateBuys.double || 0))); _dp.textContent = '🪙 ' + fmt(_e) + ' each'; } let _tp = document.getElementById('triplePrice'); if (_tp) { let _e = Math.min(PRICE_CAP, Math.floor(75000 * Math.pow(1.5, G.crateBuys.triple || 0))); _tp.textContent = '🪙 ' + fmt(_e) + ' each'; } let _cp = document.getElementById('chitlinCratePrice'); if (_cp) { let _e = Math.min(PRICE_CAP, Math.floor(1000000000 * Math.pow(1.5, G.crateBuys.chitlin || 0))); _cp.textContent = '🪙 ' + fmt(_e) + ' each'; } let _pp = document.getElementById('packPriceLabel'); if (_pp) { _pp.textContent = '🪙 ' + fmt(packPrice()) + ' each'; } document.getElementById('prestReqSet').textContent = 'All Brainrots + ' + fmt(prestigeNeed()) + ' pts'; if (next) { document.getElementById('nextName').textContent = next.name; document.getElementById('nextFill').style.width = Math.min(100, G.points / next.cost * 100) + '%'; document.getElementById('nextTxt').textContent = fmt(G.points) + ' / ' + fmt(next.cost) + ' pts'; document.getElementById('readyHint').style.display = G.points >= next.cost ? 'block' : 'none' } let soundBtn = document.getElementById('soundToggle'); if (soundBtn) soundBtn.textContent = G.settings.sound ? '🔊 Sound: ON' : '🔇 Sound: OFF'; let autoSwitchBtn = document.getElementById('autoSwitchUnlockToggle'); if (autoSwitchBtn) autoSwitchBtn.textContent = (G.settings && G.settings.autoSwitchUnlock !== false) ? '🎯 Auto-switch on unlock: ON' : '🎯 Auto-switch on unlock: OFF'; updateLedunkCosmeticSettingsUi(); updateShopNavHighlight(); }
+    function ui() { let b = cur(), next = BRAINROTS.find(x => !G.unlocked.includes(x.id)); document.getElementById('hp').textContent = fmt(G.points) + ' pts'; document.getElementById('hs').textContent = fmt(pps()) + '/s' + (incomeBoost() > 1 ? ' ⚡5x' : ''); let hsMods = document.getElementById('hsMods'); if (hsMods) { let burst = autoBurstMultiplier(); let idle = autoIdleMomentum(); let critChance = Math.min(0.6, 0.02 + getSkillLevel('auto', 'auto_crit_chance') * 0.01 + autoMilestoneCritBonus()); hsMods.textContent = 'Burst x' + burst.toFixed(1) + ' • Idle x' + idle.toFixed(1) + ' • Crit ' + Math.round(critChance * 100) + '%'; hsMods.style.color = (burst > 1 || idle > 1) ? 'var(--accent)' : 'var(--muted)'; } document.getElementById('scoreNum').textContent = fmt(G.points); document.getElementById('ppc').textContent = '+' + fmt(ppc()) + ' per click'; document.getElementById('stClicks').textContent = fmt(G.totalClicks); document.getElementById('stRun').textContent = fmt(G.runEarned); document.getElementById('stLife').textContent = fmt(G.lifetimeEarned); document.getElementById('stPpc').textContent = fmt(ppc()); document.getElementById('stPps').textContent = fmt(pps()); document.getElementById('stPrestige').textContent = G.prestige; document.getElementById('stSkillPoints').textContent = G.skillPoints || 0; let stLastOffline = document.getElementById('stLastOffline'); if (stLastOffline) stLastOffline.textContent = fmt(G.lastOfflineGain || 0) + ' pts'; var mpBtn = document.getElementById('modPanelBtn'); if (mpBtn) mpBtn.style.display = G.modPanelUnlocked ? 'block' : 'none'; document.getElementById('stBrainrots').textContent = G.unlocked.length + '/' + BRAINROTS.length; document.getElementById('prestNeed').textContent = fmt(prestigeNeed()); let miss = missingBrainrots(); document.getElementById('prestAll').textContent = miss.length === 0 ? 'Yes' : 'No (' + miss.length + ' missing)'; document.getElementById('prestMax').textContent = maxLvl(); if (document.getElementById('stPlaytime')) document.getElementById('stPlaytime').textContent = formatTime(G.playtime); let _dp = document.getElementById('doublePrice'); if (_dp) { let _e = Math.min(PRICE_CAP, Math.floor(15000 * Math.pow(2, G.crateBuys.double || 0))); _dp.textContent = '🪙 ' + fmt(_e) + ' each'; } let _tp = document.getElementById('triplePrice'); if (_tp) { let _e = Math.min(PRICE_CAP, Math.floor(75000 * Math.pow(1.5, G.crateBuys.triple || 0))); _tp.textContent = '🪙 ' + fmt(_e) + ' each'; } let _cp = document.getElementById('chitlinCratePrice'); if (_cp) { let _e = Math.min(PRICE_CAP, Math.floor(1000000000 * Math.pow(1.5, G.crateBuys.chitlin || 0))); _cp.textContent = '🪙 ' + fmt(_e) + ' each'; } let _pp = document.getElementById('packPriceLabel'); if (_pp) { _pp.textContent = '🪙 ' + fmt(packPrice()) + ' each'; } document.getElementById('prestReqSet').textContent = 'All Brainrots + ' + fmt(prestigeNeed()) + ' pts'; if (next) { document.getElementById('nextName').textContent = next.name; document.getElementById('nextFill').style.width = Math.min(100, G.points / next.cost * 100) + '%'; document.getElementById('nextTxt').textContent = fmt(G.points) + ' / ' + fmt(next.cost) + ' pts'; document.getElementById('readyHint').style.display = G.points >= next.cost ? 'block' : 'none' } let soundBtn = document.getElementById('soundToggle'); if (soundBtn) soundBtn.textContent = G.settings.sound ? '🔊 Sound: ON' : '🔇 Sound: OFF'; let autoSwitchBtn = document.getElementById('autoSwitchUnlockToggle'); if (autoSwitchBtn) autoSwitchBtn.textContent = (G.settings && G.settings.autoSwitchUnlock !== false) ? '🎯 Auto-switch on unlock: ON' : '🎯 Auto-switch on unlock: OFF'; updateLedunkCosmeticSettingsUi(); renderSpawnBrainrot(); updateShopNavHighlight(); }
     function page(id) {
       document.querySelectorAll('.page').forEach(p => { p.classList.remove('active'); p.style.display = 'none' }); document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active')); let el = document.getElementById('page-' + id); if (el) { el.classList.add('active'); el.style.display = 'block'; if (id === 'quests') fullRenderQuests(); if (id === 'cards') renderCards(); if (id === 'skills') { renderSkills(); renderMilestones(); } let m = { game: 0, shop: 1, brainrots: 2, cards: 3, skills: 4, codes: 5, quests: 6, settings: 7 }; let btn = document.querySelectorAll('.nav-btn')[m[id]]; if (btn) btn.classList.add('active'); if (id === 'shop') renderShop(); if (id === 'brainrots') renderBrains(); if (id === 'codes') renderCodes(); if (id === 'skills') renderSkills(); ui() }
     }
@@ -2466,6 +2687,8 @@
         if (G.lastOfflineGain === undefined) G.lastOfflineGain = 0;
         if (G.lastOfflineSeconds === undefined) G.lastOfflineSeconds = 0;
         if (G.lastSaveTime === undefined) G.lastSaveTime = now;
+        if (G.spawnBrainrot === undefined) G.spawnBrainrot = null;
+        if (G.lastSpawnRoll === undefined) G.lastSpawnRoll = 0;
 
         const HARD_OFFLINE_CAP_SECONDS = 12 * 60 * 60;
         G.lastOfflineGain = 0;
@@ -2476,7 +2699,8 @@
           const awaySeconds = Math.floor((now - lastSaveTime) / 1000);
           const cappedAwaySeconds = Math.min(awaySeconds, HARD_OFFLINE_CAP_SECONDS);
           const offlineLevel = getSkillLevel('auto', 'auto_offline');
-          const maxOfflineSeconds = offlineLevel * 60;
+          // At least 1 minute of bankable offline time (skill level 0 used to give 0s, so nothing ever credited).
+          const maxOfflineSeconds = Math.max(1, offlineLevel) * 60;
           const rewardedSeconds = Math.min(cappedAwaySeconds, maxOfflineSeconds);
           if (rewardedSeconds > 0) {
             const offlineGain = Math.floor(pps() * rewardedSeconds);
@@ -2491,6 +2715,10 @@
               checkAutoMilestones();
               const capNote = awaySeconds > HARD_OFFLINE_CAP_SECONDS ? ' • capped at 12h' : '';
               toast('🕒 Offline progress: +' + fmt(offlineGain) + ' pts (' + Math.floor(rewardedSeconds / 60) + 'm ' + (rewardedSeconds % 60) + 's)' + capNote);
+              save();
+            } else if (pps() <= 0) {
+              toast('🕒 You were away ' + Math.floor(rewardedSeconds / 60) + 'm — buy auto upgrades (or click power) to earn offline points.');
+              save();
             }
           }
         }
@@ -2512,6 +2740,12 @@
         }
       }, 30000);
       setInterval(save, 30000);
+      setInterval(() => tickSpawnBrainrot(), 250);
+      setInterval(() => {
+        if (Date.now() - (G.lastSpawnRoll || 0) < 59000) return;
+        G.lastSpawnRoll = Date.now();
+        spawnBrainrotNow(false);
+      }, 1000);
       document.getElementById('char').addEventListener('click', clicker);
       document.addEventListener('keydown', e => { if (e.code === 'Space' && !e.repeat && document.getElementById('page-game').classList.contains('active') && !['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) { e.preventDefault(); let r = document.getElementById('charImg').getBoundingClientRect(); clicker({ clientX: r.left + r.width / 2, clientY: r.top + r.height / 2 }) } });
       load();
@@ -2604,6 +2838,11 @@
         <button class="btn w-full" onclick="modUnlockAll()">Unlock All Brainrots</button>
       </div>
 
+      <div class="mod-block">
+        <div class="section section-no-top">⚠️ Spawn Brainrot</div>
+        <button class="btn w-full" onclick="modSpawnBrainrot()">Spawn brainrot</button>
+      </div>
+
       <div class="mod-note">Changes are applied instantly and
         saved 🔒</div>
     </div>
@@ -2660,6 +2899,10 @@
           if (!G.unlocked.includes(b.id)) G.unlocked.push(b.id);
         });
         ui(); renderBrains(); renderShop(); save(); toast('All Brainrots unlocked!');
+      }
+      function modSpawnBrainrot() {
+        if (spawnBrainrotNow(true)) { ui(); save(); return; }
+        toast('A wild brainrot is already active.');
       }
 
       // Save code generation and management — short SAVE* IDs are LOCAL only (browser storage).
