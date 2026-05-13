@@ -1108,6 +1108,272 @@
         opacity: 0
       }
     }
+
+    .arena-combat-wrap {
+      margin-top: 16px;
+      text-align: center
+    }
+
+    .arena-hud {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px 20px;
+      margin-bottom: 10px;
+      font-weight: 800;
+      color: var(--accent)
+    }
+
+    #arenaCanvas {
+      display: block;
+      margin: 0 auto;
+      max-width: 100%;
+      height: auto;
+      border: 3px solid var(--accent);
+      border-radius: 12px;
+      background: #0a0a12;
+      cursor: none;
+      touch-action: none
+    }
+
+    #arenaLeaderboard {
+      text-align: left;
+      max-height: 280px;
+      overflow-y: auto
+    }
+
+    .arena-lb-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 6px 0;
+      border-bottom: 1px solid #222;
+      font-size: 0.9rem
+    }
+
+    .arena-grid-top {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px
+    }
+
+    @media (max-width: 820px) {
+      .arena-grid-top {
+        grid-template-columns: 1fr
+      }
+    }
+
+    .arena-summon-panel {
+      background: linear-gradient(165deg, rgba(255, 79, 216, 0.08) 0%, rgba(20, 12, 40, 0.95) 45%, rgba(10, 8, 22, 0.98) 100%);
+      border: 1px solid rgba(255, 120, 220, 0.35);
+      border-radius: 16px;
+      padding: 16px 16px 18px;
+      box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.4), 0 12px 40px rgba(0, 0, 0, 0.45)
+    }
+
+    .arena-summon-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px
+    }
+
+    .arena-summon-head h3 {
+      margin: 0;
+      font-size: 1.15rem;
+      letter-spacing: 0.03em
+    }
+
+    .arena-diff-pill {
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--muted);
+      white-space: nowrap
+    }
+
+    .arena-pick-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(132px, 1fr));
+      gap: 10px;
+      max-height: 280px;
+      overflow-y: auto;
+      padding: 4px;
+      margin-bottom: 12px;
+      border-radius: 12px;
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.06)
+    }
+
+    .arena-pick-tile {
+      cursor: pointer;
+      text-align: center;
+      padding: 10px 8px 12px;
+      border-radius: 12px;
+      border: 2px solid rgba(120, 120, 160, 0.35);
+      background: linear-gradient(180deg, rgba(40, 32, 70, 0.9), rgba(18, 14, 32, 0.95));
+      transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
+      min-height: 88px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px
+    }
+
+    .arena-pick-tile:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 22px rgba(255, 100, 200, 0.18)
+    }
+
+    .arena-pick-tile.selected {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(255, 100, 200, 0.35), 0 8px 26px rgba(255, 79, 216, 0.22)
+    }
+
+    .arena-pick-tile .ap-name {
+      font-weight: 800;
+      font-size: 0.82rem;
+      line-height: 1.2;
+      color: #fff
+    }
+
+    .arena-pick-tile .ap-meta {
+      font-size: 0.7rem;
+      color: var(--muted)
+    }
+
+    .arena-pick-tile.r-common {
+      border-color: rgba(160, 170, 200, 0.45)
+    }
+
+    .arena-pick-tile.r-rare {
+      border-color: rgba(100, 200, 255, 0.55)
+    }
+
+    .arena-pick-tile.r-epic {
+      border-color: rgba(200, 120, 255, 0.65)
+    }
+
+    .arena-pick-tile.r-superrare {
+      border-color: rgba(255, 215, 120, 0.7)
+    }
+
+    .arena-pick-tile.r-legendary {
+      border-color: rgba(255, 100, 160, 0.85)
+    }
+
+    .arena-summon-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center
+    }
+
+    .arena-summon-actions .btn-primary-wide {
+      flex: 1;
+      min-width: 200px
+    }
+
+    #arenaScreenCrack {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.55);
+      opacity: 0;
+      transition: opacity 0.2s ease
+    }
+
+    #arenaScreenCrack.show {
+      opacity: 1;
+      pointer-events: all
+    }
+
+    #arenaScreenCrack svg {
+      width: min(96vw, 720px);
+      height: min(70vh, 520px);
+      filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.35))
+    }
+
+    .arena-intro-title {
+      position: absolute;
+      bottom: 18%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: clamp(1.1rem, 3.5vw, 1.65rem);
+      font-weight: 900;
+      color: #fff;
+      text-shadow: 0 0 18px #ff4fd8, 0 2px 0 #000;
+      text-align: center;
+      padding: 0 16px;
+      letter-spacing: 0.04em;
+      opacity: 0;
+      transition: opacity 0.25s ease
+    }
+
+    #arenaScreenCrack.phase2 .arena-intro-title {
+      opacity: 1
+    }
+
+    body.arena-body-shake {
+      animation: arenaShakeA 0.09s linear infinite
+    }
+
+    body.arena-body-shake-hard {
+      animation: arenaShakeB 0.07s linear infinite
+    }
+
+    @keyframes arenaShakeA {
+
+      0%,
+      100% {
+        transform: translate(0, 0)
+      }
+
+      25% {
+        transform: translate(2px, -2px)
+      }
+
+      50% {
+        transform: translate(-2px, 1px)
+      }
+
+      75% {
+        transform: translate(1px, 2px)
+      }
+    }
+
+    @keyframes arenaShakeB {
+
+      0%,
+      100% {
+        transform: translate(0, 0)
+      }
+
+      20% {
+        transform: translate(-4px, 3px)
+      }
+
+      40% {
+        transform: translate(4px, -3px)
+      }
+
+      60% {
+        transform: translate(-3px, -4px)
+      }
+
+      80% {
+        transform: translate(3px, 4px)
+      }
+    }
   </style>
 </head>
 
@@ -1125,6 +1391,7 @@
   <div id="nav"><button class="nav-btn active" onclick="page('game')">🎮 Click</button><button class="nav-btn" id="shopNavBtn"
       onclick="page('shop')">🛒 Shop</button><button class="nav-btn" onclick="page('brainrots')">🧠
       Brainrots</button><button class="nav-btn" onclick="page('cards')">🃏 Cards</button><button class="nav-btn"
+      onclick="page('arena')">⚔️ Arena</button><button class="nav-btn"
       onclick="page('skills')">🌟 Skills</button><button class="nav-btn" onclick="page('codes')">🎁
       Codes</button><button class="nav-btn" onclick="page('quests')">📋 Quests</button><button class="nav-btn"
       onclick="page('settings')">⚙️ Settings</button></div>
@@ -1163,9 +1430,12 @@
       </div>
       <div class="box side">
         <h3>⭐ Prestige</h3>
-        <div class="row"><span>Need</span><b id="prestNeed">10B</b></div>
+        <div class="row"><span>Points need</span><b id="prestNeed">10B</b></div>
+        <div class="row"><span>Wild defeats</span><b id="prestWild">0 / 3</b></div>
         <div class="row"><span>All Brainrots?</span><b id="prestAll">No</b></div>
-        <div class="row"><span>Upgrade Max</span><b id="prestMax">5</b></div>
+        <div class="row"><span>Upgrades maxed?</span><b id="prestUpMax">No</b></div>
+        <div class="row"><span>Wild rolls / min</span><b id="prestWildRolls">1</b></div>
+        <div class="row"><span>Upgrade cap</span><b id="prestMax">5</b></div>
         <div class="row"><span>Total Playtime</span><b id="stPlaytime">0s</b></div><button class="btn btn-full-top"
           onclick="openPrestigeConfirm()">Prestige</button>
       </div>
@@ -1257,6 +1527,40 @@
       <div id="cardsGrid" class="grid"></div>
     </div>
   </div>
+  <div id="page-arena" class="page">
+    <div class="title">⚔️ Arena</div>
+    <div class="sub">Sacrifice <b>5 identical</b> cards to spawn a <b>Wild Boss</b>. Rarer cards &amp; mutations make patterns faster and the boss tankier — but you earn more <b>Skill Points</b> on clear. Dodge with your mouse; after <b>3 waves</b> the boss gets <b>tired</b> and you <b>click</b> to deal <b>PPC</b> damage.</div>
+    <div class="arena-grid-top">
+      <div class="box arena-summon-panel">
+        <div class="arena-summon-head">
+          <h3>Choose your sacrifice</h3>
+          <span class="arena-diff-pill" id="arenaDiffPill" title="Updates when you select a stack">Difficulty: —</span>
+        </div>
+        <p class="small" style="color:var(--muted);margin:0 0 12px">Tap a stack you own ×5+. Boss intro plays when you commit — <b>5 cards</b> are spent immediately.</p>
+        <div id="arenaPickGrid" class="arena-pick-grid" role="listbox" aria-label="Arena card stacks"></div>
+        <div class="arena-summon-actions">
+          <button type="button" class="btn btn-primary-wide" onclick="startArenaFromSelection()">Break the screen &amp; fight (5 cards)</button>
+        </div>
+        <p id="arenaSummonHint" class="small" style="margin-top:12px;color:var(--muted)"></p>
+      </div>
+      <div class="box">
+        <div class="section section-no-top">🏆 Leaderboard</div>
+        <p class="small" style="color:var(--muted)">Top local clears (this browser). Score favors harder bosses, surviving hearts, and speed.</p>
+        <div id="arenaLeaderboard"></div>
+        <button type="button" class="btn secondary" style="margin-top:10px" onclick="clearArenaLeaderboard()">Clear leaderboard</button>
+      </div>
+    </div>
+    <div id="arenaCombatWrap" class="arena-combat-wrap" hidden>
+      <div class="arena-hud">
+        <span>❤️ <b id="arenaHearts">3</b></span>
+        <span id="arenaPhaseLabel">Phase: </span><b id="arenaPhase">—</b>
+        <span>Boss HP: </span><b id="arenaBossHp">—</b>
+      </div>
+      <canvas id="arenaCanvas" width="560" height="380" tabindex="0"></canvas>
+      <p id="arenaHint" class="small" style="margin-top:10px;color:var(--muted)">Dodge with your mouse. When the boss is <b>TIRED</b>, click inside the box to attack.</p>
+      <button type="button" class="btn danger" style="margin-top:10px" onclick="arenaFlee()">Flee (forfeit fight)</button>
+    </div>
+  </div>
   <div id="page-codes" class="page">
     <div class="title">🎁 Codes</div>
     <div class="sub">The prestige code appears after your first prestige, but it can be used even before it is revealed.
@@ -1298,7 +1602,7 @@
   </div>
   <div id="page-settings" class="page">
     <div class="title">⚙️ Settings</div>
-    <div class="sub">Prestige requires all Brainrots and the required points. Each prestige gives a 2x multiplier.</div>
+    <div class="sub">Prestige needs the points threshold, every purchasable Brainrot unlocked, every click and auto upgrade maxed, plus enough wild Brainrot defeats (starts at 3, +1 per prestige). Each prestige adds +1 wild spawn roll per minute. You keep a permanent PPC multiplier.</div>
     <div class="box mb-13">
       <div class="section section-no-top">🖥️ Display</div><button class="btn" onclick="toggleFullscreen()">Toggle
         Fullscreen</button>
@@ -1319,7 +1623,7 @@
     </div>
     <div class="box">
       <div class="section section-no-top">🌟 Prestige</div>
-      <div class="row"><span>Requirement</span><b id="prestReqSet">All Brainrots + 10B</b></div><button class="btn"
+      <div class="row"><span>Requirement</span><b id="prestReqSet">Points + all Brainrots + max upgrades + wild defeats</b></div><button class="btn"
         onclick="openPrestigeConfirm()">Prestige</button>
     </div>
     <div class="box mt-13">
@@ -1337,6 +1641,8 @@
       <div class="section section-no-top">🧠 Update Log</div>
       <ul class="update-list">
         <li>🚀 <b>V 4.0 MAJOR UPDATE!</b></li>
+        <li>⚔️ <b>Arena:</b> Spend 5 identical cards to fight a Wild Boss (mouse dodge + tired phase clicks). Local leaderboard for clears.</li>
+        <li>💰 Prestige again requires the scaling <b>points</b> threshold on top of Brainrots, max upgrades, and wild defeats.</li>
         <li>🌟 <b>New Skill System:</b> Earn Skill Points through milestones (clicks, points, Brainrots, prestige) and
           unlock powerful abilities across 4 skill trees!</li>
         <li>💰 <b>Lucky Click Skill:</b> Increases chance of triggering 5x income boost on click.</li>
@@ -1366,7 +1672,7 @@
         <li>📦 Card packs cost 50K points at first and increase by 1.3x after every purchase. Open up to 3 packs at
           once.</li>
         <li>🍝 Triple Evolution Lucky Blocks can roll Spaghetti Tualetti for evo (he is also always in the Shop).</li>
-        <li>⭐ Spaghetti Tualetti is required to prestige.</li>
+        <li>⭐ <b>Prestige gate:</b> Own every purchasable Brainrot, max every click and auto Shop upgrade, then defeat wild Brainrots (need 3 + your current prestige count, resets after prestiging). Each prestige adds +1 wild spawn roll per minute.</li>
         <li>⚡ Clicking now has a tiny chance to trigger a 5x income boost for 1 minute and 30 seconds.</li>
         <li>🎁 A new public code was added.</li>
         <li>🤫 A new secret code was added. Ask Brantley Cain or Carter L for a code and they will give it to you.</li>
@@ -1384,10 +1690,13 @@
   <div id="prestigeConfirm" class="modal">
     <div class="modal-card">
       <h2 class="gold-title">⚠️ Prestige Warning</h2>
-      <p class="sub">You will lose your points, upgrades, unlocked Brainrots, and ALL evolutions. Tung Tung God will
-        return to Tung Tung Sahur. You will gain a permanent 2x multiplier.</p>
-      <div class="row"><span>Need</span><b id="prestigeConfirmNeed">10B</b></div>
-      <div class="row"><span>All Brainrots owned?</span><b id="prestigeConfirmOwned">No</b></div>
+      <p class="sub">You will lose your points, upgrades, unlocked Brainrots, and ALL evolutions (except card-boosted evos). Tung Tung God will
+        return to Tung Tung Sahur. You gain a stronger permanent PPC multiplier.</p>
+      <div class="row"><span>Points required</span><b id="prestigeConfirmPts">10B</b></div>
+      <div class="row"><span>All Brainrots owned?</span><b id="prestigeConfirmBrains">No</b></div>
+      <div class="row"><span>Upgrades maxed?</span><b id="prestigeConfirmMaxed">No</b></div>
+      <div class="row"><span>Wild defeats (this run)</span><b id="prestigeConfirmWild">0 / 3</b></div>
+      <div class="row"><span>Wild spawn rolls / min</span><b id="prestigeConfirmWildRolls">1</b></div>
       <div class="modal-actions"><button class="btn secondary"
           onclick="closeModal('prestigeConfirm')">Cancel</button><button class="btn"
           onclick="confirmPrestige()">Okay</button></div>
@@ -1417,8 +1726,13 @@
   <div id="prestigeConfirmModal" class="modal">
     <div class="modal-card">
       <h2 class="gold-title">⚠️ Prestige Warning</h2>
-      <p class="sub">You will lose your points, unlocked Brainrots, upgrades, and ALL evolutions. Tung Tung God will
-        turn back into regular Tung Tung Sahur. You will gain a permanent 2x multiplier boost.</p>
+      <p class="sub">You will lose your points, unlocked Brainrots, upgrades, and ALL evolutions (except card-boosted evos). Tung Tung God will
+        turn back into regular Tung Tung Sahur. You gain a stronger permanent PPC multiplier.</p>
+      <div class="row"><span>Points required</span><b id="prestigeConfirmModalPts">10B</b></div>
+      <div class="row"><span>All Brainrots owned?</span><b id="prestigeConfirmModalBrains">No</b></div>
+      <div class="row"><span>Upgrades maxed?</span><b id="prestigeConfirmModalMaxed">No</b></div>
+      <div class="row"><span>Wild defeats (this run)</span><b id="prestigeConfirmModalWild">0 / 3</b></div>
+      <div class="row"><span>Wild spawn rolls / min</span><b id="prestigeConfirmModalWildRolls">1</b></div>
       <div class="modal-actions-wrap"><button class="btn secondary"
           onclick="closeModal('prestigeConfirmModal')">Cancel</button><button class="btn"
           onclick="confirmPrestige()">Okay</button></div>
@@ -1438,11 +1752,27 @@
         calculations<br>• Update modal now only shows for new updates<br><br>🆕 <b>MAY 9 ADDITIONS (V 4.0):</b><br>•
         Offline progress now has a 12h anti-cheese cap + Last Offline Gain stat<br>• Auto-switch toggle for first-time
         unlocks<br>• Card pack cap set to 500B and new card quests added<br>• Quest loop reset button (+10 Skill
-        Points)<br>• Secret codes: LEDUNK (one-time Dunkin unlock) · LEDUNKIN (toggle Dunkin look, unlimited)<br>• Settings &rarr; Cosmetics (shows after LEDUNK) matches that toggle<br>• Spoony Spoonicus (45M, 500K PPC); Blue Collar Spongebob (100M, 5M PPC); Job Job Job 15M; John Pork 75M PPC<br>• Spaghetti Tualetti always in Shop (no Chitlin gate)</div>
+        Points)<br>• Secret codes: LEDUNK (one-time Dunkin unlock) · LEDUNKIN (toggle Dunkin look, unlimited)<br>• Settings &rarr; Cosmetics (shows after LEDUNK) matches that toggle<br>• Spoony Spoonicus (45M, 500K PPC); Blue Collar Spongebob (100M, 5M PPC); Job Job Job 15M; John Pork 75M PPC<br>• Spaghetti Tualetti always in Shop (no Chitlin gate)<br>• Prestige: all Brainrots + max click/auto upgrades + wild defeats (3 + prestige count); +1 wild spawn roll per prestige per minute</div>
       <button type="button" class="btn mt-15" onclick="closeUpdateModal()">Got it! Let's play!</button>
     </div>
   </div>
   <div id="toast"></div>
+  <div id="arenaScreenCrack" hidden>
+    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <linearGradient id="arenaCrackGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.95" />
+          <stop offset="40%" style="stop-color:#e8e8ff;stop-opacity:0.75" />
+          <stop offset="100%" style="stop-color:#8899cc;stop-opacity:0.35" />
+        </linearGradient>
+      </defs>
+      <path d="M100 0 L98 18 L104 32 L96 48 L102 62 L94 78 L100 95 L92 112 L98 128 L90 155 L96 178 L100 200" fill="none" stroke="url(#arenaCrackGrad)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" />
+      <path d="M100 0 L108 22 L100 38 L110 55 L102 72 L112 90 L104 108 L114 130 L106 152 L118 175 L100 200" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="1.6" stroke-linecap="round" />
+      <path d="M0 88 L32 92 L48 86 L72 94 L100 88 L132 96 L168 88 L200 92" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1.2" />
+      <path d="M0 118 L40 112 L68 122 L100 116 L140 124 L200 118" fill="none" stroke="rgba(200,220,255,0.2)" stroke-width="0.9" />
+    </svg>
+    <div class="arena-intro-title" id="arenaIntroTitle">A wild boss shatters through…</div>
+  </div>
   <script>
     const PLAYER_IMG = "https://agent.creao.ai/api/files/download?key=workspaces/2zj8laDkdMi0vz24k6kDUgWbvYdDbZSp/dcdfb844-90a3-4566-a9c0-90f00c86de11/files/best-brainrot-player.png";
     const TUNG_GOD_IMG = "data:image/jpeg;base64,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";
@@ -1790,14 +2120,17 @@
       document.body.appendChild(modal);
     }
 
-    let G = { points: 0, runEarned: 0, lifetimeEarned: 0, totalClicks: 0, current: 'tung', unlocked: ['tung'], levels: {}, evos: {}, redeemed: [], prestige: 0, prestigeCodeUnlocked: false, playtime: 0, crateBuys: { double: 0, triple: 0, chitlin: 0 }, settings: { particles: true, rings: true, sound: true }, questsDone: [], chitlinUnlocked: false, ledunkUnlocked: false, ledunkRedeemed: false, ledunkCosmeticOn: false, skillPoints: 0, skillLevels: {}, skillMilestones: {}, activeTree: 'click', boostUntil: 0, cardBuys: 0, cards: {}, codex: [], cardBoosts: {}, combinePick: [], saveCodes: {}, importedSave: null, autoProduced: 0, autoMilestones: {}, lastManualClick: Date.now(), spawnBrainrot: null, lastSpawnRoll: 0 };
+    function createDefaultGameState() {
+      return { points: 0, runEarned: 0, lifetimeEarned: 0, totalClicks: 0, current: 'tung', unlocked: ['tung'], levels: {}, evos: {}, redeemed: [], prestige: 0, prestigeCodeUnlocked: false, playtime: 0, crateBuys: { double: 0, triple: 0, chitlin: 0 }, settings: { particles: true, rings: true, sound: true }, questsDone: [], chitlinUnlocked: false, ledunkUnlocked: false, ledunkRedeemed: false, ledunkCosmeticOn: false, skillPoints: 0, skillLevels: {}, skillMilestones: {}, activeTree: 'click', boostUntil: 0, cardBuys: 0, cards: {}, codex: [], cardBoosts: {}, combinePick: [], saveCodes: {}, importedSave: null, autoProduced: 0, autoMilestones: {}, lastManualClick: Date.now(), spawnBrainrot: null, lastSpawnRoll: 0, wildKillsThisRun: 0, arenaLeaderboard: [] };
+    }
+    let G = createDefaultGameState();
     const BRAINROT_SHOP_CHAIN = ['tim', 'patapim', 'bomb', 'frulli', 'lirili', 'trala', 'gusini', 'coco', 'ryan', 'odin', 'homer', 'ander', 'spaghetti', 'mateo', 'jobjob'];
     const BRAINROT_SHOP_MULTS = [13, 2.55, 2.05, 1.75, 1.12, 1.85, 2.35, 1.32, 1.65, 4.8, 2.05, 4.5, 1.82, 1.17];
     const BRAINROT_JOHN_BASE = 4200000000;
     function applyBrainrotShopCosts() {
       let p = 90;
       const pr = Number(G && G.prestige) || 0;
-      const disc = Math.pow(0.965, pr);
+      const disc = Math.max(0.65, Math.pow(0.98, pr));
       BRAINROT_SHOP_CHAIN.forEach((id, i) => {
         const b = BRAINROTS.find(x => x.id === id);
         if (!b) return;
@@ -1822,14 +2155,17 @@
     const CARD_PACK_PRICE_CAP = 500000000000;
     const MUTATIONS = [{ id: 'radiation', name: 'Radiation', mult: 1.5, color: '#7CFC00', weight: 10 }, { id: 'gold', name: 'Gold', mult: 2, color: '#ffd700', weight: 6 }, { id: 'diamond', name: 'Diamond', mult: 3, color: '#00d4ff', weight: 3 }, { id: 'heavenly', name: 'Heavenly', mult: 5, color: '#f5f3ff', weight: 1 }];
     function fmt(n) { n = Math.floor(n); if (n >= INFINITY_T) return 'InfinityT'; if (n >= 1e12) return (n / 1e12).toFixed(2) + 'T'; if (n >= 1e9) return (n / 1e9).toFixed(2) + 'B'; if (n >= 1e6) return (n / 1e6).toFixed(2) + 'M'; if (n >= 1e3) return (n / 1e3).toFixed(1) + 'K'; return String(n) }
-    function evoCap() { return 100000 + (G.prestige || 0) * 100000 } function evo(id) { return Math.min(G.evos[id] || 1, evoCap()) } function isTungGod() { return evo('tung') >= 200000 } function displayName(b) { return b.id === 'tung' && isTungGod() ? b.godName : b.name } function displayPpc(b) { return b.ppc * evo(b.id) } function maxLvl() { return 5 + G.prestige * 5 } function prestigeNeed() { return Math.min(10000000000000000, Math.floor(10000000000 * Math.pow(1.2, G.prestige))) } function missingBrainrots() { return BRAINROTS.filter(b => b.cost > 0 && !b.noPrestige && !G.unlocked.includes(b.id)) } function allOwned() { return missingBrainrots().length === 0 }
+    function evoCap() { return 100000 + (G.prestige || 0) * 100000 } function evo(id) { return Math.min(G.evos[id] || 1, evoCap()) } function isTungGod() { return evo('tung') >= 200000 } function displayName(b) { return b.id === 'tung' && isTungGod() ? b.godName : b.name } function displayPpc(b) { return b.ppc * evo(b.id) } function maxLvl() { return 5 + G.prestige * 5 } function prestigeNeed() { return Math.min(10000000000000000, Math.floor(10000000000 * Math.pow(1.25, Number(G.prestige) || 0))) } function missingBrainrots() { return BRAINROTS.filter(b => b.cost > 0 && !b.noPrestige && !G.unlocked.includes(b.id)) } function allOwned() { return missingBrainrots().length === 0 }
+    function prestigeWildKillsRequired() { return 3 + (Number(G.prestige) || 0); }
+    function wildSpawnRollsPerMinute() { return 1 + (Number(G.prestige) || 0); }
+    function allShopUpgradesMaxed() { let m = maxLvl(); return [...UPGRADES, ...AUTOS].every(u => (G.levels[u.id] || 0) >= m); }
     function cur() { return BRAINROTS.find(b => b.id === G.current) || BRAINROTS[0] } function incomeBoost() { return Date.now() < (G.boostUntil || 0) ? 5 : 1 } function cardBoost(id) { return Math.pow(1.5, (G.cardBoosts && G.cardBoosts[id]) || 0) } function autoMilestoneDiscount() { let discount = 0; if ((G.autoProduced || 0) >= 1000000) discount += 0.05; return Math.min(0.5, discount) } function autoMilestoneBurstBonusMs() { return (G.autoProduced || 0) >= 50000000 ? 1000 : 0 } function autoMilestoneCritBonus() { return (G.autoProduced || 0) >= 500000000 ? 0.01 : 0 } function autoBurstMultiplier() { let cycleMs = 30000; let activeMs = 5000 + autoMilestoneBurstBonusMs(); return (Date.now() % cycleMs) < activeMs ? 2.5 : 1 } function autoIdleMomentum() { return Date.now() - (G.lastManualClick || 0) >= 10000 ? 1.4 : 1 } function ppc() {
-      let b = cur(), bonus = 0; UPGRADES.forEach(u => bonus += u.effect * (G.levels[u.id] || 0)); let baseValue = (displayPpc(b) * cardBoost(b.id) + bonus) * Math.pow(2, G.prestige) * incomeBoost(); let speedMultiplier = 1; let multiBoost = 1; // Apply Click Mastery skills
+      let b = cur(), bonus = 0; UPGRADES.forEach(u => bonus += u.effect * (G.levels[u.id] || 0)); let baseValue = (displayPpc(b) * cardBoost(b.id) + bonus) * Math.pow(1.5, G.prestige) * incomeBoost(); let speedMultiplier = 1; let multiBoost = 1; // Apply Click Mastery skills
       speedMultiplier *= getSkillBonus('click', 'click_speed');
       multiBoost *= getSkillBonus('click', 'click_multi');
       let totalMultiplier = speedMultiplier * multiBoost;
       return Math.floor(baseValue * totalMultiplier);
-    } function pps() { let autoBase = 0; AUTOS.forEach(a => autoBase += a.effect * (G.levels[a.id] || 0)); let hybridClickPower = ppc() * 0.35; let autoEff = getSkillBonus('auto', 'auto_efficiency'); let autoBoost = getSkillBonus('auto', 'auto_boost'); let prestigeAuto = 1 + (Number(G.prestige) || 0) * 0.06; let burst = autoBurstMultiplier(); let idle = autoIdleMomentum(); let critChance = Math.min(0.6, 0.02 + getSkillLevel('auto', 'auto_crit_chance') * 0.01 + autoMilestoneCritBonus()); let critMultiplier = 4 * (1 + getSkillLevel('auto', 'auto_crit_power') * 0.3); let expectedCrit = 1 + critChance * (critMultiplier - 1); let total = (autoBase + hybridClickPower) * autoEff * autoBoost * prestigeAuto * burst * idle * expectedCrit; return Math.floor(total); } function safeBigInt(value) {
+    } function pps() { let autoBase = 0; AUTOS.forEach(a => autoBase += a.effect * (G.levels[a.id] || 0)); let hybridClickPower = ppc() * 0.22; let autoEff = getSkillBonus('auto', 'auto_efficiency'); let autoBoost = getSkillBonus('auto', 'auto_boost'); let prestigeAuto = 1 + (Number(G.prestige) || 0) * 0.06; let burst = autoBurstMultiplier(); let idle = autoIdleMomentum(); let critChance = Math.min(0.6, 0.02 + getSkillLevel('auto', 'auto_crit_chance') * 0.01 + autoMilestoneCritBonus()); let critMultiplier = 4 * (1 + getSkillLevel('auto', 'auto_crit_power') * 0.3); let expectedCrit = 1 + critChance * (critMultiplier - 1); let total = (autoBase + hybridClickPower) * autoEff * autoBoost * prestigeAuto * burst * idle * expectedCrit; return Math.floor(total); } function safeBigInt(value) {
       try {
         if (typeof value === 'bigint') return value;
         if (typeof value === 'number' && !isNaN(value) && isFinite(value)) {
@@ -2204,6 +2540,7 @@
         s.hp = 0;
         s.dying = true;
         s.removeAt = Date.now() + 1400;
+        G.wildKillsThisRun = (Number(G.wildKillsThisRun) || 0) + 1;
         renderSpawnBrainrot();
         ui();
         save();
@@ -2242,20 +2579,72 @@
     function unlockBrainrot(id, options) { options = options || {}; let b = BRAINROTS.find(x => x.id === id); if (!b || G.unlocked.includes(id)) return false; G.unlocked.push(id); if (G.settings && G.settings.autoSwitchUnlock) { G.current = id; updateChar(); if (!options.silentToast) toast('Unlocked ' + b.name + ' and auto-switched!') } else if (!options.silentToast) { toast('Unlocked ' + b.name) } return true }
     function buyB(id) { let b = BRAINROTS.find(x => x.id === id); if (G.unlocked.includes(id)) return; let canAfford = b.cost === Infinity ? G.points >= INFINITY_T : G.points >= b.cost; if (!canAfford) return toast('Need ' + fmt(b.cost)); if (b.cost !== Infinity) G.points -= b.cost; else G.points = 0; unlockBrainrot(id); renderShop(); renderBrains(); ui() }
     function selectB(id) { if (!G.unlocked.includes(id)) return toast('Buy it first'); G.current = id; updateChar(); renderBrains(); ui() }
-    function openPrestigeConfirm() { let need = prestigeNeed(), missing = missingBrainrots(); document.getElementById('prestigeConfirmNeed').textContent = fmt(need) + ' points'; document.getElementById('prestigeConfirmOwned').textContent = missing.length === 0 ? 'Yes' : 'No, ' + missing.length + ' missing'; showModal('prestigeConfirm') }
+    function openPrestigeConfirm() {
+      let needWild = prestigeWildKillsRequired();
+      let gotWild = Number(G.wildKillsThisRun) || 0;
+      let maxed = allShopUpgradesMaxed();
+      let rolls = wildSpawnRollsPerMinute();
+      let missing = missingBrainrots();
+      let brainsTxt = missing.length === 0 ? 'Yes' : 'No, ' + missing.length + ' missing';
+      let br = document.getElementById('prestigeConfirmBrains');
+      if (br) br.textContent = brainsTxt;
+      let br2 = document.getElementById('prestigeConfirmModalBrains');
+      if (br2) br2.textContent = brainsTxt;
+      let needPts = prestigeNeed();
+      let pt = document.getElementById('prestigeConfirmPts');
+      if (pt) pt.textContent = fmt(needPts) + ' pts';
+      let pt2 = document.getElementById('prestigeConfirmModalPts');
+      if (pt2) pt2.textContent = fmt(needPts) + ' pts';
+      let mx = document.getElementById('prestigeConfirmMaxed');
+      if (mx) mx.textContent = maxed ? 'Yes' : 'No';
+      let w = document.getElementById('prestigeConfirmWild');
+      if (w) w.textContent = gotWild + ' / ' + needWild;
+      let wr = document.getElementById('prestigeConfirmWildRolls');
+      if (wr) wr.textContent = String(rolls);
+      let mx2 = document.getElementById('prestigeConfirmModalMaxed');
+      if (mx2) mx2.textContent = maxed ? 'Yes' : 'No';
+      let w2 = document.getElementById('prestigeConfirmModalWild');
+      if (w2) w2.textContent = gotWild + ' / ' + needWild;
+      let wr2 = document.getElementById('prestigeConfirmModalWildRolls');
+      if (wr2) wr2.textContent = String(rolls);
+      showModal('prestigeConfirm');
+    }
     function prestige() { openPrestigeConfirm() }
     function confirmPrestige() {
-      let need = prestigeNeed(); let missing = missingBrainrots();
-      if (missing.length > 0) { closeModal('prestigeConfirm'); return toast('Need all Brainrots first') }
-      if (Number(G.points) < need) { closeModal('prestigeConfirm'); return toast('Need ' + fmt(need) + ' points') }
+      let missing = missingBrainrots();
+      if (missing.length > 0) {
+        closeModal('prestigeConfirm');
+        closeModal('prestigeConfirmModal');
+        return toast('Need all Brainrots first (' + missing.length + ' missing)');
+      }
+      if (!allShopUpgradesMaxed()) {
+        closeModal('prestigeConfirm');
+        closeModal('prestigeConfirmModal');
+        return toast('Max every click and auto upgrade in the Shop first');
+      }
+      let needWild = prestigeWildKillsRequired();
+      let gotWild = Number(G.wildKillsThisRun) || 0;
+      if (gotWild < needWild) {
+        closeModal('prestigeConfirm');
+        closeModal('prestigeConfirmModal');
+        return toast('Defeat ' + (needWild - gotWild) + ' more wild Brainrot' + (needWild - gotWild === 1 ? '' : 's') + ' (this run: ' + gotWild + '/' + needWild + ')');
+      }
+      let needPts = prestigeNeed();
+      if (Number(G.points) < needPts) {
+        closeModal('prestigeConfirm');
+        closeModal('prestigeConfirmModal');
+        return toast('Need ' + fmt(needPts) + ' points to prestige');
+      }
       let keepEvos = {};
       Object.keys(G.cardBoosts || {}).forEach(id => {
         if ((G.cardBoosts[id] || 0) > 0 && (G.evos[id] || 0) > 1) keepEvos[id] = G.evos[id];
       });
-      G.prestige = (Number(G.prestige) || 0) + 1; G.prestigeCodeUnlocked = true; G.points = 0; G.runEarned = 0; G.totalClicks = 0; G.current = 'tung'; G.unlocked = ['tung']; G.levels = {}; G.evos = keepEvos; G.crateBuys = { double: 0, triple: 0, chitlin: 0 }; G.cardBuys = 0; G.tungGodNotified = false;
+      G.prestige = (Number(G.prestige) || 0) + 1; G.prestigeCodeUnlocked = true; G.points = 0; G.runEarned = 0; G.totalClicks = 0; G.current = 'tung'; G.unlocked = ['tung']; G.levels = {}; G.evos = keepEvos; G.crateBuys = { double: 0, triple: 0, chitlin: 0 }; G.cardBuys = 0; G.tungGodNotified = false; G.wildKillsThisRun = 0;
       applyBrainrotShopCosts();
       syncLedunkCosmeticFromSave();
-      closeModal('prestigeConfirm'); save(); updateChar(); renderShop(); renderBrains(); renderCodes(); renderCards(); ui(); showModal('prestigeModal');
+      closeModal('prestigeConfirm');
+      closeModal('prestigeConfirmModal');
+      save(); updateChar(); renderShop(); renderBrains(); renderCodes(); renderCards(); ui(); showModal('prestigeModal');
     }
     function redeem() { let val = document.getElementById('codeInput').value.trim().toUpperCase(), c = CODES.find(x => x.code === val); if (!c) return toast('Invalid code'); if (c.reward === 'ledunk_toggle') { G.ledunkCosmeticOn = !G.ledunkCosmeticOn; G.ledunkUnlocked = true; if (G.ledunkCosmeticOn) { applyLedunkSkin(); toast('🥤 Dunkin cosmetic ON') } else { removeLedunkSkin(); toast('🐷 John Pork look restored') } document.getElementById('codeInput').value = ''; updateChar(); renderShop(); renderBrains(); ui(); save(); return } if (G.redeemed.includes(val)) return toast('Already used'); G.redeemed.push(val); if (c.reward === 'points') { G.points += c.amount; G.runEarned += c.amount; G.lifetimeEarned += c.amount } if (c.reward === 'prestige') { G.prestige += c.amount; G.prestigeCodeUnlocked = true; applyBrainrotShopCosts(); toast('+1 prestige') } if (c.reward === 'tunggod') { G.evos['tung'] = evo('tung') * 3; G.points += 15000; G.runEarned += 15000; G.lifetimeEarned += 15000; toast('Tung Tung got x3 evo + 15K points!') } if (c.reward === 'ledunk') { G.ledunkRedeemed = true; G.ledunkUnlocked = true; G.ledunkCosmeticOn = true; applyLedunkSkin(); toast('🥤 John Pork became Dunkin! Toggle anytime in Settings.'); updateChar(); renderShop(); renderBrains(); } if (c.reward === 'modpanel') { G.modPanelUnlocked = true; openModPanel(); toast('🛠️ Mod Panel Unlocked!'); document.getElementById('codeInput').value = ''; renderCodes(); renderCards(); ui(); save(); return } if (c.reward === 'chitlinburger') { G.chitlinUnlocked = true; toast('🍔 Secret Brainrot Unlocked: Chitlin Burger!'); document.getElementById('codeInput').value = ''; renderCodes(); renderShop(); renderBrains(); ui(); save(); return } if (c.reward === 'chitlinblock') { document.getElementById('codeInput').value = ''; renderCodes(); openCrates('chitlin', 1, true); ui(); save(); return } document.getElementById('codeInput').value = ''; renderCodes(); renderCards(); ui(); save() }
     let crateAnimating = false;
@@ -2538,9 +2927,377 @@
     function renderCodes() { document.getElementById('codes').innerHTML = CODES.filter(c => !c.secret).map(c => '<div class="card code ' + (G.redeemed.includes(c.code) ? 'owned' : '') + '"><div class="name">' + c.code + '</div><div class="small">' + c.desc + '</div>' + (c.secret ? '<div class="small" style="color:var(--gold)">Keep this for later</div>' : '') + '</div>').join('') }
     function formatTime(sec) { sec = Math.floor(sec || 0); let h = Math.floor(sec / 3600), m = Math.floor((sec % 3600) / 60), ss = sec % 60; return h > 0 ? h + 'h ' + m + 'm ' + ss + 's' : m > 0 ? m + 'm ' + ss + 's' : ss + 's' }
     function updateChar() { let b = cur(), im = document.getElementById('charImg'); let src = (b.id === 'tung' && isTungGod() && b.godImg) ? b.godImg : b.img; src = normalizeImageSrc(src); im.src = src || 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="250" height="250"><text x="50%" y="55%" text-anchor="middle" font-size="150">' + (b.emoji || '🧠') + '</text></svg>'); im.onerror = () => { im.src = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="250" height="250"><text x="50%" y="55%" text-anchor="middle" font-size="140">🧠</text></svg>'); }; let currentName = displayName(b); im.alt = currentName + ' character'; im.title = currentName; document.getElementById('charName').textContent = currentName; document.documentElement.style.setProperty('--char-color', b.color) }
-    function ui() { let b = cur(), next = BRAINROTS.find(x => !G.unlocked.includes(x.id)); document.getElementById('hp').textContent = fmt(G.points) + ' pts'; document.getElementById('hs').textContent = fmt(pps()) + '/s' + (incomeBoost() > 1 ? ' ⚡5x' : ''); let hsMods = document.getElementById('hsMods'); if (hsMods) { let burst = autoBurstMultiplier(); let idle = autoIdleMomentum(); let critChance = Math.min(0.6, 0.02 + getSkillLevel('auto', 'auto_crit_chance') * 0.01 + autoMilestoneCritBonus()); hsMods.textContent = 'Burst x' + burst.toFixed(1) + ' • Idle x' + idle.toFixed(1) + ' • Crit ' + Math.round(critChance * 100) + '%'; hsMods.style.color = (burst > 1 || idle > 1) ? 'var(--accent)' : 'var(--muted)'; } document.getElementById('scoreNum').textContent = fmt(G.points); document.getElementById('ppc').textContent = '+' + fmt(ppc()) + ' per click'; document.getElementById('stClicks').textContent = fmt(G.totalClicks); document.getElementById('stRun').textContent = fmt(G.runEarned); document.getElementById('stLife').textContent = fmt(G.lifetimeEarned); document.getElementById('stPpc').textContent = fmt(ppc()); document.getElementById('stPps').textContent = fmt(pps()); document.getElementById('stPrestige').textContent = G.prestige; document.getElementById('stSkillPoints').textContent = G.skillPoints || 0; let stLastOffline = document.getElementById('stLastOffline'); if (stLastOffline) stLastOffline.textContent = fmt(G.lastOfflineGain || 0) + ' pts'; var mpBtn = document.getElementById('modPanelBtn'); if (mpBtn) mpBtn.style.display = G.modPanelUnlocked ? 'block' : 'none'; document.getElementById('stBrainrots').textContent = G.unlocked.length + '/' + BRAINROTS.length; document.getElementById('prestNeed').textContent = fmt(prestigeNeed()); let miss = missingBrainrots(); document.getElementById('prestAll').textContent = miss.length === 0 ? 'Yes' : 'No (' + miss.length + ' missing)'; document.getElementById('prestMax').textContent = maxLvl(); if (document.getElementById('stPlaytime')) document.getElementById('stPlaytime').textContent = formatTime(G.playtime); let _dp = document.getElementById('doublePrice'); if (_dp) { let _e = Math.min(PRICE_CAP, Math.floor(15000 * Math.pow(2, G.crateBuys.double || 0))); _dp.textContent = '🪙 ' + fmt(_e) + ' each'; } let _tp = document.getElementById('triplePrice'); if (_tp) { let _e = Math.min(PRICE_CAP, Math.floor(75000 * Math.pow(1.5, G.crateBuys.triple || 0))); _tp.textContent = '🪙 ' + fmt(_e) + ' each'; } let _cp = document.getElementById('chitlinCratePrice'); if (_cp) { let _e = Math.min(PRICE_CAP, Math.floor(1000000000 * Math.pow(1.5, G.crateBuys.chitlin || 0))); _cp.textContent = '🪙 ' + fmt(_e) + ' each'; } let _pp = document.getElementById('packPriceLabel'); if (_pp) { _pp.textContent = '🪙 ' + fmt(packPrice()) + ' each'; } document.getElementById('prestReqSet').textContent = 'All Brainrots + ' + fmt(prestigeNeed()) + ' pts'; if (next) { document.getElementById('nextName').textContent = next.name; document.getElementById('nextFill').style.width = Math.min(100, G.points / next.cost * 100) + '%'; document.getElementById('nextTxt').textContent = fmt(G.points) + ' / ' + fmt(next.cost) + ' pts'; document.getElementById('readyHint').style.display = G.points >= next.cost ? 'block' : 'none' } let soundBtn = document.getElementById('soundToggle'); if (soundBtn) soundBtn.textContent = G.settings.sound ? '🔊 Sound: ON' : '🔇 Sound: OFF'; let autoSwitchBtn = document.getElementById('autoSwitchUnlockToggle'); if (autoSwitchBtn) autoSwitchBtn.textContent = (G.settings && G.settings.autoSwitchUnlock !== false) ? '🎯 Auto-switch on unlock: ON' : '🎯 Auto-switch on unlock: OFF'; updateLedunkCosmeticSettingsUi(); renderSpawnBrainrot(); updateShopNavHighlight(); }
+    function ui() { let b = cur(), next = BRAINROTS.find(x => !G.unlocked.includes(x.id)); document.getElementById('hp').textContent = fmt(G.points) + ' pts'; document.getElementById('hs').textContent = fmt(pps()) + '/s' + (incomeBoost() > 1 ? ' ⚡5x' : ''); let hsMods = document.getElementById('hsMods'); if (hsMods) { let burst = autoBurstMultiplier(); let idle = autoIdleMomentum(); let critChance = Math.min(0.6, 0.02 + getSkillLevel('auto', 'auto_crit_chance') * 0.01 + autoMilestoneCritBonus()); hsMods.textContent = 'Burst x' + burst.toFixed(1) + ' • Idle x' + idle.toFixed(1) + ' • Crit ' + Math.round(critChance * 100) + '%'; hsMods.style.color = (burst > 1 || idle > 1) ? 'var(--accent)' : 'var(--muted)'; } document.getElementById('scoreNum').textContent = fmt(G.points); document.getElementById('ppc').textContent = '+' + fmt(ppc()) + ' per click'; document.getElementById('stClicks').textContent = fmt(G.totalClicks); document.getElementById('stRun').textContent = fmt(G.runEarned); document.getElementById('stLife').textContent = fmt(G.lifetimeEarned); document.getElementById('stPpc').textContent = fmt(ppc()); document.getElementById('stPps').textContent = fmt(pps()); document.getElementById('stPrestige').textContent = G.prestige; document.getElementById('stSkillPoints').textContent = G.skillPoints || 0; let stLastOffline = document.getElementById('stLastOffline'); if (stLastOffline) stLastOffline.textContent = fmt(G.lastOfflineGain || 0) + ' pts'; var mpBtn = document.getElementById('modPanelBtn'); if (mpBtn) mpBtn.style.display = G.modPanelUnlocked ? 'block' : 'none'; document.getElementById('stBrainrots').textContent = G.unlocked.length + '/' + BRAINROTS.length; let _needWild = prestigeWildKillsRequired(); let _gotWild = Number(G.wildKillsThisRun) || 0; let _pw = document.getElementById('prestWild'); if (_pw) _pw.textContent = _gotWild + ' / ' + _needWild; let _miss = missingBrainrots(); let _pa = document.getElementById('prestAll'); if (_pa) _pa.textContent = _miss.length === 0 ? 'Yes' : 'No (' + _miss.length + ' missing)'; let _pum = document.getElementById('prestUpMax'); if (_pum) _pum.textContent = allShopUpgradesMaxed() ? 'Yes' : 'No'; let _pwr = document.getElementById('prestWildRolls'); if (_pwr) _pwr.textContent = String(wildSpawnRollsPerMinute()); document.getElementById('prestMax').textContent = maxLvl(); if (document.getElementById('stPlaytime')) document.getElementById('stPlaytime').textContent = formatTime(G.playtime); let _dp = document.getElementById('doublePrice'); if (_dp) { let _e = Math.min(PRICE_CAP, Math.floor(15000 * Math.pow(2, G.crateBuys.double || 0))); _dp.textContent = '🪙 ' + fmt(_e) + ' each'; } let _tp = document.getElementById('triplePrice'); if (_tp) { let _e = Math.min(PRICE_CAP, Math.floor(75000 * Math.pow(1.5, G.crateBuys.triple || 0))); _tp.textContent = '🪙 ' + fmt(_e) + ' each'; } let _cp = document.getElementById('chitlinCratePrice'); if (_cp) { let _e = Math.min(PRICE_CAP, Math.floor(1000000000 * Math.pow(1.5, G.crateBuys.chitlin || 0))); _cp.textContent = '🪙 ' + fmt(_e) + ' each'; } let _pp = document.getElementById('packPriceLabel'); if (_pp) { _pp.textContent = '🪙 ' + fmt(packPrice()) + ' each'; } document.getElementById('prestReqSet').textContent = fmt(prestigeNeed()) + ' pts + all Brainrots + max upgrades + ' + prestigeWildKillsRequired() + ' wild defeats'; let _pn = document.getElementById('prestNeed'); if (_pn) _pn.textContent = fmt(prestigeNeed()); if (next) { document.getElementById('nextName').textContent = next.name; document.getElementById('nextFill').style.width = Math.min(100, G.points / next.cost * 100) + '%'; document.getElementById('nextTxt').textContent = fmt(G.points) + ' / ' + fmt(next.cost) + ' pts'; document.getElementById('readyHint').style.display = G.points >= next.cost ? 'block' : 'none' } let soundBtn = document.getElementById('soundToggle'); if (soundBtn) soundBtn.textContent = G.settings.sound ? '🔊 Sound: ON' : '🔇 Sound: OFF'; let autoSwitchBtn = document.getElementById('autoSwitchUnlockToggle'); if (autoSwitchBtn) autoSwitchBtn.textContent = (G.settings && G.settings.autoSwitchUnlock !== false) ? '🎯 Auto-switch on unlock: ON' : '🎯 Auto-switch on unlock: OFF'; updateLedunkCosmeticSettingsUi(); renderSpawnBrainrot(); updateShopNavHighlight(); }
+    function arenaClearIntroTimers() {
+      window.__arenaIntroActive = false;
+      let arr = window.__arenaIntroTimers;
+      if (arr && arr.length) arr.forEach((id) => clearTimeout(id));
+      window.__arenaIntroTimers = [];
+    }
+    function arenaClearSpawnFx() {
+      let el = document.getElementById('arenaScreenCrack');
+      if (el) { el.classList.remove('show', 'phase2'); el.hidden = true; }
+      document.body.classList.remove('arena-body-shake', 'arena-body-shake-hard');
+    }
+    function arenaDifficultyFromCard(cardKey, b) {
+      let r = String((b && b.rarity) || 'common').toLowerCase();
+      let tier = { common: 0, rare: 1, epic: 2, superrare: 3, legendary: 4 }[r];
+      if (tier === undefined) tier = 0;
+      let sp = splitCardKey(cardKey);
+      let m = sp.mut ? mutationById(sp.mut) : null;
+      let mutB = m ? Math.min(0.28, (m.mult - 1) * 0.1) : 0;
+      let raw = 1 + tier * 0.1 + mutB;
+      return Math.min(1.48, Math.max(1, raw));
+    }
+    function arenaDescribeDifficulty(d) {
+      if (d < 1.08) return 'Casual';
+      if (d < 1.2) return 'Standard';
+      if (d < 1.34) return 'Rough';
+      return 'Brutal';
+    }
+    function arenaPlaySpawnIntro(bossLabel, onDone) {
+      arenaClearIntroTimers();
+      arenaClearSpawnFx();
+      let el = document.getElementById('arenaScreenCrack');
+      let title = document.getElementById('arenaIntroTitle');
+      if (!el || !onDone) { if (onDone) onDone(); return; }
+      window.__arenaIntroActive = true;
+      if (title) title.textContent = 'Wild Boss: ' + bossLabel;
+      el.hidden = false;
+      el.classList.remove('phase2');
+      window.__arenaIntroTimers = window.__arenaIntroTimers || [];
+      window.__arenaIntroTimers.push(setTimeout(() => {
+        el.classList.add('show');
+        document.body.classList.add('arena-body-shake');
+      }, 30));
+      window.__arenaIntroTimers.push(setTimeout(() => {
+        document.body.classList.remove('arena-body-shake');
+        document.body.classList.add('arena-body-shake-hard');
+        el.classList.add('phase2');
+      }, 720));
+      window.__arenaIntroTimers.push(setTimeout(() => {
+        arenaClearSpawnFx();
+        window.__arenaIntroActive = false;
+        onDone();
+      }, 1980));
+    }
+    function arenaUpdateDiffPill() {
+      let pill = document.getElementById('arenaDiffPill');
+      if (!pill) return;
+      let key = window.__arenaSelectedCardKey;
+      if (!key) { pill.textContent = 'Difficulty: —'; return; }
+      let sp = splitCardKey(key);
+      let b = BRAINROTS.find(z => z.id === sp.id);
+      if (!b) { pill.textContent = 'Difficulty: —'; return; }
+      let d = arenaDifficultyFromCard(key, b);
+      pill.textContent = 'Difficulty: ' + arenaDescribeDifficulty(d) + ' (' + d.toFixed(2) + '×)';
+    }
+    function arenaBossMaxHpFromBrainrot(b) {
+      let c = Number(b && b.cost);
+      if (b.cost === Infinity || !isFinite(c) || c <= 0) c = Math.min(INFINITY_T, 1e18);
+      c = Math.min(INFINITY_T, c);
+      let hp = Math.floor(c * 2);
+      if (!isFinite(hp) || hp > 1e15) hp = 1e15;
+      return Math.max(200, hp);
+    }
+    function arenaAbortFight() {
+      arenaClearIntroTimers();
+      arenaClearSpawnFx();
+      let F = window.__arenaFight;
+      if (!F) return;
+      if (F.rafId) cancelAnimationFrame(F.rafId);
+      F.rafId = 0;
+      F.active = false;
+      let cv = document.getElementById('arenaCanvas');
+      if (cv && F._mm) cv.removeEventListener('mousemove', F._mm);
+      if (cv && F._md) cv.removeEventListener('mousedown', F._md);
+      if (cv && F._ml) cv.removeEventListener('mouseleave', F._ml);
+      window.__arenaFight = null;
+      let wrap = document.getElementById('arenaCombatWrap');
+      if (wrap) wrap.hidden = true;
+    }
+    function arenaFlee() {
+      if (!window.__arenaFight || !__arenaFight.active) return toast('No active fight');
+      arenaAbortFight();
+      toast('You fled the Arena.');
+    }
+    function clearArenaLeaderboard() {
+      G.arenaLeaderboard = [];
+      save();
+      renderArenaLeaderboard();
+      toast('Leaderboard cleared');
+    }
+    function renderArenaLeaderboard() {
+      let el = document.getElementById('arenaLeaderboard');
+      if (!el) return;
+      let rows = (G.arenaLeaderboard || []).slice().sort((a, b) => (Number(b.score) || 0) - (Number(a.score) || 0)).slice(0, 25);
+      if (!rows.length) { el.innerHTML = '<div class="small" style="color:var(--muted)">No clears yet. Win a boss fight!</div>'; return; }
+      el.innerHTML = rows.map((r, i) => '<div class="arena-lb-row"><span><b>#' + (i + 1) + '</b> ' + (r.bossName || '?') + '</span><span style="color:var(--gold)">' + fmt(r.score) + '</span></div><div class="small" style="color:var(--muted);margin:-4px 0 8px">' + (r.sub || '') + '</div>').join('');
+    }
+    function renderArenaCardSelect() {
+      let grid = document.getElementById('arenaPickGrid');
+      let hint = document.getElementById('arenaSummonHint');
+      if (!grid) return;
+      applyBrainrotShopCosts();
+      let keys = Object.keys(G.cards || {}).filter(k => (G.cards[k] || 0) >= 5);
+      if (!keys.length) {
+        grid.innerHTML = '<div class="small" style="color:var(--muted);padding:12px;text-align:center">No ×5 stacks yet — open packs in Cards!</div>';
+        if (hint) hint.textContent = 'Collect 5 copies of one card to challenge its Wild Boss.';
+        window.__arenaSelectedCardKey = '';
+        arenaUpdateDiffPill();
+        return;
+      }
+      keys.sort((a, b) => (G.cards[b] || 0) - (G.cards[a] || 0));
+      let html = keys.map(k => {
+        let sp = splitCardKey(k), b = BRAINROTS.find(z => z.id === sp.id) || BRAINROTS[0];
+        let rar = String(b.rarity || 'common').toLowerCase().replace(/\s+/g, '');
+        let d = arenaDifficultyFromCard(k, b);
+        let m = sp.mut ? mutationById(sp.mut) : null;
+        let mutTag = m ? '<span class="ap-meta" style="color:' + m.color + '">' + m.name + '</span>' : '<span class="ap-meta">Base card</span>';
+        return '<div class="arena-pick-tile r-' + rar + '" data-k="' + encodeURIComponent(k) + '" tabindex="0" role="option">' +
+          '<span class="ap-name">' + cardDisplayName(k) + '</span>' + mutTag +
+          '<span class="ap-meta">×' + G.cards[k] + ' owned • ' + arenaDescribeDifficulty(d) + '</span></div>';
+      }).join('');
+      grid.innerHTML = html;
+      grid.onclick = function (e) {
+        let t = e.target.closest('.arena-pick-tile');
+        if (!t || !grid.contains(t)) return;
+        let k = t.getAttribute('data-k');
+        if (!k) return;
+        window.__arenaSelectedCardKey = decodeURIComponent(k);
+        grid.querySelectorAll('.arena-pick-tile').forEach(x => x.classList.remove('selected'));
+        t.classList.add('selected');
+        arenaUpdateDiffPill();
+      };
+      if (window.__arenaSelectedCardKey && keys.indexOf(window.__arenaSelectedCardKey) >= 0) {
+        let pre = window.__arenaSelectedCardKey;
+        grid.querySelectorAll('.arena-pick-tile').forEach(x => {
+          if (decodeURIComponent(x.getAttribute('data-k') || '') === pre) x.classList.add('selected');
+        });
+      } else {
+        window.__arenaSelectedCardKey = '';
+      }
+      if (hint) hint.textContent = 'Select a stack, then break the screen to begin.';
+      arenaUpdateDiffPill();
+    }
+    function renderArenaPage() {
+      renderArenaCardSelect();
+      renderArenaLeaderboard();
+    }
+    function arenaPushLeaderboard(entry) {
+      if (!G.arenaLeaderboard) G.arenaLeaderboard = [];
+      G.arenaLeaderboard.push(entry);
+      G.arenaLeaderboard.sort((a, b) => (Number(b.score) || 0) - (Number(a.score) || 0));
+      G.arenaLeaderboard = G.arenaLeaderboard.slice(0, 40);
+      save();
+      renderArenaLeaderboard();
+    }
+    function startArenaFromSelection() {
+      if (G.cardRolling) return toast('Wait for the current card roll');
+      if (window.__arenaIntroActive) return toast('Wait for the boss to break through…');
+      if (window.__arenaFight && __arenaFight.active) return toast('Finish or flee the current fight first');
+      let key = window.__arenaSelectedCardKey;
+      if (!key) return toast('Select a card stack from the grid first');
+      if ((G.cards[key] || 0) < 5) return toast('Need 5 copies of that exact card');
+      applyBrainrotShopCosts();
+      let sp = splitCardKey(key);
+      let b = BRAINROTS.find(z => z.id === sp.id);
+      if (!b) return toast('Invalid card');
+      let diffHard = arenaDifficultyFromCard(key, b);
+      let baseHp = arenaBossMaxHpFromBrainrot(b);
+      let bossMax = Math.max(120, Math.floor(baseHp * (0.84 + (diffHard - 1) * 0.36)));
+      let velScale = 0.66 + (diffHard - 1) * 0.52;
+      let spawnGapMul = 1.34 / diffHard;
+      let waveLen = 5000 + Math.floor((diffHard - 1) * 480);
+      let hitPad = 11.2 - (diffHard - 1) * 0.55;
+      G.cards[key] -= 5;
+      if (G.cards[key] <= 0) delete G.cards[key];
+      save();
+      renderCards();
+      ui();
+      let wrap = document.getElementById('arenaCombatWrap');
+      let cv = document.getElementById('arenaCanvas');
+      if (!wrap || !cv) return;
+      wrap.hidden = true;
+      let bossLabel = cardDisplayName(key);
+      arenaPlaySpawnIntro(bossLabel, function () {
+        wrap.hidden = false;
+        let W = cv.width, H = cv.height;
+        let F = {
+          active: true, cardKey: key, brainrot: b, bossName: bossLabel, bossHp: bossMax, bossMax: bossMax, diffHard: diffHard,
+          velScale: velScale, spawnGapMul: spawnGapMul, waveLen: waveLen, hitPad: hitPad,
+          phase: 0, waveEndAt: Date.now() + waveLen + 280, bullets: [], souls: { x: W / 2, y: H * 0.72 }, hearts: 3,
+          invulnUntil: 0, nextSpawn: Date.now() + 520, startedAt: Date.now(), rafId: 0, lastDamageAt: 0
+        };
+        window.__arenaFight = F;
+        function syncHud() {
+          let hEl = document.getElementById('arenaHearts');
+          if (hEl) hEl.textContent = String(F.hearts);
+          let ph = document.getElementById('arenaPhase');
+          if (ph) {
+            let pt;
+            if (F.phase === 'tired') pt = 'TIRED — click to attack!';
+            else if (typeof F.phase === 'number' && F.phase < 3) pt = 'Dodge wave ' + (F.phase + 1) + '/3';
+            else if (F.phase === 'won') pt = 'VICTORY';
+            else if (F.phase === 'lost') pt = 'DEFEAT';
+            else pt = '—';
+            ph.textContent = pt;
+          }
+          let hp = document.getElementById('arenaBossHp');
+          if (hp) hp.textContent = fmt(Math.max(0, Math.floor(F.bossHp))) + ' / ' + fmt(F.bossMax);
+        }
+        function hitPlayer() {
+          let now = Date.now();
+          if (now < F.invulnUntil) return;
+          if (F.phase === 'tired' || F.phase === 'won' || F.phase === 'lost') return;
+          F.hearts -= 1;
+          F.invulnUntil = now + Math.max(1180, Math.floor(1580 - (F.diffHard - 1) * 140));
+          syncHud();
+          if (F.hearts <= 0) {
+            F.phase = 'lost';
+            F.bullets.length = 0;
+            syncHud();
+            toast('💀 Out of hearts…');
+            setTimeout(() => { arenaAbortFight(); renderArenaCardSelect(); }, 1600);
+          }
+        }
+        function spawnBullet(kind) {
+          let vs = F.velScale || 0.72;
+          let x, y, vx, vy, r = Math.max(5.2, 6.8 - (F.diffHard - 1) * 0.55);
+          if (kind === 0) {
+            x = 16 + Math.random() * (W - 32); y = -10; vx = (Math.random() - 0.5) * 1.1 * vs; vy = (2.4 + Math.random() * 1.9) * vs;
+          } else if (kind === 1) {
+            let fromLeft = Math.random() < 0.5;
+            x = fromLeft ? -10 : W + 10; y = 40 + Math.random() * (H - 80); vx = (fromLeft ? 2.35 : -2.35) * vs; vy = (Math.random() - 0.5) * 0.85 * vs;
+          } else {
+            x = W / 2; y = 36;
+            let dx = F.souls.x - x + (Math.random() - 0.5) * 72;
+            let dy = F.souls.y - y + (Math.random() - 0.5) * 42;
+            let len = Math.sqrt(dx * dx + dy * dy) || 1;
+            vx = (dx / len) * 1.95 * vs; vy = (dy / len) * 1.95 * vs;
+          }
+          F.bullets.push({ x, y, vx, vy, r });
+        }
+        function arenaFrame() {
+          let F = window.__arenaFight;
+          if (!F || !F.active) return;
+          let now = Date.now();
+          let ctx = cv.getContext('2d');
+          ctx.fillStyle = '#070712';
+          ctx.fillRect(0, 0, W, H);
+          ctx.strokeStyle = '#3a2a55';
+          ctx.strokeRect(8, 8, W - 16, H - 16);
+          ctx.fillStyle = '#f472b8';
+          ctx.font = 'bold 16px system-ui,sans-serif';
+          ctx.fillText('Wild Boss: ' + F.bossName, 16, 28);
+          if (F.phase === 'won' || F.phase === 'lost') {
+            ctx.fillStyle = F.phase === 'won' ? '#5dff9c' : '#ff6b6b';
+            ctx.font = 'bold 28px system-ui,sans-serif';
+            ctx.fillText(F.phase === 'won' ? 'YOU WON' : 'GAME OVER', W / 2 - 90, H / 2);
+            F.rafId = 0;
+            return;
+          }
+          if (F.phase === 'tired') {
+            F.bullets.length = 0;
+            ctx.fillStyle = 'rgba(255,255,255,.12)';
+            ctx.fillRect(W / 2 - 120, 44, 240, 28);
+            ctx.fillStyle = '#fff';
+            ctx.font = 'bold 14px system-ui,sans-serif';
+            ctx.fillText('TIRED — click to strike!', W / 2 - 105, 64);
+          } else {
+            let guard = 0;
+            let gap0 = F.phase === 2 ? 360 : 118;
+            while (typeof F.phase === 'number' && F.phase < 3 && now > F.nextSpawn && guard++ < 28) {
+              spawnBullet(F.phase);
+              F.nextSpawn += gap0 * (F.spawnGapMul || 1);
+            }
+            if (typeof F.phase === 'number' && F.phase < 3 && now > F.waveEndAt) {
+              F.phase += 1;
+              F.bullets.length = 0;
+              if (typeof F.phase === 'number' && F.phase < 3) {
+                F.waveEndAt = now + (F.waveLen || 5000);
+                F.nextSpawn = now + 240;
+              } else {
+                F.phase = 'tired';
+                F.waveEndAt = 0;
+              }
+              syncHud();
+            }
+          }
+          let pad = F.hitPad != null ? F.hitPad : 11;
+          for (let i = F.bullets.length - 1; i >= 0; i--) {
+            if (F.phase === 'lost') break;
+            let p = F.bullets[i];
+            p.x += p.vx; p.y += p.vy;
+            if (p.y > H + 40 || p.y < -40 || p.x < -40 || p.x > W + 40) { F.bullets.splice(i, 1); continue; }
+            ctx.beginPath();
+            ctx.fillStyle = '#ffcc00';
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fill();
+            if (typeof F.phase === 'number' && now >= F.invulnUntil) {
+              let dx = p.x - F.souls.x, dy = p.y - F.souls.y;
+              let hitR = p.r + pad;
+              if (dx * dx + dy * dy < hitR * hitR) hitPlayer();
+            }
+          }
+          let sx = F.souls.x, sy = F.souls.y;
+          ctx.save();
+          if (now < F.invulnUntil && Math.floor(now / 100) % 2 === 0) ctx.globalAlpha = 0.45;
+          ctx.fillStyle = '#7ef9ff';
+          ctx.beginPath();
+          ctx.moveTo(sx, sy - 8);
+          ctx.lineTo(sx + 8, sy + 6);
+          ctx.lineTo(sx - 8, sy + 6);
+          ctx.closePath();
+          ctx.fill();
+          ctx.restore();
+          F.rafId = requestAnimationFrame(arenaFrame);
+        }
+        F._mm = function (e) {
+          let r = cv.getBoundingClientRect(), sx = cv.width / r.width, sy = cv.height / r.height;
+          let mx = (e.clientX - r.left) * sx, my = (e.clientY - r.top) * sy;
+          F.souls.x = Math.max(18, Math.min(W - 18, mx));
+          F.souls.y = Math.max(52, Math.min(H - 22, my));
+        };
+        F._md = function (e) {
+          if (F.phase !== 'tired') return;
+          let now = Date.now();
+          if (now - F.lastDamageAt < Math.max(180, 260 - (F.diffHard - 1) * 55)) return;
+          let r = cv.getBoundingClientRect(), scx = cv.width / r.width, scy = cv.height / r.height;
+          let mx = (e.clientX - r.left) * scx, my = (e.clientY - r.top) * scy;
+          if (mx < 10 || mx > W - 10 || my < 10 || my > H - 10) return;
+          F.lastDamageAt = now;
+          let dmg = Math.max(1, ppc());
+          F.bossHp -= dmg;
+          if (F.bossHp <= 0) {
+            F.bossHp = 0;
+            F.phase = 'won';
+            let dur = Math.max(1, Date.now() - F.startedAt);
+            let reward = Math.max(500, Math.floor(F.bossMax * 0.04));
+            let skillPts = Math.max(1, Math.min(18, Math.round(1 + F.diffHard * 2.6 + F.bossMax / 12e6 + F.hearts * 0.9)));
+            G.points += reward; G.runEarned += reward; G.lifetimeEarned += reward;
+            G.skillPoints = (G.skillPoints || 0) + skillPts;
+            let score = Math.floor(F.bossMax / 1000) + F.hearts * 80000 - Math.floor(dur / 400) + skillPts * 650;
+            arenaPushLeaderboard({ bossName: F.bossName, score: score, sub: '+' + fmt(reward) + ' pts • +' + skillPts + ' Skill Points • ' + Math.floor(dur / 1000) + 's • ♥' + F.hearts, t: Date.now() });
+            toast('🏆 Boss defeated! +' + fmt(reward) + ' pts • +' + skillPts + ' Skill Points');
+            syncHud();
+            setTimeout(() => { arenaAbortFight(); renderArenaCardSelect(); ui(); }, 2000);
+          }
+          syncHud();
+        };
+        F._ml = function () { };
+        cv.addEventListener('mousemove', F._mm);
+        cv.addEventListener('mousedown', F._md);
+        cv.addEventListener('mouseleave', F._ml);
+        syncHud();
+        F.rafId = requestAnimationFrame(arenaFrame);
+        cv.focus();
+        toast('⚔️ Dodge the waves — then strike when the boss is tired!');
+      });
+    }
     function page(id) {
-      document.querySelectorAll('.page').forEach(p => { p.classList.remove('active'); p.style.display = 'none' }); document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active')); let el = document.getElementById('page-' + id); if (el) { el.classList.add('active'); el.style.display = 'block'; if (id === 'quests') fullRenderQuests(); if (id === 'cards') renderCards(); if (id === 'skills') { renderSkills(); renderMilestones(); } let m = { game: 0, shop: 1, brainrots: 2, cards: 3, skills: 4, codes: 5, quests: 6, settings: 7 }; let btn = document.querySelectorAll('.nav-btn')[m[id]]; if (btn) btn.classList.add('active'); if (id === 'shop') renderShop(); if (id === 'brainrots') renderBrains(); if (id === 'codes') renderCodes(); if (id === 'skills') renderSkills(); ui() }
+      if (id !== 'arena') arenaAbortFight();
+      document.querySelectorAll('.page').forEach(p => { p.classList.remove('active'); p.style.display = 'none' }); document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active')); let el = document.getElementById('page-' + id); if (el) { el.classList.add('active'); el.style.display = 'block'; if (id === 'quests') fullRenderQuests(); if (id === 'cards') renderCards(); if (id === 'skills') { renderSkills(); renderMilestones(); } let m = { game: 0, shop: 1, brainrots: 2, cards: 3, arena: 4, skills: 5, codes: 6, quests: 7, settings: 8 }; let btn = document.querySelectorAll('.nav-btn')[m[id]]; if (btn) btn.classList.add('active'); if (id === 'shop') renderShop(); if (id === 'brainrots') renderBrains(); if (id === 'codes') renderCodes(); if (id === 'skills') renderSkills(); if (id === 'arena') renderArenaPage(); ui() }
     }
     function toast(t) { let x = document.getElementById('toast'); x.textContent = t; x.classList.add('show'); clearTimeout(window.toastTimer); window.toastTimer = setTimeout(() => { x.classList.remove('show'); if (x.textContent === t) x.textContent = '' }, 2600) } function showModal(id) { let m = document.getElementById(id); if (m) { m.style.display = 'flex'; m.classList.add('show') } } function closeModal(id) { let m = document.getElementById(id); if (m) { m.classList.remove('show'); m.style.display = 'none' } let cw = document.getElementById('caseWrap'); if (cw) cw.style.display = 'block'; let b = document.getElementById('bulkCases'); if (b) b.style.display = 'none' }
 
@@ -2644,8 +3401,25 @@
       function finishCardCombine(win) { let box = document.getElementById('combineSelected'); if (win === 'fail') { if (box) box.innerHTML = '<b style="color:var(--red)">❌ Fail!</b> The combination did not go through, and the cards were lost.'; toast('Combination failed — cards lost!') } else { G.cardBoosts[win] = (G.cardBoosts[win] || 0) + 1; let b = BRAINROTS.find(x => x.id === win); if (box) box.innerHTML = '<b style="color:var(--green)">✅ Success!</b> ' + displayName(b) + ' got a permanent 1.5x boost!'; toast('Success! ' + displayName(b) + ' gets a permanent 1.5x boost!') } G.combinePick = []; G.cardRolling = false; renderCards(); renderBrains(); ui(); save() }
       function combineCards() { if (G.cardRolling) return toast('Already rolling'); if (!G.combinePick || G.combinePick.length !== 5) return toast('Pick exactly 5 cards'); let keyCounts = {}; G.combinePick.forEach(k => keyCounts[k] = (keyCounts[k] || 0) + 1); for (let k in keyCounts) { if ((G.cards[k] || 0) < keyCounts[k]) return toast('Not enough ' + cardDisplayName(k) + ' cards') } Object.keys(keyCounts).forEach(k => { G.cards[k] -= keyCounts[k]; if (G.cards[k] < 0) G.cards[k] = 0 }); let baseCounts = {}; G.combinePick.forEach(k => { let id = splitCardKey(k).id; baseCounts[id] = (baseCounts[id] || 0) + 1 }); let bag = combineCandidates(baseCounts); let win = bag[Math.floor(Math.random() * bag.length)]; animateCardCombine(win, bag); save() }
 
-      function save() { try { G.lastSaveTime = Date.now(); localStorage.setItem('brainrotClickerOGv3', JSON.stringify(G)) } catch (e) { } }
+      function save() { try { if (window.__brainrotResetInProgress) return; G.lastSaveTime = Date.now(); localStorage.setItem('brainrotClickerOGv3', JSON.stringify(G)) } catch (e) { } }
       function load() { 
+        try {
+          const qp = new URLSearchParams(window.location.search || '');
+          if (qp.get('reset') === '1') {
+            G = createDefaultGameState();
+            try {
+              localStorage.removeItem('brainrotSaveOG');
+              localStorage.setItem('brainrotClickerOGv3', JSON.stringify(G));
+            } catch (e) { }
+            try { sessionStorage.clear(); } catch (e) { }
+            try {
+              qp.delete('reset');
+              qp.delete('ts');
+              const cleanUrl = window.location.origin + window.location.pathname + (qp.toString() ? ('?' + qp.toString()) : '');
+              window.history.replaceState({}, '', cleanUrl);
+            } catch (e) { }
+          }
+        } catch (e) { }
         try { 
                 let s = localStorage.getItem('brainrotClickerOGv3') || localStorage.getItem('brainrotSaveOG'); 
                 if (s) Object.assign(G, JSON.parse(s)); 
@@ -2689,6 +3463,8 @@
         if (G.lastSaveTime === undefined) G.lastSaveTime = now;
         if (G.spawnBrainrot === undefined) G.spawnBrainrot = null;
         if (G.lastSpawnRoll === undefined) G.lastSpawnRoll = 0;
+        if (G.wildKillsThisRun === undefined) G.wildKillsThisRun = 0;
+        if (!Array.isArray(G.arenaLeaderboard)) G.arenaLeaderboard = [];
 
         const HARD_OFFLINE_CAP_SECONDS = 12 * 60 * 60;
         G.lastOfflineGain = 0;
@@ -2723,7 +3499,119 @@
           }
         }
       }
-      function resetGame() { if (confirm('Reset everything?')) { localStorage.removeItem('brainrotClickerOGv3'); localStorage.removeItem('brainrotSaveOG'); location.reload() } }
+      function resetGame(forceConfirm) {
+        if (!forceConfirm) {
+          try {
+            if (!window.confirm('Reset everything? This will wipe your local save, save codes, and progress on this browser.')) {
+              showResetConfirmModal();
+              return;
+            }
+          } catch (e) {
+            showResetConfirmModal();
+            return;
+          }
+        }
+        try {
+          window.__brainrotResetInProgress = true;
+
+          const keyLooksLikeBrainrot = (k) => /brainrot|saveog|savecode|ledunk|modpanel|prestige/i.test(String(k || ''));
+
+          try {
+            for (let i = localStorage.length - 1; i >= 0; i--) {
+              const k = localStorage.key(i);
+              if (keyLooksLikeBrainrot(k)) localStorage.removeItem(k);
+            }
+            // Extra-safe pass for stubborn local environments.
+            localStorage.clear();
+            localStorage.removeItem('brainrotClickerOGv3');
+            localStorage.removeItem('brainrotSaveOG');
+          } catch (e) { }
+
+          try {
+            for (let i = sessionStorage.length - 1; i >= 0; i--) {
+              const k = sessionStorage.key(i);
+              if (keyLooksLikeBrainrot(k)) sessionStorage.removeItem(k);
+            }
+            sessionStorage.clear();
+          } catch (e) { }
+
+          // If any older/fallback IndexedDB save exists, remove common names.
+          try {
+            ['brainrotClickerDB', 'brainrot-save-db', 'brainrotSaveDB'].forEach((dbName) => {
+              try { indexedDB.deleteDatabase(dbName); } catch (e) { }
+            });
+          } catch (e) { }
+
+          // Always reset immediately in-memory (works in Cursor Preview if redirects are blocked/sandboxed).
+          G = createDefaultGameState();
+          try { syncLedunkCosmeticFromSave(); } catch (e) { }
+          applyBrainrotShopCosts();
+          try {
+            localStorage.setItem('brainrotClickerOGv3', JSON.stringify(G));
+          } catch (e) { }
+          try {
+            const qp = new URLSearchParams(window.location.search || '');
+            qp.delete('reset');
+            qp.delete('ts');
+            const cleanUrl = window.location.origin + window.location.pathname + (qp.toString() ? ('?' + qp.toString()) : '');
+            window.history.replaceState({}, '', cleanUrl);
+          } catch (e) { }
+          updateChar();
+          renderShop();
+          renderBrains();
+          renderCodes();
+          renderCards();
+          ui();
+          toast('Game reset complete.');
+          showResetVerificationModal();
+        } finally {
+          window.__brainrotResetInProgress = false;
+        }
+      }
+      function showResetConfirmModal() {
+        let existing = document.getElementById('resetConfirmModal');
+        if (existing) existing.remove();
+        let modal = document.createElement('div');
+        modal.id = 'resetConfirmModal';
+        modal.className = 'modal show';
+        modal.innerHTML = `
+          <div class="modal-card">
+            <h2 class="gold-title">⚠️ Confirm Reset</h2>
+            <p class="sub">This wipes local progress, save codes, and settings on this browser.</p>
+            <div class="row">
+              <button class="btn danger" id="resetConfirmBtn">Yes, Reset Everything</button>
+              <button class="btn secondary" id="resetCancelBtn">Cancel</button>
+            </div>
+          </div>
+        `;
+        document.body.appendChild(modal);
+        const doClose = () => { try { modal.remove(); } catch (e) { } };
+        const confirmBtn = modal.querySelector('#resetConfirmBtn');
+        const cancelBtn = modal.querySelector('#resetCancelBtn');
+        if (confirmBtn) confirmBtn.onclick = () => { doClose(); resetGame(true); };
+        if (cancelBtn) cancelBtn.onclick = () => { doClose(); toast('Reset cancelled'); };
+      }
+      function showResetVerificationModal() {
+        let existing = document.getElementById('resetVerifyModal');
+        if (existing) existing.remove();
+        let modal = document.createElement('div');
+        modal.id = 'resetVerifyModal';
+        modal.className = 'modal show';
+        modal.innerHTML = `
+          <div class="modal-card">
+            <h2 class="gold-title">✅ Reset Verification</h2>
+            <p class="sub">Quick sanity check after reset:</p>
+            <div class="box" style="text-align:left">
+              <div class="row"><span>Points</span><b>${fmt(G.points)}</b></div>
+              <div class="row"><span>Prestige</span><b>${Number(G.prestige) || 0}</b></div>
+              <div class="row"><span>Unlocked Brainrots</span><b>${(G.unlocked || []).length}</b></div>
+            </div>
+            <div class="small" style="margin-top:10px;color:var(--muted)">Expected fresh values: points=0, prestige=0, unlocked=1.</div>
+            <button class="btn mt-15" onclick="document.getElementById('resetVerifyModal')?.remove()">Got it</button>
+          </div>
+        `;
+        document.body.appendChild(modal);
+      }
       setInterval(() => { let v = pps(); if (v > 0) { let delta = v / 20; G.points += delta; G.runEarned += delta; G.lifetimeEarned += delta; G.autoProduced = (G.autoProduced || 0) + delta; checkAutoMilestones(); ui() } }, 50);
       setInterval(() => { G.playtime = (G.playtime || 0) + 1; ui() }, 1000);
       setInterval(() => {
@@ -2744,7 +3632,11 @@
       setInterval(() => {
         if (Date.now() - (G.lastSpawnRoll || 0) < 59000) return;
         G.lastSpawnRoll = Date.now();
-        spawnBrainrotNow(false);
+        let rolls = wildSpawnRollsPerMinute();
+        for (let i = 0; i < rolls; i++) {
+          spawnBrainrotNow(false);
+          if (G.spawnBrainrot && G.spawnBrainrot.active) break;
+        }
       }, 1000);
       document.getElementById('char').addEventListener('click', clicker);
       document.addEventListener('keydown', e => { if (e.code === 'Space' && !e.repeat && document.getElementById('page-game').classList.contains('active') && !['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) { e.preventDefault(); let r = document.getElementById('charImg').getBoundingClientRect(); clicker({ clientX: r.left + r.width / 2, clientY: r.top + r.height / 2 }) } });
